@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="snippet_jobs_rows" name="Jobs Rows">
+      <section class="s_media_list o_colored_level pt64 o_cc o_cc1 pb24" data-vcss="001" data-snippet="s_media_list" data-name="Media List" style="background-image: none;" data-original-title="" title="" aria-describedby="tooltip944644">
+        <div class="row s_row_jobs">
+          <div class="container o_colored_level col-lg-5 offset-lg-1 rounded o_cc o_cc2" style="border-radius: 10px !important; background-color: rgb(245, 242, 242) !important;">
+            <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
+              <!-- offres à ajouter -->
+                  <div class="s_media_list_item pb0 col-lg-12 pt0" data-name="Media item" id="rows_job">
+                        <!-- ici les offres vont être inserés -->
+                  </div>
+              <!-- offres à ajouter -->
+            </div>
+          </div>
+          <div class="container o_colored_level col-lg-5" style="" data-original-title="" title="" aria-describedby="tooltip537086">
+            <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
+			<!-- formations -->
+              <div class="s_media_list_item pb16 col-lg-12 pt4" data-name="Media item" id="rows_trainning">
+                <!-- ici les formations vont être insérés -->
+              </div>
+			  <!-- formations -->
+                  <div>
+                 <div class="o_colored_level col-lg-5 offset-lg-1 pt16">
+                    <h2 style="text-align: left;">
+                      <strong>
+                        <font class="text-o-color-2">Offres d'Emplois</font>
+                      </strong>
+                    </h2>
+                  </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+  </section>
+  </template>
+
+</odoo>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <template id="candidat_espace_template" name="Espace Candidat Complet">
+      <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+          <h2 class="text-center mb-4">🎓 Espace personnel du candidat</h2>
+
+          <!-- INFOS PERSONNELLES -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">👤 Informations personnelles</h5>
+              <p><strong>Nom :</strong> <t t-esc="candidat.name" /></p>
+              <p><strong>Email :</strong> <t t-esc="candidat.email" /></p>
+              <p><strong>Téléphone :</strong> <t t-esc="candidat.phone" /></p>
+              <a href="#" class="btn btn-outline-primary btn-sm">Modifier mes informations</a>
+            </div>
+          </div>
+
+          <!-- CANDIDATURES -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">📄 Mes candidatures</h5>
+              <t t-if="candidat.application_ids">
+                <ul class="list-group">
+                  <t t-foreach="candidat.application_ids" t-as="app">
+                    <li class="list-group-item">
+                      <strong><t t-esc="app.job_id.name" /></strong> — <t t-esc="app.stage_id.name" />
+                    </li>
+                  </t>
+                </ul>
+              </t>
+              <t t-else="">
+                <p>Aucune candidature soumise.</p>
+              </t>
+            </div>
+          </div>
+
+          <!-- OFFRES DISPONIBLES -->
+          <div class="mb-4">
+            <h5 class="mb-3">🚀 Offres disponibles</h5>
+            <div style="overflow-x:auto; white-space: nowrap;">
+              <t t-foreach="offres" t-as="offre">
+                <div class="card d-inline-block me-3" style="width: 300px;">
+                  <div class="card-body">
+                    <h6 class="card-title"><t t-esc="offre.name" /></h6>
+                    <p><t t-esc="offre.description" /></p>
+                    <a t-attf-href="{{offre.website_url}}" class="btn btn-sm btn-outline-success">Voir le poste</a>
+                  </div>
+                </div>
+              </t>
+            </div>
+          </div>
+
+          <!-- PROFIL COMPLET -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">📘 Mon profil</h5>
+
+              <h6>Formations</h6>
+              <ul class="list-group mb-2">
+                <t t-foreach="candidat.formation_ids" t-as="formation">
+                  <li class="list-group-item">
+                    <strong><t t-esc="formation.name" /></strong><br/>
+                    <span><t t-esc="formation.date_start" /> - <t t-esc="formation.date_end" /></span><br/>
+                    <p><t t-esc="formation.description" /></p>
+                  </li>
+                </t>
+              </ul>
+              
+              <a href="/mon-espace/ajouter/formation" class="btn btn-sm btn-outline-primary mb-3">Ajouter une formation</a>
+
+              <h6>Expériences</h6>
+              <ul class="list-group mb-2">
+                <t t-foreach="candidat.experience_ids" t-as="exp">
+                  <li class="list-group-item"><t t-esc="exp.name" /> — <t t-esc="exp.date_start" /></li>
+                </t>
+              </ul>
+              <a href="/mon-espace/ajouter/experience" class="btn btn-sm btn-outline-primary mb-3">Ajouter une expérience</a>
+
+              <h6>Éducation</h6>
+              <ul class="list-group mb-2">
+                <t t-foreach="candidat.education_ids" t-as="edu">
+                  <li class="list-group-item"><t t-esc="edu.name" /> — <t t-esc="edu.date_start" /></li>
+                </t>
+              </ul>
+              <a href="/mon-espace/ajouter/education" class="btn btn-sm btn-outline-primary mb-3">Ajouter un diplôme</a>
+
+              <h6>Langages</h6>
+              <ul class="list-group mb-2">
+                <t t-foreach="candidat.langage_ids" t-as="langue">
+                  <li class="list-group-item"><t t-esc="langue.name" /></li>
+                </t>
+              </ul>
+              <a href="/mon-espace/ajouter/langage" class="btn btn-sm btn-outline-primary">Ajouter un langage</a>
+
+            </div>
+          </div>
+
+        </div>
+      </t>
+    </template>
+    <report
+    id="report_cv_pdf"
+    model="website.user"
+    string="CV Candidat"
+    report_type="qweb-pdf"
+    name="website_bensizwe.report_cv_pdf_template"
+    file="website_bensizwe.report_cv_pdf_template"
+    print_report_name="'CV - %s' % object.name"
+    />
+  </data>
+</odoo>

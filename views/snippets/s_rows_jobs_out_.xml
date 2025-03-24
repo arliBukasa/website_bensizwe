@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="snippet_jobs_out_rows" name="Jobs out Rows">
+    <!--***********-->
+    <section class="s_three_columns o_colored_level pt40 pb48 o_cc o_cc4" data-vcss="001" data-snippet="s_three_columns" data-name="Columns" style="background-color: rgb(4, 161, 215) !important; background-image: none;">
+      <div class="container-fluid s_row_out_jobs">
+        <div class="row d-flex align-items-center" data-original-title="" title="" aria-describedby="tooltip729543" id="rows_out_job">
+          
+        </div>
+      </div>
+    </section>
+    <!--***********-->
+  </template>
+</odoo>

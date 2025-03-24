@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="report_cv_pdf_template">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="object">
+        
+      <t t-call="web.external_layout">
+        <div class="page">
+          <h2>CV - <t t-esc="object.name" /></h2>
+          <p><strong>Email :</strong> <t t-esc="object.email" /></p>
+          <p><strong>Téléphone :</strong> <t t-esc="object.phone" /></p>
+
+          <h4>🎓 Formations</h4>
+          <ul>
+            <t t-foreach="object.formation_ids" t-as="formation">
+              <li>
+                <strong><t t-esc="formation.name" /></strong> — <t t-esc="formation.date_start"/> à <t t-esc="formation.date_end"/>
+                <p><t t-esc="formation.description"/></p>
+              </li>
+            </t>
+          </ul>
+
+          <h4>💼 Expériences</h4>
+          <ul>
+            <t t-foreach="object.experience_ids" t-as="exp">
+              <li>
+                <strong><t t-esc="exp.name" /></strong> — <t t-esc="exp.date_start"/> à <t t-esc="exp.date_end"/>
+                <p><t t-esc="exp.description"/></p>
+              </li>
+            </t>
+          </ul>
+
+          <h4>🏫 Éducation</h4>
+          <ul>
+            <t t-foreach="object.education_ids" t-as="edu">
+              <li>
+                <strong><t t-esc="edu.name" /></strong> — <t t-esc="edu.date_start"/> à <t t-esc="edu.date_end"/>
+                <p><t t-esc="edu.description"/></p>
+              </li>
+            </t>
+          </ul>
+
+          <h4>🧠 Compétences</h4>
+          <ul>
+            <t t-foreach="object.competence_ids" t-as="comp">
+              <li><t t-esc="comp.name"/> : <t t-esc="comp.description"/></li>
+            </t>
+          </ul>
+
+          <h4>🌐 Langues</h4>
+          <ul>
+            <t t-foreach="object.langage_ids" t-as="langue">
+              <li><t t-esc="langue.name"/> : <t t-esc="langue.description"/></li>
+            </t>
+          </ul>
+        </div>
+        </t>
+      </t>
+    </t>
+  </template>
+</odoo>

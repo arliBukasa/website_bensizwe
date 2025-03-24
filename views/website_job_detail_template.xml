@@ -1,0 +1,37 @@
+<odoo>
+  <template id="hr_job_detail_inherit" inherit_id="website_hr_recruitment.detail">
+    <xpath expr="//section[@class='pb32']" position="after">
+
+      <section class="pt-3 pb-3">
+        <div class="container">
+          <div class="row mb-4">
+            <div class="col-md-4"><strong>Référence :</strong><br/> <t t-esc="job.reference"/></div>
+            <div class="col-md-4"><strong>Département :</strong><br/></div>
+            <div class="col-md-4"><strong>Secteur :</strong><br/> <t t-esc="job.secteur"/></div>
+            <div class="col-md-4"><strong>Durée :</strong><br/> <t t-esc="job.duree_contrat"/></div>
+            <div class="col-md-4"><strong>Localisation :</strong><br/> <t t-esc="job.localisation"/></div>
+            <div class="col-md-4"><strong>Date de clôture :</strong><br/> <t t-esc="job.date_cloture"/></div>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-primary">🧾 Contexte</h3>
+            <t t-out="job.contexte"/>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-primary">📌 Description du poste</h3>
+            <t t-out="job.description_poste"/>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-primary">🎓 Qualifications</h3>
+            <t t-out="job.qualification"/>
+          </div>
+        </div>
+      </section>
+
+    </xpath>
+     <!-- Supprime le champ website_description -->
+    <xpath expr="//div[@t-field='job.website_description']" position="replace"/>
+  </template>
+</odoo>

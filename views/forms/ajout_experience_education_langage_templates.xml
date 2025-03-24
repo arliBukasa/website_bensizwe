@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="ajouter_experience_template" name="Ajouter une expérience">
+    <t t-call="website.layout">
+      <div class="container my-5">
+        <h2 class="mb-4">➕ Ajouter une expérience</h2>
+        <form action="/mon-espace/ajouter/experience/submit" method="POST">
+          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+          <div class="form-group">
+            <label>Nom du poste</label>
+            <input type="text" name="name" class="form-control" required="required"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Date de début</label>
+            <input type="date" name="date_start" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>Date de fin</label>
+            <input type="date" name="date_end" class="form-control"/>
+          </div>
+          <button type="submit" class="btn btn-success">Ajouter</button>
+          <a href="/mon-espace" class="btn btn-secondary">Annuler</a>
+        </form>
+      </div>
+    </t>
+  </template>
+
+  <template id="ajouter_education_template" name="Ajouter une éducation">
+    <t t-call="website.layout">
+      <div class="container my-5">
+        <h2 class="mb-4">➕ Ajouter une formation académique</h2>
+        <form action="/mon-espace/ajouter/education/submit" method="POST">
+          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+          <div class="form-group">
+            <label>Nom de l'établissement</label>
+            <input type="text" name="name" class="form-control" required="required"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Date de début</label>
+            <input type="date" name="date_start" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>Date de fin</label>
+            <input type="date" name="date_end" class="form-control"/>
+          </div>
+          <button type="submit" class="btn btn-success">Ajouter</button>
+          <a href="/mon-espace" class="btn btn-secondary">Annuler</a>
+        </form>
+      </div>
+    </t>
+  </template>
+
+  <template id="ajouter_langage_template" name="Ajouter un langage">
+    <t t-call="website.layout">
+      <div class="container my-5">
+        <h2 class="mb-4">➕ Ajouter un langage</h2>
+        <form action="/mon-espace/ajouter/langage/submit" method="POST">
+          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+          <div class="form-group">
+            <label>Nom du langage</label>
+            <input type="text" name="name" class="form-control" required="required"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">Ajouter</button>
+          <a href="/mon-espace" class="btn btn-secondary">Annuler</a>
+        </form>
+      </div>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record id="view_hr_job_form_inherit_extra_fields" model="ir.ui.view">
+      <field name="name">hr.job.form.inherit.extra.fields</field>
+      <field name="model">hr.job</field>
+      <field name="inherit_id" ref="hr.view_hr_job_form"/>
+      <field name="arch" type="xml">
+      <field name="description" position="after">
+          <field name="reference"/>
+                <group>
+                  <group name="spécificité" string="Spécificité">
+                    <field name="department_id"/>
+                    <field name="secteur"/>
+                    <field name="secteur"/>
+                  </group>
+                  <group string="Durée et localisation">
+                    <field name="duree_contrat"/>
+                    <field name="localisation"/>
+                    <field name="date_cloture"/>
+                  </group>
+                  
+                </group>
+                <group>  
+                  <field name="contexte" widget="html"/>
+                  <field name="description_poste" widget="html"/>
+                  <field name="qualification" widget="html"/>
+                </group>
+          </field>
+
+      </field>
+    </record>
+
+  </data>
+</odoo>

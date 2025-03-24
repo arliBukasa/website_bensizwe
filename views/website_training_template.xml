@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+        <template id="inscription_formation" name="Inscription Formation">
+            <t t-call="website.layout">
+                <div class="container">
+
+                    <!-- HEADER IMAGE -->
+                    <div class="mb-4 text-center">
+                        <t t-if="formation.header">
+                            <!-- <img src="/web/image/website_bensizwe/static/src/img/jobs.svg" class="img-fluid rounded" style="max-height: 300px;" />
+                            <img t-att-src="'/web/image/website.training/{}/header' .format(formation.id)" class="img-fluid rounded" style="max-height: 300px;" /> -->
+                        </t>
+                        <t t-else="">
+                            <img src="/web/image/website_bensizwe/static/src/img/jobs.svg" class="img-fluid rounded" style="max-height: 300px;" />
+
+                        </t>
+                    </div>
+                    <!-- INFOS FORMATION -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary">
+                                <t t-esc="formation.name" />
+                            </h2>
+                            <p class="card-text">
+                                <t t-esc="formation.description" />
+                            </p>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <strong>📅 Dates :</strong> du <t t-esc="formation.date_start"/>
+                                        au <t t-esc="formation.date_end"/>
+                            </li>
+                            <li>
+                                <strong>🎯 Statut :</strong>
+                                <t t-esc="formation.status"/>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- INFOS CANDIDAT -->
+                <t t-if="candidat.user_id.id != website.user_id.id">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5>👤 Vos informations</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <strong>Nom :</strong>
+                                    <t t-esc="candidat.name"/>
+                                </li>
+                                <li>
+                                    <strong>Email :</strong>
+                                    <t t-esc="candidat.email"/>
+                                </li>
+                                <li>
+                                    <strong>Téléphone :</strong>
+                                    <t t-esc="candidat.phone"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- CTA BUTTON CONNECTÉ -->
+                    <div class="text-center mb-5">
+                        <a t-attf-href="/formation/valider_inscription/{{ formation.id }}" class="btn btn-success btn-lg">
+      ✅ S'inscrire à cette formation
+                        </a>
+                    </div>
+                </t>
+
+                <!-- ALERTE NON CONNECTÉ -->
+                <t t-else="">
+                    <div class="alert alert-warning text-center" role="alert">
+    ⚠️ Vous n'êtes pas connecté. Veuillez créer un compte pour vous inscrire à cette formation.
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <a href="/candidat/signup" class="btn btn-primary btn-lg">
+      Créer un compte et s'inscrire
+                        </a>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</data>
+</odoo>

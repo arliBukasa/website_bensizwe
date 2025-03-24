@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_website_training_manager,website_training_manager,model_website_training,base.group_user,1,1,1,1
+access_website_user_manager,website_user_manager,model_website_user,base.group_user,1,1,1,1
+access_website_experience_manager,website_experience_manager,model_website_experience,base.group_user,1,1,1,1
+access_website_education_manager,website_education_manager,model_website_education,base.group_user,1,1,1,1
+access_website_langage_manager,website_langage_manager,model_website_langage,base.group_user,1,1,1,1
+access_website_competence_manager,website_competence_manager,model_website_competence,base.group_user,1,1,1,1
+access_website_formation_manager,website_formation_manager,model_website_formation,base.group_user,1,1,1,1
+access_hr_department_public,access_hr_department_public,model_hr_department,base.group_user,1,0,0,0

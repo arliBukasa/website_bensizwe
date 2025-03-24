@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+  
+    <!-- TEMPLATE LOGIN -->
+    <template id="candidat_login_template" name="Connexion Candidat">
+      <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h3 class="mb-4 text-center">Connexion Candidat</h3>
+
+                  <t t-if="error">
+                    <div class="alert alert-danger" role="alert">
+                      <t t-esc="error" />
+                    </div>
+                  </t>
+
+                  <form method="post" action="/candidat/login/submit">
+                    <div class="mb-3">
+                      <label for="login" class="form-label">Email</label>
+                      <input type="text" name="login" class="form-control" required="required"/>
+                    </div>
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Mot de passe</label>
+                      <input type="password" name="password" class="form-control" required="required"/>
+                    </div>
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-primary">Se connecter</button>
+                    </div>
+                  </form>
+
+                  <div class="text-center mt-3">
+                    <a href="/candidat/signup">Créer un compte</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <!-- TEMPLATE SIGNUP -->
+    <template id="candidat_signup_template" name="Inscription Candidat">
+      <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h3 class="mb-4 text-center">Inscription Candidat</h3>
+
+                  <t t-if="error">
+                    <div class="alert alert-danger" role="alert">
+                      <t t-esc="error" />
+                    </div>
+                  </t>
+
+                  <form method="post" action="/candidat/signup/submit">
+                    <div class="mb-3">
+                      <label for="name" class="form-label">Nom</label>
+                      <input type="text" name="name" class="form-control" required="required"/>
+                    </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" name="email" class="form-control" required="required"/>
+                    </div>
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Mot de passe</label>
+                      <input type="password" name="password" class="form-control" required="required"/>
+                    </div>
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-success">Créer un compte</button>
+                    </div>
+                  </form>
+
+                  <div class="text-center mt-3">
+                    <a href="/candidat/login">Déjà inscrit ? Connectez-vous</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+  </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ajouter_formation_template" name="Ajouter une formation">
+            <t t-call="website.layout">
+                <div class="container my-5">
+                <h2 class="mb-4">➕ Ajouter une formation</h2>
+                <form action="/mon-espace/ajouter/formation/submit" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="form-group">
+                    <label>Nom de la formation</label>
+                    <input type="text" name="name" class="form-control" required="required"/>
+                    </div>
+                    <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                    <label>Date de début</label>
+                    <input type="date" name="date_start" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                    <label>Date de fin</label>
+                    <input type="date" name="date_end" class="form-control"/>
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
+                    <a href="/mon-espace" class="btn btn-secondary">Annuler</a>
+                </form>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
+
+
+
+

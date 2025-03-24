@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="confirmation_inscription" name="Confirmation d'inscription">
+            <t t-call="website.layout">
+                <div class="container mt-5">
+                    <div class="alert alert-success text-center" role="alert">
+                    🎉 Félicitations <t t-esc="candidat.name" />
+                    , vous êtes maintenant inscrit à :
+                    <strong>
+                        <t t-esc="formation.name" />
+                    </strong>
+                </div>
+
+                <div class="text-center">
+                    <a href="/" class="btn btn-primary mt-3">Retour à l'accueil</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</data>
+</odoo>
+
+
