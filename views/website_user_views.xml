@@ -11,9 +11,12 @@
                 <field name="user_id"/>
                 <field name="email"/>
                 <field name="phone"/>
+                <field name="adresse"/>
+                <field name="date_naissance"/>
+                <field name="etat_civil"/>
+                <field name="nationalite"/>
                 <field name="training_ids" widget="many2many_tags"/>
                 <field name="experience_ids" widget="many2many_tags"/>
-
             </tree>
         </field>
     </record>
@@ -34,7 +37,11 @@
                             <group name="" string="connection">
                                 <field name="user_id"/>
                                 <field name="email"/>
-                                <field name="phone"/>    
+                                <field name="phone"/> 
+                                <field name="adresse"/>  
+                                <field name="date_naissance"/>  
+                                <field name="etat_civil"/>
+                                <field name="nationalite"/>  
                                 <field name="training_ids"/>
                                 <field name="experience_ids">
                                     <tree string="Experience">

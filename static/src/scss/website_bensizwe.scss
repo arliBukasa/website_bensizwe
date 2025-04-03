@@ -1,0 +1,23 @@
+.btn-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #04A1D0;
+    text-align: center;
+    align-items: center;
+    
+ } 
+ .m-arrow-right{
+    @media screen and (min-width: 992px) {
+        margin-right: -350px;         
+      }
+ }
+ .m-arrow-left{
+    @media screen and (min-width: 992px) {
+        margin-left: -350px;         
+      }
+ }
+  .btn-circle:hover {
+    background-color: #04A1D0;
+    opacity: 0.95;
+  }

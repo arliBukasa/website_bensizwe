@@ -68,10 +68,14 @@ class HrJob(models.Model):
     reference = fields.Char(string="Référence")
     department_id = fields.Many2one('hr.department', string="Département / Service")
     secteur = fields.Char(string="Secteur")
-    duree_contrat = fields.Char(string="Durée du Contrat")
     localisation = fields.Char(string="Localisation")
     date_cloture = fields.Date(string="Date de Clôture")
-
+    duree_contrat = fields.Selection([
+        ('cdi', 'CDI'),
+        ('cdd', 'CDD'),
+        ('stage', 'Stage'),
+        ('alternance', 'Alternance')
+    ], string="Type de contrat", default='cdd')
     # Champs riches avec éditeur HTML
     contexte = fields.Html(string="Contexte")
     description_poste = fields.Html(string="Description du poste")  # déjà existant, mais redéfini ici si besoin
@@ -87,6 +91,7 @@ class WebsiteTraining(models.Model):
     date_start = fields.Date(string='Date de début')
     date_end = fields.Date(string='Date de fin')
     applicant_id = fields.Many2one('hr.applicant', string='Candidat')
+    cout= fields.Float(string='Coût', default=0.0)
     header = fields.Binary(string='Entête de la formation')
     status = fields.Selection([
         ('en_cours', 'En cours'),

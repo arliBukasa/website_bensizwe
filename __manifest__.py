@@ -24,6 +24,7 @@
         "views/forms/website_form_formation.xml",
         "views/forms/ajout_experience_education_langage_templates.xml",
         "views/report_cv_pdf_template.xml",
+        "views/snippets/snippet3collones_dynamic.xml"
     ],
     'assets': {
         'web.assets_frontend': [

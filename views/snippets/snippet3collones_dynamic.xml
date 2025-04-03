@@ -1,0 +1,31 @@
+<odoo>
+  <template id="dynamic_training_snippet" name="Dynamic Training Snippet">
+    <section class="oe_structure pt-16" id="dynamic_training_section">
+      <div class="container">
+        <div class="row pb16 pt16" id="training_cards_container">
+          <!--  Les formations seront injectées ici dynamiquement  -->
+        </div>
+        <!--  Pagination  -->
+        <div class="d-flex justify-content-between mt-4">
+           <a class="carousel-control-prev o_not_editable o_we_no_overlay " id="prev_trainings" data-slide="prev" role="img" aria-label="Précedent" title="Précedent" href="#myCarousel1742908695644">
+            <br/>
+            <span class="carousel-control-prev-icon btn-circle m-arrow-left" style="text-align: center;">
+              <i class="carousel-control-prev-icon" style="margin-top:18px;"/>
+              <br/>
+            </span>
+            <span class="sr-only o_default_snippet_text">Précédent</span>
+          </a>
+          <a class="carousel-control-next o_not_editable o_we_no_overlay" id="next_trainings" data-slide="next" role="img" aria-label="Suivant" title="Suivant" href="#myCarousel1742908695644">
+            <span class="carousel-control-next-icon btn-circle m-arrow-right">
+            <i class="carousel-control-next-icon" style="margin-top:18px;"/>
+            </span>
+            <span class="sr-only o_default_snippet_text">Suivant</span>
+          </a>
+          <!-- <button class="btn btn-outline-primary" id="prev_trainings">Précédent</button>
+          <button class="btn btn-outline-primary" id="next_trainings">Suivant</button> -->
+        </div>
+
+      </div>
+    </section>
+  </template>
+</odoo>

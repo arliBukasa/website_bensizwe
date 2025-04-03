@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <template id="hr_job_detail_inherit" inherit_id="website_hr_recruitment.detail">
     <xpath expr="//section[@class='pb32']" position="after">
@@ -34,4 +35,13 @@
      <!-- Supprime le champ website_description -->
     <xpath expr="//div[@t-field='job.website_description']" position="replace"/>
   </template>
+
+
+  <!-- surcharge du tempplate: website_hr_recruitment.index -->
+  <template id="job_filter_logic" inherit_id="website_hr_recruitment.index">
+    <xpath expr="//div[@id='jobs_grid']" position="replace">
+
+    </xpath>
+  </template>
+  
 </odoo>

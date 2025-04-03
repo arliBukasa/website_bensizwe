@@ -9,6 +9,7 @@
             <tree>
                 <field name="name"/>
                 <field name="description"/>
+                <field name="cout" />
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="applicant_id"/>
@@ -32,6 +33,7 @@
                     <group string="Details">
                         <group>
                             <field name="description"/>
+                            <field name="cout"/>
                             <field name="date_start" class="oe_inline"/>
                             <field name="date_end" class="oe_inline"/>
                         </group>
