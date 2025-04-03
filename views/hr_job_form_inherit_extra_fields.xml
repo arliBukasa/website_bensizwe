@@ -12,6 +12,7 @@
                 <group>
                   <group name="spécificité" string="Spécificité">
                     <field name="department_id"/>
+                    <field name="reference"/>
                     <field name="secteur"/>
                   </group>
                   <group string="Durée et localisation">
