@@ -43,7 +43,7 @@ var DJobs = publicWidget.Widget.extend({
         let html = ``;
         
         data.forEach(jobs => {
-          let dateCloture = new Date(jobs['date_cloture']);
+          const dateCloture = new Date(jobs['date_cloture']);
           let today = new Date();
           let timeDiff = dateCloture - today;
           let daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -65,7 +65,7 @@ var DJobs = publicWidget.Widget.extend({
             <a href="${joburl}" class="col-lg-4 pt-0" data-url="${joburl}">                            
               <div class="row pt-0 s_col_no_resize s_col_no_bgcolor no-gutters rounded o_colored_level align-items-start o_cc o_cc2 pt-0" style="height: 130px; background-color: rgb(245, 242, 242) !important;">
                 <div class="s_media_list_body col-lg-12" style="padding-top: 0px !important;padding-bottom: 0px !important;">
-                  <span class="s_badge badge o_animable" style="background-color:${badgeColor};"><font style="color:rgb(255, 255, 255);">CDI</font></span>
+                  <span class="s_badge badge o_animable" style="background-color:${badgeColor};"><font style="color:rgb(255, 255, 255);">${(jobs['duree_contrat'] || '').toUpperCase()}</font></span>
                   <strong><span style="font-size: 22px;">${jobs['name']}</span></strong>
                   <p>
                     <h6 style="font-size:16px;">📍<strong> ${jobs['localisation']}</strong></h6>

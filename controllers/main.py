@@ -33,7 +33,7 @@ class Main(http.Controller):
     def trainnings(self, **kw):
 
         # afficher les 15 derniers jobs selon la date d'expiration
-        formations = request.env['website.training'].sudo().search([], limit=3)
+        formations = request.env['website.training'].sudo().search([("is_published","=",True)], limit=3)
         liste_formations= []
         if formations:
             for formation in formations:

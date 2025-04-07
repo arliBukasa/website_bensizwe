@@ -6,7 +6,7 @@ class WebsiteTrainingController(http.Controller):
     @http.route(['/formations/liste'], type='json', auth='public', website=True)
     def get_paginated_trainings(self, page=1, per_page=6):
         offset = (page - 1) * per_page
-        trainings = request.env['website.training'].sudo().search([], offset=offset, limit=per_page)
+        trainings = request.env['website.training'].sudo().search([("is_published","=",True)], offset=offset, limit=per_page)
         total = request.env['website.training'].sudo().search_count([])
         values = [{
             'name': t.name,
