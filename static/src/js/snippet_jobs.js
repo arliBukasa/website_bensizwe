@@ -101,7 +101,7 @@ var DJobs = publicWidget.Widget.extend({
                 <div class="s_media_list_body col-lg-8">
                   <h3><strong><span style="font-size: 24px;">${trainings['name']}</span></strong></h3>
                   <p><strong>Du ${trainings['date_start']} au ${trainings['date_end']}</strong></p>
-                  <p><strong><span style="font-size: 24px;"><font class="text-o-color-1">50$</font></span></strong></p>
+                  <p><strong><span style="font-size: 24px;"><font class="text-o-color-1">${trainings['cout']}$</font></span></strong></p>
                 </div>
               </div>
             </a>`;
