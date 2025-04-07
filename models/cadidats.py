@@ -99,7 +99,8 @@ class WebsiteTraining(models.Model):
         ('annule', 'Annulé')
     ], string='Status', default='en_cours')
     candidat_ids = fields.One2many('website.user', 'training_ids', string='Candidats', store=True)
-
+    is_published = fields.Boolean(string='Publié', default=False)
+   
     @api.model
     def create(self, vals):
         record = super().create(vals)

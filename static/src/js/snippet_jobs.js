@@ -14,37 +14,63 @@ var DJobs = publicWidget.Widget.extend({
     if (!document.querySelector('#formationModal')) {
       let modalWrapper = document.createElement('div');
       modalWrapper.innerHTML = `
-<!-- Modal pour les formations -->
-<div class="modal fade" id="formationModal" tabindex="-1" role="dialog" aria-labelledby="formationModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formationModalLabel">Détail de la formation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body" id="formationModalBody">Chargement...</div>
-    </div>
-  </div>
-</div>`;
+      <!-- Modal pour les formations -->
+      <div class="modal fade" id="formationModal" tabindex="-1" role="dialog" aria-labelledby="formationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="formationModalLabel">Détail de la formation</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body" id="formationModalBody">Chargement...</div>
+          </div>
+        </div>
+      </div>`;
       document.body.appendChild(modalWrapper);
     }
-
+    let formatDateDMY=function(dateStr) {
+      const date = new Date(dateStr);
+      if (isNaN(date)) return ''; // Gérer les erreurs
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
     let jobrow = this.el.querySelector('#rows_job')
     let formations = this.el.querySelector('#rows_trainning')
     if (jobrow) {
       this._rpc({ route: '/jobs_row/', params: {} }).then(data => {
         let html = ``;
+        
         data.forEach(jobs => {
+          let dateCloture = new Date(jobs['date_cloture']);
+          let today = new Date();
+          let timeDiff = dateCloture - today;
+          let daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          let joburl = jobs['url'];
+          let badgeColor = 'rgb(3, 252, 20)';
+          if (daysRemaining < 0) {
+            badgeColor = 'red';
+            joburl = '#';
+          } else if (daysRemaining <= 7) {
+            badgeColor = 'orange';
+          }
+          //console.log: dateCloture, today, timeDiff, daysRemaining
+          console.log( ` dateCloture: ${dateCloture}`);
+          console.log( ` today: ${today}`);
+          console.log(` timedif: ${timeDiff}`);
+          console.log(` days remaining: ${daysRemaining}`);
+          console.log(` badgecolor: ${badgeColor}`);
           html += `
-            <a href="${jobs['url']}" class="col-lg-4 pt-0" data-url="${jobs['url']}">                            
+            <a href="${joburl}" class="col-lg-4 pt-0" data-url="${joburl}">                            
               <div class="row pt-0 s_col_no_resize s_col_no_bgcolor no-gutters rounded o_colored_level align-items-start o_cc o_cc2 pt-0" style="height: 130px; background-color: rgb(245, 242, 242) !important;">
                 <div class="s_media_list_body col-lg-12" style="padding-top: 0px !important;padding-bottom: 0px !important;">
-                  <span class="s_badge badge o_animable" style="background-color: rgb(3, 252, 20);"><font style="color:rgb(255, 255, 255);">CDI</font></span>
+                  <span class="s_badge badge o_animable" style="background-color:${badgeColor};"><font style="color:rgb(255, 255, 255);">CDI</font></span>
                   <strong><span style="font-size: 22px;">${jobs['name']}</span></strong>
                   <p>
                     <h6 style="font-size:16px;">📍<strong> ${jobs['localisation']}</strong></h6>
                     <h6 style="font-size:14px;">🕒 <strong>Publié le ${jobs['write_date']}</strong></h6>
-                    <h6 style="font-size:14px;">🕒<strong>Date de clôture: ${jobs['date_cloture']}</strong></h6>
+                    <h6 style="font-size:14px;">🕒<strong>Date de clôture: ${formatDateDMY(jobs['date_cloture'])}</strong></h6>
                   </p>
                   <div class="s_hr text-left pt0 pb8">
                     <hr class="mx-auto w-100" style="border-top: 1px solid rgb(8, 82, 148);" />
@@ -113,6 +139,7 @@ var DJobs = publicWidget.Widget.extend({
       window.location.href = ev.target.dataset.url;
     }
   },
+  
 
 });
 

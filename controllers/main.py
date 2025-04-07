@@ -25,7 +25,7 @@ class Main(http.Controller):
             'localisation': j.localisation if j.localisation else '',
             'description': j.description,
             'write_date': j.write_date.strftime('%d/%m/%Y'),
-            'date_cloture': j.date_cloture.strftime('%d/%m/%Y') if j.date_cloture else '',
+            'date_cloture':j.date_cloture.isoformat() if j.date_cloture else '',
             'duree_contrat': j.duree_contrat or 'N/A'
         } for j in jobs]
 
@@ -46,6 +46,8 @@ class Main(http.Controller):
                     'date_end': formation.date_end,
                     'header': formation.header,
                     'status': formation.status,
+                    'cout': formation.cout,
+                    'is_published': formation.is_published,
                     'url': '/formation/inscription/' + str(formation.id)                   
                 }
                 liste_formations.append(formation_data)

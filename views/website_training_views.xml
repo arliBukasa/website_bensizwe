@@ -13,6 +13,7 @@
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="applicant_id"/>
+                <field name="is_published"/>
             </tree>
         </field>
     </record>
@@ -38,6 +39,7 @@
                             <field name="date_end" class="oe_inline"/>
                         </group>
                         <group>
+                            <field name="is_published"/>
                             <field name="applicant_id"/>
                             <field name="header" widget="image" class="oe_avatar" options="{'preview_image': 'header'}"/>
                         </group>
