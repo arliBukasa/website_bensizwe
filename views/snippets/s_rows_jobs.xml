@@ -1,37 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <template id="snippet_jobs_rows" name="Jobs Rows">
-      <section class="s_media_list o_colored_level pt64 o_cc o_cc1 pb24" data-vcss="001" data-snippet="s_media_list" data-name="Media List" style="background-image: none;" data-original-title="" title="" aria-describedby="tooltip944644">
-        <div class="row s_row_jobs">
-          <div class="container o_colored_level col-lg-5 offset-lg-1 rounded o_cc o_cc2" style="border-radius: 10px !important; background-color: rgb(245, 242, 242) !important;">
-            <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
-              <!-- offres à ajouter -->
-                  <div class="s_media_list_item pb0 col-lg-12 pt0" data-name="Media item" id="rows_job">
-                        <!-- ici les offres vont être inserés -->
-                  </div>
-              <!-- offres à ajouter -->
+    <section class="s_media_list o_colored_level pt64 o_cc o_cc1 pb24" data-vcss="001" data-snippet="s_media_list" data-name="Media List" style="background-image: none;" data-original-title="" title="" aria-describedby="tooltip944644">
+      <div class="row s_row_jobs">
+        <div class="container o_colored_level col-lg-5 offset-lg-1 rounded o_cc o_cc2" style="border-radius: 10px !important; background-color: rgb(245, 242, 242) !important;">
+          <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
+            <!-- offres à ajouter -->
+            <div class="s_media_list_item pb0 col-lg-12 pt0" data-name="Media item" id="rows_job">
+              <!-- ici les offres vont être inserés -->
             </div>
+            <!-- offres à ajouter -->
           </div>
-          <div class="container o_colored_level col-lg-5" style="" data-original-title="" title="" aria-describedby="tooltip537086">
-            <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
-			<!-- formations -->
-              <div class="s_media_list_item pb16 col-lg-12 pt4" data-name="Media item" id="rows_trainning">
-                <!-- ici les formations vont être insérés -->
+        </div>
+        <div class="container o_colored_level col-lg-5" style="" data-original-title="" title="" aria-describedby="tooltip537086">
+          <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
+            <!-- formations -->
+            <div class="s_media_list_item pb16 col-lg-12 pt4" data-name="Media item" id="rows_trainning">
+              <!-- ici les formations vont être insérés -->
+            </div>
+            <!-- formations -->
+            <div>
+              <div class="o_colored_level col-lg-5 offset-lg-1 pt16">
+                <h2 style="text-align: left;">
+                  <strong>
+                    <font class="text-o-color-2">Offres d'Emplois</font>
+                  </strong>
+                </h2>
               </div>
-			  <!-- formations -->
-                  <div>
-                 <div class="o_colored_level col-lg-5 offset-lg-1 pt16">
-                    <h2 style="text-align: left;">
-                      <strong>
-                        <font class="text-o-color-2">Offres d'Emplois</font>
-                      </strong>
-                    </h2>
-                  </div>
-                  </div>
             </div>
           </div>
         </div>
-  </section>
+      </div>
+    </section>
+  </template>
+  <template id="dynamic_job_filter_snippet" name="Snippet Filtres Métiers / Localisations / Contrats">
+    <section class="oe_structure mt-4" id="job_filter_bar">
+      <div class="container">
+        <div class="text-monospace pt8" style="border-radius:45px;">
+          <div class="o_colored_level pb0 pt0 o_cc o_cc1" style="border-radius:45px;padding-right:0px;">
+            <div class="row" style="height:75px;">
+              <!--  Métier  -->
+              <div class="s_col_no_bgcolor text-center pt0 pb0 col-lg-3" style="height:75px;">
+                <div class="card" style="border-radius: 40px !important; max-height:75px;">
+                  <div class="card-body text-center">
+                    <h4 class="card-title">
+                      <a href="#" data-filter="job">
+                        <strong>
+                          <span class="s_comparisons_currency">
+                            <i class="fa fa-search-plus"/>
+Métier
+                          </span>
+                        </strong>
+                      </a>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+              <!--  Localisation (dropdown dynamique)  -->
+              <div class="s_col_no_bgcolor text-center pt0 pb0 col-lg-3" style="height:75px;">
+                <div class="card dropdown" style="max-height:75px;">
+                  <div class="card-body">
+                    <button class="btn btn-link dropdown-toggle text-dark p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <strong>Localisation</strong>
+                    </button>
+                    <ul class="dropdown-menu text-start">
+                      <li>
+                        <a class="dropdown-item" href="/jobs">Toutes les localisations</a>
+                      </li>
+                      <t t-foreach="offices" t-as="office">
+                        <li>
+                          <a class="dropdown-item" t-attf-href="/jobs/office/#{ office.id }">
+                            <t t-esc="office.city"/>
+                            <t t-if="office.country_id">
+,
+                              <t t-esc="office.country_id.name"/>
+                            </t>
+                          </a>
+                        </li>
+                      </t>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <!--  Type de contrat  -->
+              <div class="s_col_no_bgcolor text-center pt0 pb0 col-lg-3" style="height:75px;">
+                <div class="card" style="max-height:75px;">
+                  <div class="card-body text-center">
+                    <h4 class="card-title">
+                      <a href="#" data-filter="contract">
+                        <strong>
+                          <span>Type de contrat</span>
+                          <span class="s_comparisons_currency">
+                            <i class="fa fa-sort-down"/>
+                          </span>
+                        </strong>
+                      </a>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+              <!--  Rechercher  -->
+              <div class="text-center pt0 pb0 col-lg-3" style="height:75px; max-height:75px;">
+                <div class="card rounded" style="border-radius: 40px !important; max-height:75px; background-color:#04A1D0; border: solid 2px #04A1D0;">
+                  <div class="card-body text-center" style="background-color:#04A1D0;">
+                    <h4 class="card-title">
+                      <a href="/jobs" class="text-white">
+                        <strong>
+                          <span class="s_comparisons_currency">Recherchez</span>
+                        </strong>
+                      </a>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </template>
 
-</odoo>
+  </odoo>

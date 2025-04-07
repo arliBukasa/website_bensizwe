@@ -10,25 +10,24 @@ from datetime import datetime as dt
 
 
 class Main(http.Controller):
-    @http.route('/jobs_row', type='json', auth='public')
-    def list(self, **kw):
 
-        # afficher les 15 derniers jobs selon la date d'expiration
-        jobs = request.env['hr.job'].sudo().search([("website_published","=",True)], limit=15, order='write_date desc')
-        row_jobs = []
-        if jobs:
-            for job in jobs:
-                # get the job's datas
-                job_data = {
-                    'id': job.id,
-                    'name': job.name,
-                    'description': job.description,
-                    'location': job.address_id.name,
-                    'write_date': job.write_date,
-                    'url': job.website_url
-                }
-                row_jobs.append(job_data)
-        return row_jobs
+    @http.route('/jobs_row/', type='json', auth='public')
+    def jobs_row(self, search=None, duree_contrat=None):
+        domain = [("website_published","=",True)]
+        if search:
+            domain.append(('name', 'ilike', search))
+        if duree_contrat:
+            domain.append(('duree_contrat', '=',duree_contrat))
+        jobs = request.env['hr.job'].sudo().search(domain, limit=15, order='write_date desc')
+        return [{
+            'name': j.name,
+            'url': j.website_url,
+            'localisation': j.localisation if j.localisation else '',
+            'description': j.description,
+            'write_date': j.write_date.strftime('%d/%m/%Y'),
+            'date_cloture': j.date_cloture.strftime('%d/%m/%Y') if j.date_cloture else '',
+            'duree_contrat': j.duree_contrat or 'N/A'
+        } for j in jobs]
 
     @http.route('/training_row', type='json', auth='public')
     def trainnings(self, **kw):
@@ -88,7 +87,15 @@ class Main(http.Controller):
             })
         return request.redirect('/candidat/login')
     
-    
+    """@http.route('/', type='http', auth='public', website=True)
+    def homepage(self, **kwargs):
+        jobs = request.env['hr.job'].sudo().search([], limit=6, order='create_date desc')
+        formations = request.env['website.formation'].sudo().search([], limit=6, order='create_date desc')
+
+        return request.render('website.homepage1', {
+            'jobs': jobs,
+            'formations': formations
+        }) """
     
     @http.route('/jobs_row_out', type='json', auth='public')
     def list_out(self, **kw):

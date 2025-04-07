@@ -17,6 +17,9 @@
                             <t t-snippet="website_bensizwe.dynamic_training_snippet" t-thumbnail="/website_bensizwe/static/src/img/jobs.svg">
                                 <keywords>Snippet</keywords>
                             </t>
+                            <t t-snippet="website_bensizwe.dynamic_job_filter_snippet" t-thumbnail="/website_bensizwe/static/src/img/jobs.svg">
+                                <keywords>Snippet</keywords>
+                            </t>
                         </div>
                     </div>
                 </t>

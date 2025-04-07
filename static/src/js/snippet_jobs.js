@@ -42,9 +42,9 @@ var DJobs = publicWidget.Widget.extend({
                   <span class="s_badge badge o_animable" style="background-color: rgb(3, 252, 20);"><font style="color:rgb(255, 255, 255);">CDI</font></span>
                   <strong><span style="font-size: 22px;">${jobs['name']}</span></strong>
                   <p>
-                    <h6 style="font-size:16px;">📍<strong> ${jobs['location']}</strong></h6>
+                    <h6 style="font-size:16px;">📍<strong> ${jobs['localisation']}</strong></h6>
                     <h6 style="font-size:14px;">🕒 <strong>Publié le ${jobs['write_date']}</strong></h6>
-                    <h6 style="font-size:14px;">🕒<strong>Date de clôture: 16/12/2024</strong></h6>
+                    <h6 style="font-size:14px;">🕒<strong>Date de clôture: ${jobs['date_cloture']}</strong></h6>
                   </p>
                   <div class="s_hr text-left pt0 pb8">
                     <hr class="mx-auto w-100" style="border-top: 1px solid rgb(8, 82, 148);" />
