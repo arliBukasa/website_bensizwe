@@ -15,6 +15,8 @@ class WebsiteTrainingController(http.Controller):
             'date_end': t.date_end,
             'cout': t.cout,
             'status': t.status,
+            'header': t.header,
+            'image': t.image,
             'id': t.id,
         } for t in trainings]
         return {

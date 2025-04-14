@@ -100,7 +100,8 @@ class WebsiteTraining(models.Model):
     ], string='Status', default='en_cours')
     candidat_ids = fields.One2many('website.user', 'training_ids', string='Candidats', store=True)
     is_published = fields.Boolean(string='Publié', default=False)
-   
+    image = fields.Image(string="Image", max_width=1024, max_height=1024)
+
     @api.model
     def create(self, vals):
         record = super().create(vals)
@@ -113,15 +114,21 @@ class WebsiteTraining(models.Model):
         if 'header' in vals:
             self._set_header_public()
         return res
+        # force tous les attaches a header avec _force_public_url()
+        for record in self.env['ir.attachment'].search([]):
+            record_set_header_public()
 
     def _set_header_public(self):
-        self.ensure_one()
-        if self.header:
-            self.env['ir.attachment'].sudo().search([
-                ('res_model', '=', self._name),
-                ('res_id', '=', self.id),
+        for rec in self:
+            attachment = self.env['ir.attachment'].sudo().search([
+                ('res_model', '=', 'website.training'),
+                ('res_id', '=', rec.id),
                 ('res_field', '=', 'header')
-            ]).write({'public': True})
+            ], limit=1)
+            if attachment:
+                attachment.write({'public': True})
+                # Construction manuelle de l'URL
+                attachment.url = f'/web/image/{attachment.res_model}/{attachment.res_id}/{attachment.res_field}'
 
 class WebsiteUser(models.Model):
     _name = 'website.user'

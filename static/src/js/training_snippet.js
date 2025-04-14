@@ -35,13 +35,18 @@ odoo.define('website_training.snippet', function (require) {
                     const card = $(`
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm">
-                                <img class="card-img-top" src="/web/image/website.training/${training.id}/header" alt="${training.name}" style="height: 200px; object-fit: cover;">
+                                <img class="card-img-top  w-100 h-100" src="data:image/png;base64,${training.header}" alt="${training.name}" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>
                                 <div class="card-body" style="text-align: center;">
                                     <h4 class="card-title text-o-color-2"><strong>${training.name}</strong></h4>
                                     <p class="card-text text-muted small text-600">
                                        <strong> Du ${training.date_start || ''} au ${training.date_end || ''}  </strong>
                                     </p>
-                                    <p class="card-text"><h4><strong class="text-o-color-2">${training.cout || ''}$</strong></h4></p>
+                                    <p class="card-text">
+                                        <h4>
+                                            <strong class="text-o-color-2">${training.cout || ''}$
+                                            </strong>
+                                        </h4>
+                                    </p>
                                 </div>
                             </div>
                         </div>
