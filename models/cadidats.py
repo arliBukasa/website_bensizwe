@@ -116,7 +116,7 @@ class WebsiteTraining(models.Model):
         return res
         # force tous les attaches a header avec _force_public_url()
         for record in self.env['ir.attachment'].search([]):
-            record_set_header_public()
+            record._set_header_public()
 
     def _set_header_public(self):
         for rec in self:
