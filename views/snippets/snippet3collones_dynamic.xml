@@ -7,7 +7,7 @@
         </div>
         <!--  Pagination  -->
         <div class="d-flex justify-content-between mt-4">
-           <a class="carousel-control-prev o_not_editable o_we_no_overlay " id="prev_trainings" data-slide="prev" role="img" aria-label="Précedent" title="Précedent" href="#myCarousel1742908695644">
+          <a class="carousel-control-prev o_not_editable o_we_no_overlay " id="prev_trainings" data-slide="prev" role="img" aria-label="Précedent" title="Précedent" href="#myCarousel1742908695644">
             <br/>
             <span class="carousel-control-prev-icon btn-circle m-arrow-left" style="text-align: center;">
               <i class="carousel-control-prev-icon" style="margin-top:18px;"/>
@@ -17,7 +17,7 @@
           </a>
           <a class="carousel-control-next o_not_editable o_we_no_overlay" id="next_trainings" data-slide="next" role="img" aria-label="Suivant" title="Suivant" href="#myCarousel1742908695644">
             <span class="carousel-control-next-icon btn-circle m-arrow-right">
-            <i class="carousel-control-next-icon" style="margin-top:18px;"/>
+              <i class="carousel-control-next-icon" style="margin-top:18px;"/>
             </span>
             <span class="sr-only o_default_snippet_text">Suivant</span>
           </a>
