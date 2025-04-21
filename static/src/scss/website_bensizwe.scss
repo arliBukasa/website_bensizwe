@@ -68,4 +68,25 @@
       transform: translateY(0);
     }
   }
+  // centrer la pagination
+  .pagination {
+    display: flex;
+    justify-content: center;
+  }
+  #pagination_container {
+    display: flex;
+    justify-content: center;
+  }
   
+  // poste resposive pour le span dans h6
+  @media (max-width: 768px) {
+    .detail_post span {
+      display: block;
+      margin-top: 5px;
+      font-size: 9px !important;
+    }
+    .detail_post img {
+      width: 6px !important;
+    }
+    
+  }

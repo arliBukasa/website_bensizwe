@@ -68,9 +68,9 @@ var DJobs = publicWidget.Widget.extend({
                   </span>
                   <strong><span style="font-size: 22px;">${jobs['name']}</span></strong>
                 </h6>
-                <p>
+                <p class="detail_post">
                   <h6>
-                    <div class="d-flex justify-content-between small mt-1" style="margin-right: 10%;">
+                    <div class="d-flex justify-content-between small mt-1 detail_post" style="margin-right: 10%;">
                       <strong><span style="font-size:20px;"><img src="/website_bensizwe/static/src/img/icons/location-dot-solid.svg" width="14" style="margin-right:4px;"/>${jobs['localisation']}</span></strong>
                       <strong><span style="font-size:18px;"><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="14" style="margin-right:4px;"/> Publié le ${jobs['write_date']}</span></strong>
                       <strong><span style="font-size:18px;"><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="14" style="margin-right:4px;"/> Échéance: ${formatDateDMY(jobs['date_cloture'])}</span></strong>
