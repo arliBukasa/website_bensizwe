@@ -12,7 +12,7 @@ var DJobs = publicWidget.Widget.extend({
 
   start() {
     this.currentPage = 1;
-    this.jobsPerPage = 2;
+    this.jobsPerPage = 12;
     this.totalJobs = 0;
     this.totalPages = 0;
     this._loadJobs();
