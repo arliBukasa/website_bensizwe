@@ -60,7 +60,7 @@ var DJobs = publicWidget.Widget.extend({
         html += `
           <a href="${joburl}" class="d-block w-100" data-url="${joburl}" style="margin: 15px; padding: 0;margin-bottom: 10px;">
             <div class="row s_col_no_resize s_col_no_bgcolor no-gutters rounded o_colored_level align-items-start o_cc o_cc2"
-                style="background-color: rgb(245, 242, 242); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 8px 0;">
+                style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 8px 0;">
               <div class="s_media_list_body col-12 custom-job-card " style="padding: 0;padding-left: 5px;">
                 <h6 style="font-size: 22px;">
                   <span class="s_badge badge o_animable" style="background-color:${badgeColor};">
@@ -134,7 +134,7 @@ var DJobs = publicWidget.Widget.extend({
             data-date-start="${trainings['date_start']}"
             data-date-end="${trainings['date_end']}"
             data-url="${trainings['url']}">
-            <div class="row s_col_no_resize s_col_no_bgcolor no-gutters o_cc o_cc1 rounded o_colored_level align-items-top" style="background-color: rgb(245, 242, 242); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 0px 0;align-items:top !important;margin:15px;">
+            <div class="row s_col_no_resize s_col_no_bgcolor no-gutters o_cc o_cc1 rounded o_colored_level align-items-top" style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 0px 0;align-items:top !important;margin:15px;">
               <div class="align-self-stretch s_media_list_img_wrapper col-lg-3" style ="">
                 <img src="data:image/png;base64,${trainings['header']}" class="s_media_list_img w-100 h-auto" loading="lazy" style =""/>
               </div>
