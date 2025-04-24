@@ -34,6 +34,7 @@ odoo.define('website_training.snippet', function (require) {
                 data.trainings.forEach((training) => {
                     const card = $(`
                         <div class="col-md-4 mb-4">
+                            <a href="/${training.url}" class="text-decoration-none">
                             <div class="card h-100 shadow-sm">
                                 <img class="card-img-top  w-100 h-100" src="data:image/png;base64,${training.header}" alt="${training.name}" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>
                                 <div class="card-body" style="text-align: center;">
@@ -49,6 +50,7 @@ odoo.define('website_training.snippet', function (require) {
                                     </p>
                                 </div>
                             </div>
+                            </a>
                         </div>
                     `);
                     container.append(card);
