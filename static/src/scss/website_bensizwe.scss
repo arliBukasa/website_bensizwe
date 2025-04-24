@@ -80,6 +80,9 @@
   
   // poste resposive pour le span dans h6
   @media (max-width: 768px) {
+    .s_row_jobs h6{
+      font-size: 16px;
+    }
     .detail_post span {
       display: block;
       margin-top: 5px;
@@ -88,5 +91,16 @@
     .detail_post img {
       width: 6px !important;
     }
+
+  }
+  @media screen and (min-width: 992px) {
+    #job_time_location {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      margin-right:10% ;
+    }
     
   }
+  // poste resposive h6
