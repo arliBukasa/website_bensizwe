@@ -28,6 +28,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            'website_bensizwe/static/src/img/accueil.png',
             'website_bensizwe/static/src/scss/*.scss',
             'website_bensizwe/static/src/js/*.js',
             'website_bensizwe/static/src/img/icons/*.svg',
