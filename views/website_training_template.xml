@@ -2,85 +2,102 @@
     <data>
         <template id="inscription_formation" name="Inscription Formation">
             <t t-call="website.layout">
-                <div class="container">
-
+                <div id="wrap" class="oe_structure oe_empty">
                     <!-- HEADER IMAGE -->
-                    <div class="mb-4 text-center">
-                        <t t-if="formation.header">
-                            <!-- <img src="/web/image/website_bensizwe/static/src/img/jobs.svg" class="img-fluid rounded" style="max-height: 300px;" />
-                            <img t-att-src="'/web/image/website.training/{}/header' .format(formation.id)" class="img-fluid rounded" style="max-height: 300px;" /> -->
-                        </t>
-                        <t t-else="">
-                            <img src="/web/image/website_bensizwe/static/src/img/jobs.svg" class="img-fluid rounded" style="max-height: 300px;" />
-
-                        </t>
-                    </div>
-                    <!-- INFOS FORMATION -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h2 class="card-title text-primary">
-                                <t t-esc="formation.name" />
-                            </h2>
-                            <p class="card-text">
-                                <t t-esc="formation.description" />
+                    <section class="s_text_block o_colored_level o_cc o_cc3 pb4 pt16" style="background-image: none;">
+                        <div class="s_allow_columns container">
+                            <p style="text-align: left;">
+                                <strong>
+                                    <span style="font-size: 36px;">
+                                        <t t-esc="formation.name"/>
+                                    </span>
+                                </strong>
                             </p>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <strong>📅 Dates :</strong> du <t t-esc="formation.date_start"/>
-                                        au <t t-esc="formation.date_end"/>
-                            </li>
-                            <li>
-                                <strong>🎯 Statut :</strong>
-                                <t t-esc="formation.status"/>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-                <!-- INFOS CANDIDAT -->
-                <t t-if="candidat.user_id.id != website.user_id.id">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5>👤 Vos informations</h5>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <strong>Nom :</strong>
-                                    <t t-esc="candidat.name"/>
-                                </li>
-                                <li>
-                                    <strong>Email :</strong>
-                                    <t t-esc="candidat.email"/>
-                                </li>
-                                <li>
-                                    <strong>Téléphone :</strong>
-                                    <t t-esc="candidat.phone"/>
-                                </li>
-                            </ul>
+                            <p style="text-align: left; color: rgb(77, 213, 254);">
+                                Du <t t-esc="formation.date_start"/> au <t t-esc="formation.date_end"/>
+                            </p>
+                            <p style="text-align: left;">
+                                <t t-esc="formation.cout"/> $
+                            </p>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- CTA BUTTON CONNECTÉ -->
-                    <div class="text-center mb-5">
-                        <a t-attf-href="/formation/valider_inscription/{{ formation.id }}" class="btn btn-success btn-lg">
-      ✅ S'inscrire à cette formation
-                        </a>
-                    </div>
-                </t>
+                    <!-- CONTENU FORMATION -->
+                    <section class="s_text_image o_colored_level pb0 pt40" style="background-image: none;">
+                        <div class="container">
+                            <div class="row align-items-start">
+                                <!-- DESCRIPTION -->
+                                <div class="pt16 pb0 col-lg-7">
+                                    <h3>
+                                        <strong>
+                                            <span style="font-size: 44px;">Ce que vous allez apprendre</span>
+                                        </strong>
+                                    </h3>
+                                    <div style="margin:20px; padding:20px; border-radius:15px; border:2px solid rgb(168, 164, 164);">
+                                        <strong>
+                                            <span style="font-size: 18px;">
+                                                <t t-raw="formation.description"/>
+                                            </span>
+                                        </strong>
+                                    </div>
+                                </div>
 
-                <!-- ALERTE NON CONNECTÉ -->
-                <t t-else="">
-                    <div class="alert alert-warning text-center" role="alert">
-    ⚠️ Vous n'êtes pas connecté. Veuillez créer un compte pour vous inscrire à cette formation.
-                    </div>
+                                <!-- CARTE FORMATION -->
+                                <div class="pb0 pt0 col-lg-4" style="border-color: rgb(168, 164, 164);">
+                                    <div class="col-md-12 mb-4 text-center">
+                                        <a t-att-href="'/formation/inscription/%s' % formation.id" class="text-decoration-none" style="width: 100%;">
+                                            <div class="card shadow-sm">
+                                                <img class="card-img-top w-100" t-att-src="formation.header or ''" alt="Image formation" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>
+                                                <div class="card-body text-center">
+                                                    <h4 class="card-title text-o-color-2">
+                                                        <strong><t t-esc="formation.name"/></strong>
+                                                    </h4>
+                                                    <p class="card-text text-muted small text-600">
+                                                        <strong>Du <t t-esc="formation.date_start"/> au <t t-esc="formation.date_end"/></strong>
+                                                    </p>
+                                                    <h4>
+                                                        <strong class="text-o-color-2">
+                                                            <t t-esc="formation.cout"/> $
+                                                        </strong>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="text-center mb-5">
-                        <a href="/candidat/signup" class="btn btn-primary btn-lg">
-      Créer un compte et s'inscrire
-                        </a>
-                    </div>
-                </t>
-            </div>
-        </t>
-    </template>
-</data>
+                            <!-- BOUTONS CAROUSEL -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a class="carousel-control-prev o_not_editable o_we_no_overlay"
+                                   id="prev_trainings"
+                                   data-bs-slide="prev"
+                                   role="img"
+                                   aria-label="Précédent"
+                                   title="Précédent"
+                                   href="#myCarousel1742908695644">
+                                    <span class="carousel-control-prev-icon btn-circle m-arrow-left" style="text-align: center;">
+                                        <i class="carousel-control-prev-icon" style="margin-top:18px;"></i>
+                                    </span>
+                                    <span class="sr-only o_default_snippet_text">Précédent</span>
+                                </a>
+                                <a class="carousel-control-next o_not_editable o_we_no_overlay"
+                                   id="next_trainings"
+                                   data-bs-slide="next"
+                                   role="img"
+                                   aria-label="Suivant"
+                                   title="Suivant"
+                                   href="#myCarousel1742908695644">
+                                    <span class="carousel-control-next-icon btn-circle m-arrow-right">
+                                        <i class="carousel-control-next-icon" style="margin-top:18px;"></i>
+                                    </span>
+                                    <span class="sr-only o_default_snippet_text">Suivant</span>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+    </data>
 </odoo>

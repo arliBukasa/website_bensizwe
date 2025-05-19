@@ -130,7 +130,6 @@ var DJobs = publicWidget.Widget.extend({
         formationhtml += `
           <a href="/${trainings['url']}" class="col-lg-4"
             data-name="${trainings['name']}"
-            data-description="${trainings['description']}"
             data-date-start="${trainings['date_start']}"
             data-date-end="${trainings['date_end']}"
             data-url="${trainings['url']}">
@@ -140,11 +139,12 @@ var DJobs = publicWidget.Widget.extend({
               </div>
               <div class="col-lg-8 tranning-time" style="items-align: top;padding-left: 15px; margin-left: 5px;">
                 <p class="" style ="margin-bottom: 0px;padding-top:15px;">
-                <strong><span style="font-size: 20px;color:#444444">${trainings['name']}</span></strong>
+                  <strong><span style="font-size: 20px;color:#444444">${trainings['name']}</span></strong>
                 </p>
                 <p class="col" style="margin: 0;padding: 0;">
-                <span><strong style="color:#767373">Du ${trainings['date_start']} au ${trainings['date_end']}</strong></span><br/> 
-                <strong><span style="font-size: 24px;"><font class="text-o-color-1">${trainings['cout']}$</font></span></strong></p>
+                  <span><strong style="color:#767373">Du ${trainings['date_start']} au ${trainings['date_end']}</strong></span><br/> 
+                  <strong><span style="font-size: 24px;"><font class="text-o-color-1">${trainings['cout']}$</font></span></strong>
+                </p>
                 </p>
               </div>
             </div>
