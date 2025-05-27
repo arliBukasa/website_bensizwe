@@ -150,7 +150,10 @@ var DJobs = publicWidget.Widget.extend({
             </div>
           </a>`;
       });
-      formations.innerHTML = formationhtml;
+      formations.innerHTML = formationhtml+ `<a class="btn btn-custom bg-o-color-2 rounded-circle" href="/academy-1" style="border-width: 1px; border-style: solid; color: rgb(245, 242, 242);" data-original-title="" title="">
+                                                      Decouvrir Bensizwe Academy   
+                                                  <span class="fa fa-angle-double-right">​</span>
+                                              </a>`;
     });
   },
 
