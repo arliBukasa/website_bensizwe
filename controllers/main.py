@@ -33,8 +33,10 @@ class Main(http.Controller):
     def trainnings(self, **kw):
 
         # afficher les 15 derniers jobs selon la date d'expiration
-        formations = request.env['website.training'].sudo().search([("is_published","=",True)], limit=3)
+        formations = request.env['website.training'].sudo().search([], limit=5, order='date_start desc')
         liste_formations= []
+        #get the base url
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if formations:
             for formation in formations:
                 # get the job's datas
@@ -48,7 +50,7 @@ class Main(http.Controller):
                     'status': formation.status,
                     'cout': formation.cout,
                     'is_published': formation.is_published,
-                    'url': '/formation/inscription/' + str(formation.id)                   
+                    'url': base_url+'/formation/inscription/' + str(formation.id)                   
                 }
                 liste_formations.append(formation_data)
         return liste_formations
@@ -57,6 +59,8 @@ class Main(http.Controller):
     @http.route('/formation/inscription/<int:id>', type='http', auth='public', website=True)
     def inscription_formation(self, id, **kw):
         formation = request.env['website.training'].sudo().search([('id', '=', id)])
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        #formation.url=base_url+"/formation/inscription/"+str(id)
         candidat = request.env['website.user'].sudo().search([('user_id', '=', request.env.user.id)])
         if not candidat:
             candidat = request.env['website.user'].sudo().create({

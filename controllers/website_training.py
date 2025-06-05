@@ -10,8 +10,9 @@ class WebsiteTrainingController(http.Controller):
         trainings = request.env['website.training'].sudo().search([("is_published","=",True)], offset=offset, limit=per_page)
         total = request.env['website.training'].sudo().search_count([])
         # get the website domain
-        domain = request.httprequest.host_url
-        logging.info(f"================ Domain: {domain}")
+        #get the base url
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        logging.info(f"================ Domain: {base_url}")
         values = [{
             'name': t.name,
             'description': t.description,
@@ -21,7 +22,10 @@ class WebsiteTrainingController(http.Controller):
             'status': t.status,
             'header': t.header,
             'image': t.image,
-            'url': '/formation/inscription/' + str(t.id),
+            # create url from domain
+            
+
+            'url':'/formation/inscription/' + str(t.id),
             'id': t.id,
         } for t in trainings]
         return {

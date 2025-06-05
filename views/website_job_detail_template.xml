@@ -1,33 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <template id="hr_job_detail_inherit" inherit_id="website_hr_recruitment.detail">
-    <xpath expr="//section[@class='pb32']" position="after">
 
+
+  <!-- Remplacer le bouton du haut -->
+  <xpath expr="//section[@class='pb32']/div/div[@class='mt32']/div[@class='float-right']" position="replace">
+    <!-- <t t-set="today0" t-value="datetime.date.today()"/>
+     <t t-if="job.date_cloture and job.date_cloture >= today0">
+      <div class="float-right">
+        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-right">Postulez!</a>
+      </div>
+    </t> -->
+  </xpath>
+
+  <!-- Remplacer le bouton du bas -->
+  <xpath expr="//section[@class='o_job_bottom_bar mt32 mb32']/div" position="replace">
+    <t t-set="today" t-value="datetime.date.today()"/>
+    <t t-if="job.date_cloture and job.date_cloture >= today">
+      <div class="text-center">
+        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Postulez!</a>
+      </div>
+    </t>
+  </xpath>
+  <xpath expr="//div[@id='wrap']" position="before">
+    <!-- Bannière personnalisée -->
+    <section class="pt48 bg-200 o_colored_level pb208 oe_img_bg o_bg_img_center"
+          style="background-image: url('/website_bensizwe/static/src/img/Recrutement.png'); position: relative;">
+          <div class="container">
+              <div class="row" style="margin-left: 20px;">
+                  <div class="text-center o_colored_level pb16 col-lg-7">
+                      <h2 class="h1 text-secondary" style="text-align: left;">
+                          <strong>
+                              <font class="text-o-color-1">Portail des offres d'emplois</font>
+                          </strong>
+                      </h2>
+                      <h3 class="text-muted" style="text-align: left;">
+                          <font class="text-o-color-4">
+                              <span style="font-size: 18px;">
+                                  Bensizwe donne des opportunités d'emplois équitables à tous les candidats et à tous les genres sans exception.
+                              </span>
+                          </font>
+                      </h3>
+                  </div>
+              </div>
+          </div>
+    </section>
+
+  </xpath>
+  <xpath expr="//h1[@t-field='job.name']" position="replace">
+    
+
+  </xpath>
+    <xpath expr="//section[@class='pb32']" position="after">
+    <section class="s_section my-1">
+        <div class="container">
+          <div style="border-radius: 13px; box-shadow: -1px 11px 22px 15px #00000026; background-color: #ffffff; padding: 20px;">
+            <div class="row align-items-center">
+              
+              <!-- Colonne image -->
+              <div class="col-md-6 text-center">
+                <img src="/website_bensizwe/static/src/img/LOGOBENSIZWE1.png" alt="Logo" 
+                    style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid #ccc;" />
+              </div>
+
+              <!-- Colonne texte -->
+              <div class="col-md-6">
+                
+                <!-- Ligne 1 : Nom + Date -->
+                <div class="d-flex flex-wrap align-items-center mb-2">
+                  <h5 class="mb-0" style="margin-right: 20px;"><strong>Bensizwe Sarl</strong></h5>
+                   <t t-set="date_pub" t-value="job.write_date.strftime('%d %B %Y')"/>
+                  <p class="mb-0 text-muted">Publié le <t t-esc="date_pub"/></p>
+                </div>
+                
+                <!-- Ligne 2 : Poste -->
+                <div class="d-flex flex-wrap mb-2">
+                  <h3 class="mb-0"><strong><t t-esc="job.name"/></strong></h3>
+                </div>
+                
+                <!-- Ligne 3 : CDI + Lieu + Clôture -->
+                <div class="d-flex flex-wrap align-items-center">
+                  
+                  <span class="badge bg-success text-white" style="font-size: 14px; margin-right: 20px;"><t t-esc="job.duree_contrat.upper()"/></span>
+                  <p class="mb-0" style="margin-right: 20px;"><strong><img src="/website_bensizwe/static/src/img/icons/location-dot-solid.svg" width="12" style="margin-right:4px;"/></strong> <t t-esc="job.localisation"/></p>
+                  <p class="mb-0 text-success"><strong><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="12" style="margin-right:4px;"/></strong><t t-esc="job.date_cloture.strftime('%d %B %Y')"/></p>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Section contenu avec coins arrondis et ombre portée -->
+      <section class="s_section my-2">
+        <div class="container">
+          <div style="border-radius: 13px; box-shadow: -1px 11px 22px 15px #00000026; background-color: #ffffff; padding: 60px;">
+            
+            <h4 class="mb-3"><strong>Contexte</strong></h4>
+            <p>
+               <t t-out="job.contexte"/>
+            </p>
+
+            <h5 class="mt-4"><strong>Tâches et Responsabilités</strong></h5>
+            <t t-out="job.description_poste"/>
+
+            <h5 class="mt-4"><strong>Qualification et Exigences</strong></h5>
+            <ul>
+              <t t-out="job.qualification"/>
+            </ul>
+
+          </div>
+        </div>
+      </section>
       <section class="pt-3 pb-3">
         <div class="container">
-          <div class="row mb-4">
-            <div class="col-md-4"><strong>Référence :</strong><br/> <t t-esc="job.reference"/></div>
-            <div class="col-md-4"><strong>Département :</strong><br/></div>
-            <div class="col-md-4"><strong>Secteur :</strong><br/> <t t-esc="job.secteur"/></div>
-            <div class="col-md-4"><strong>Durée :</strong><br/> <t t-esc="job.duree_contrat"/></div>
-            <div class="col-md-4"><strong>Localisation :</strong><br/> <t t-esc="job.localisation"/></div>
-            <div class="col-md-4"><strong>Date de clôture :</strong><br/> <t t-esc="job.date_cloture"/></div>
-          </div>
-
           <div class="mb-4">
-            <h3 class="text-primary">🧾 Contexte</h3>
-            <t t-out="job.contexte"/>
-          </div>
-
-          <div class="mb-4">
-            <h3 class="text-primary">📌 Description du poste</h3>
-            <t t-out="job.description_poste"/>
-          </div>
-
-          <div class="mb-4">
-            <h3 class="text-primary">🎓 Qualifications</h3>
-            <t t-out="job.qualification"/>
-          </div>
+            <p>
+            Bensizwe SARL ne demande aucun frais pour le processus de candidature ou de recrutement. Si l'on vous sollicite pour un paiement, ignorez cette demande. Soyez également vigilant(e) lors de la communication de vos informations personnelles en ligne, car les logos et les adresses peuvent être facilement copiés.
+            </p>
+          </div>         
         </div>
       </section>
 

@@ -45,7 +45,7 @@
                                 <!-- CARTE FORMATION -->
                                 <div class="pb0 pt0 col-lg-4" style="border-color: rgb(168, 164, 164);">
                                     <div class="col-md-12 mb-4 text-center">
-                                        <a t-att-href="'/formation/inscription/%s' % formation.id" class="text-decoration-none" style="width: 100%;">
+                                        <a t-att-href="'#'" class="text-decoration-none" style="width: 100%;">
                                             <div class="card shadow-sm">
                                                 <img class="card-img-top w-100" t-att-src="formation.header or ''" alt="Image formation" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>
                                                 <div class="card-body text-center">

@@ -1,168 +1,247 @@
 .btn-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #04A1D0;
-    text-align: center;
-    align-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #04A1D0;
+  text-align: center;
+  align-items: center;
+
+}
+
+.m-arrow-right {
+  @media screen and (min-width: 992px) {
+    margin-right: -350px;
+  }
+}
+
+.m-arrow-left {
+  @media screen and (min-width: 992px) {
+    margin-left: -350px;
+  }
+}
+
+.btn-circle:hover {
+  background-color: #04A1D0;
+  opacity: 0.95;
+}
+
+.custom-job-card {
+  height: 85px !important;
+  padding: 4px 8px !important;
+  line-height: 1.1;
+}
+
+.custom-job-card h6,
+.custom-job-card p,
+.custom-job-card strong {
+  margin: 0;
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+  @media screen and (max-width: 992px) {
+    font-size: 12px !important;
     
- } 
- .m-arrow-right{
-    @media screen and (min-width: 992px) {
-        margin-right: -350px;         
-      }
- }
- .m-arrow-left{
-    @media screen and (min-width: 992px) {
-        margin-left: -350px;         
-      }
- }
-  .btn-circle:hover {
-    background-color: #04A1D0;
-    opacity: 0.95;
+  }
+}
+
+#rows_job a {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  display: block;
+  text-decoration: none;
+  line-height: 1.2 !important;
+}
+
+/* Effet au survol des cartes postes */
+#rows_job a:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #0d6efd !important;
+}
+
+/* Optionnel : surligner le nom du poste ou localisation */
+#rows_job a:hover .card-title,
+#rows_job a:hover h6 {
+  color: #0d6efd;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// centrer la pagination
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+#pagination_container {
+  display: flex;
+  justify-content: center;
+}
+
+// poste resposive pour le span dans h6
+@media (max-width: 768px) {
+  .s_row_jobs h6 {
+    font-size: 16px;
+  }
+
+  .detail_post span {
+    font-size: 5px !important;
+  }
+
+  .detail_post img {
+    width: 6px !important;
+  }
+
+  // aceuill espace candidat
+  .espace_candidat {
+    padding: auto;
+  }
+
+  .cdchild {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .cdchild div {
+    font-size: 20px;
+    margin-top: 20px !important;
+  }
+
+  // bg responsive
+  .bg-responsive {
+    background-image: url('/website_bensizwe/static/src/img/accueil.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    height: 100vh !important;
+  }
+
+  .hero-text-mobile {
+    position: absolute;
+    top: 80%;
+    text-align: center;
+    width: 90%;
+  }
+
+  .hero-text-mobile h2 span {
+    font-size: 24px !important;
+  }
+
+  .hero-text-mobile p span {
+    font-size: 16px !important;
+    margin-top: 50% !important;
   }
 
   .custom-job-card {
-    height: 85px !important;
-    padding: 4px 8px !important;
-    line-height: 1.1;
-  }
-  
-  .custom-job-card h6,
-  .custom-job-card p,
-  .custom-job-card strong {
-    margin: 0;
-    font-size: 13px !important;
-    line-height: 1.2 !important;
-  }
-  
-  #rows_job a {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    display: block;
-    text-decoration: none;
-    line-height: 1.2 !important;
-  }
-  
-  /* Effet au survol des cartes postes */
-  #rows_job a:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    border-color: #0d6efd !important;
-  }
-  
-  /* Optionnel : surligner le nom du poste ou localisation */
-  #rows_job a:hover .card-title,
-  #rows_job a:hover h6 {
-    color: #0d6efd;
-  }
-  .fade-in {
-    animation: fadeIn 0.4s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  // centrer la pagination
-  .pagination {
-    display: flex;
-    justify-content: center;
-  }
-  #pagination_container {
-    display: flex;
-    justify-content: center;
-  }
-  
-  // poste resposive pour le span dans h6
-  @media (max-width: 768px) {
-    .s_row_jobs h6{
-      font-size: 16px;
-    }
-    .detail_post span {
-      display: block;
-      margin-top: 5px;
-      font-size: 9px !important;
-    }
-    .detail_post img {
-      width: 6px !important;
-    }
-    // aceuill espace candidat
-    .espace_candidat {
-      padding: auto;
-    }
-    .cdchild {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 10px;
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-    .cdchild div{
-      font-size: 20px;
-      margin-top: 20px !important;
-    }
-    // bg responsive
-    .bg-responsive {
-      background-image: url('/website_bensizwe/static/src/img/accueil.png') !important;
-      background-size: cover !important;
-      background-position: center !important;
-      height: 100vh !important;
-    }
-    .hero-text-mobile {
-      position: absolute;
-      top: 80%;
-      text-align: center;
-      width: 90%;
-    }
-
-    .hero-text-mobile h2 span {
-        font-size: 24px !important;
-    }
-
-    .hero-text-mobile p span {
-        font-size: 16px !important;
-        margin-top: 50% !important;
-    }
-    .custom-job-card {
     height: auto !important;
-    }
-    .spacer {
-      height: 150px !important;
-      margin-top: 20px !important;
-    }
-    #rows_job a {
-      margin: 0 auto;
-      width: 90% !important;
-      text-align: left !important;
-      height: auto !important;
-    }
+  }
+
+  .spacer {
+    height: 150px !important;
+    margin-top: 20px !important;
+  }
+
+  #rows_job a {
+    margin: 0 auto;
+    width: 90% !important;
+    text-align: left !important;
+    height: auto !important;
+  }
 
 
-    
+
+}
+
+@media screen and (min-width: 992px) {
+  #job_time_location {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-right: 10%;
   }
-  @media screen and (min-width: 992px) {
-    #job_time_location {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      margin-right:10% ;
-    }
-    
-  }
-  // poste resposive h6
-  /* Effet au survol des cartes postes */
-  #rows_trainning a:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    border-color: #0d6efd !important;
-  }
-  
+
+}
+
+// poste resposive h6
+/* Effet au survol des cartes postes */
+#rows_trainning a:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #0d6efd !important;
+}
+
+// formation expirée
+.expired-training {
+  filter: blur(1px);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.expired-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgb(250, 52, 52);
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.job-info-row{
+  margin-left: 10% !important;
+}
+
+.job-info-row>strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 20%;
+  /* Important pour que ellipsis fonctionne dans flex */
+  max-width: 30%;
+  /* ou ajuste selon le besoin */
+  display: inline-block;
+}
+
+.job-header {
+  overflow: hidden;
+  width: 100%;
+}
+
+.badge-contrat {
+  color: #fff;
+  font-size: 14px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: 10%;
+}
+
+.job-name-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  display: inline-block;
+}
+
+.job-name-text>h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

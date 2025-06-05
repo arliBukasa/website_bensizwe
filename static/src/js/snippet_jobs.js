@@ -52,26 +52,31 @@ var DJobs = publicWidget.Widget.extend({
         let badgeColor = 'rgb(3, 252, 20)';
         if (daysRemaining < 0) {
           badgeColor = 'red';
-          joburl = '#';
+          //joburl = '#';
         } else if (daysRemaining <= 7) {
           badgeColor = 'orange';
         }
 
         html += `
-          <a href="${joburl}" class="d-block w-100" data-url="${joburl}" style="margin: 15px; padding: 0;margin-bottom: 10px;">
+          <a href="${joburl}" class="d-block w-80" data-url="${joburl}" style="margin: 15px; padding: 0;margin-bottom: 10px;">
             <div class="row s_col_no_resize s_col_no_bgcolor no-gutters rounded o_colored_level align-items-start o_cc o_cc2"
                 style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 8px 0;">
               <div class="s_media_list_body col-12 custom-job-card " style="padding: 0;padding-left: 5px;">
-                <h6 style="font-size: 22px;">
-                  <span class="s_badge badge o_animable" style="background-color:${badgeColor};">
-                    <font style="color:#fff;">${(jobs['duree_contrat'] || '').toUpperCase()}</font>
+                <div class="d-flex flex-nowrap align-items-center job-header" style="gap: 8px;">
+                  <span class="badge badge-contrat" style="background-color:${badgeColor};">
+                    ${(jobs['duree_contrat'] || '').toUpperCase()}
                   </span>
-                  <strong><span style="font-size: 20px;">${jobs['name']}</span></strong>
-                </h6>
+                  <span class="job-name-text">
+                    <h6>
+                      <strong>${jobs['name']}</strong>
+                    </h6>
+                  </span>
+                  
+                </div>
                 <p class="detail_post">
                   <h6>
-                    <div class="d-flex justify-content-between small mt-1 detail_post" id="job_time_location">
-                      <strong><span style="font-size:16px;"><img src="/website_bensizwe/static/src/img/icons/location-dot-solid.svg" width="12" style="margin-right:4px;"/>${jobs['localisation']}</span></strong>
+                    <div class="d-flex flex-nowrap justify-content-between small mt-1 job-info-row detail_post" id="job_time_location">
+                      <strong><span style="font-size:14px;"><img src="/website_bensizwe/static/src/img/icons/location-dot-solid.svg" width="12" style="margin-right:4px;"/>${jobs['localisation']}</span></strong>
                       <strong><span style="font-size:14px;"><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="12" style="margin-right:4px;"/> Publié le ${jobs['write_date']}</span></strong>
                       <strong><span style="font-size:14px;"><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="12" style="margin-right:4px;"/> Échéance: ${formatDateDMY(jobs['date_cloture'])}</span></strong>
                     </div>
@@ -127,14 +132,25 @@ var DJobs = publicWidget.Widget.extend({
     this._rpc({ route: '/training_row/', params: {} }).then(data => {
       let formationhtml = ``;
       data.forEach(trainings => {
+        const expiredClass = !trainings['is_published'] ? 'expired-training' : '';
+        const expiredBadge = !trainings['is_published'] ? `<span class="badge badge-danger expired-badge" style="position: absolute; top: 5px; right: 10px;">Expiré</span>`
+            : '';
+
+        if (trainings['is_published'] === false){
+          // flouter et re rendre inaccessible les formations non publiées
+          trainings['url'] = '#';
+        }
         formationhtml += `
-          <a href="/${trainings['url']}" class="col-lg-4"
+          
+          <a href="${trainings['url']}" class="col-lg-4 "
             data-name="${trainings['name']}"
             data-date-start="${trainings['date_start']}"
             data-date-end="${trainings['date_end']}"
             data-url="${trainings['url']}">
-            <div class="row s_col_no_resize s_col_no_bgcolor no-gutters o_cc o_cc1 rounded o_colored_level align-items-top" style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 0px 0;align-items:top !important;margin:15px;">
-              <div class="align-self-stretch s_media_list_img_wrapper col-lg-3" style ="">
+            ${expiredBadge}
+            <div class="row s_col_no_resize s_col_no_bgcolor no-gutters o_cc o_cc1 rounded o_colored_level align-items-top ${expiredClass}" style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 0px 0;align-items:top !important;margin:15px;">
+              
+            <div class="align-self-stretch s_media_list_img_wrapper col-lg-3" style ="">
                 <img src="data:image/png;base64,${trainings['header']}" class="s_media_list_img w-100 h-auto" loading="lazy" style =""/>
               </div>
               <div class="col-lg-8 tranning-time" style="items-align: top;padding-left: 15px; margin-left: 5px;">

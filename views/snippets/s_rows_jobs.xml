@@ -6,7 +6,7 @@
         <div class="container o_colored_level col-lg-5 offset-lg-1 rounded o_cc o_cc2" style="border-radius: 10px !important; background-color: rgb(255, 255, 255) !important;">
           <div class="row s_nb_column_fixed s_col_no_bgcolor" data-original-title="" title="" aria-describedby="tooltip295645">
             <!-- offres à ajouter -->
-            <div class="s_media_list_item pb0 col-lg-12 pt0" data-name="Media item" id="rows_job" style="background-color: rgb(255, 255, 255) !important; padding: 0px !important; border-radius: 10px !important;">
+            <div class="s_media_list_item pb0 col-lg-12 pt0 w-80" data-name="Media item" id="rows_job" style="background-color: rgb(255, 255, 255) !important; padding: 0px !important; border-radius: 10px !important;">
               <!-- ici les offres vont être inserés -->
             </div>
            <div class="d-flex justify-content-center align-items-center mt-3 col-lg-12" id="pagination_container">
