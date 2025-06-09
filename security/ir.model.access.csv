@@ -7,3 +7,4 @@ access_website_langage_manager,website_langage_manager,model_website_langage,bas
 access_website_competence_manager,website_competence_manager,model_website_competence,base.group_user,1,1,1,1
 access_website_formation_manager,website_formation_manager,model_website_formation,base.group_user,1,1,1,1
 access_hr_department_public,access_hr_department_public,model_hr_department,base.group_user,1,0,0,0
+access_formation_public,access_formation_public,model_website_training,base.group_public,1,0,0,0
