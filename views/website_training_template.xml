@@ -47,7 +47,8 @@
                                     <div class="col-md-12 mb-4 text-center">
                                         <a t-att-href="'#'" class="text-decoration-none" style="width: 100%;">
                                             <div class="card shadow-sm">
-                                                <img class="card-img-top w-100" t-att-src="formation.header or ''" alt="Image formation" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>
+                                                <!-- <img class="card-img-top w-100" t-att-src="formation.header or ''" alt="Image formation" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>-->
+                                                <img t-att-src="'data:image/png;base64,%s' % formation.header.decode() if formation.header else ''" class="card-img-top w-100" style="object-fit: cover; border-top-left-radius: 0.25rem; border-top-right-radius: 0.25rem;"/>
                                                 <div class="card-body text-center">
                                                     <h4 class="card-title text-o-color-2">
                                                         <strong><t t-esc="formation.name"/></strong>
