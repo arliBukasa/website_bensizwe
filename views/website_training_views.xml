@@ -50,6 +50,20 @@
             </form>
         </field>
     </record>
+    <!-- view wesite.trainnings candidat_ids -->
+    <record id="view_website_training_candidat_ids" model="ir.ui.view">
+        <field name="name">view.website.training.candidat_ids</field>
+        <field name="model">website.training</field>
+        <field name="arch" type="xml">
+            <form string="Candidats">
+                <sheet>
+                    <group>
+                        <field name="candidat_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
     <!-- View website.training search -->
     <record id="view_website_training_search" model="ir.ui.view">
@@ -78,10 +92,26 @@
             </p>
         </field>
     </record>
+    <!-- Action website.training candidat_ids -->
+    <record id="action_website_training_candidat_ids" model="ir.actions.act_window">
+        <field name="name">Candidats</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website.training</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no examples click here to add new Candidats.
+            </p>
+        </field>
+    </record>
+
 
     <!-- Menu gestions formations root -->
     <menuitem id="menu_Trainning_root" name="Trainning Management" sequence="10"/>
     <menuitem id="menu_website_training" name="Website Training" parent="website_bensizwe.menu_Trainning_root" action="website_bensizwe.action_website_training"/>
+    <menuitem id="menu_website_training_candidat_ids" name="Candidats" parent="website_bensizwe.menu_Trainning_root" action="website_bensizwe.action_website_training_candidat_ids"/>
 
 
 </odoo>
