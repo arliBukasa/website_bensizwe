@@ -36,7 +36,7 @@
                                     <div style="margin:20px; padding:20px; border-radius:15px; border:2px solid rgb(168, 164, 164);">
                                         <strong>
                                             <span style="font-size: 18px;">
-                                                <t t-raw="formation.description"/>
+                                                <t t-raw="formation.description_html"/>
                                             </span>
                                         </strong>
                                     </div>

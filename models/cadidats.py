@@ -88,6 +88,7 @@ class WebsiteTraining(models.Model):
 
     name = fields.Char(string='Nom de la formation')
     description = fields.Html(string='Description')
+    description_html = fields.Html(string='Description HTML')
     date_start = fields.Date(string='Date de début')
     date_end = fields.Date(string='Date de fin')
     applicant_id = fields.Many2one('hr.applicant', string='Candidat')
