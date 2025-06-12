@@ -245,3 +245,30 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.search-btn{
+  background-color: #04A1D0 !important;
+}
+.search-btn:hover {
+    background-color: #002147 !important;
+    border-color: #002147 !important;
+  }
+
+  .search-btn:hover a {
+    color: white !important;
+  }
+
+ input[type="text"] {
+    font-family: inherit;
+    font-size: 20px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+
+  input[type="text"]::placeholder {
+    font-family: inherit;
+    font-size: 20px;
+    color: #666; /* Couleur douce pour placeholder */
+    text-align: center;
+  }

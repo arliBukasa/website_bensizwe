@@ -67,7 +67,23 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- BOUTON s'inscrire '/formation/valider_inscription/<int:id>' -->
+                            <div class="text-center mt-4">
+                                <a t-att-href="'/formation/valider_inscription/%s' % formation.id"
+                                   class="btn btn-primary btn-lg o_we_no_overlay o_not_editable"
+                                   style="width: 300px; height: 60px; font-size: 20px;">
+                                    Valider l'inscription
+                                </a>
+                            </div>
+                             <section class="s_text_block o_colored_level pb0 pt0" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
+                                <div class="s_allow_columns o_container_small">
+                                    <p style="text-align: center;">
+                                        <span style="font-size: 36px;">
+                                            <strong>&amp;nbsp;Autres formations</strong>
+                                        </span>
+                                    </p>
+                                </div>
+                            </section>
                             <!-- BOUTONS CAROUSEL -->
                             <div class="d-flex justify-content-between mt-4">
                                 <a class="carousel-control-prev o_not_editable o_we_no_overlay"
