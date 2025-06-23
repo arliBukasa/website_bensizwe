@@ -15,7 +15,7 @@
                 <p><strong>Nom :</strong> <t t-esc="candidat.name" /></p>
                 <p><strong>Email :</strong> <t t-esc="candidat.email" /></p>
                 <p><strong>Téléphone :</strong> <t t-esc="candidat.phone" /></p>
-                <a href="#" class="btn btn-outline-primary btn-sm">Modifier mes informations</a>
+                <a href="/mon-espace/modifier" class="btn btn-outline-primary btn-sm">Modifier mes informations</a>
               </div>
             </div>
 

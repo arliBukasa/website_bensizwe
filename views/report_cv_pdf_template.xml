@@ -7,38 +7,90 @@
       <t t-call="web.external_layout">
         <div class="page">
           <h2>CV - <t t-esc="object.name" /></h2>
-          <p><strong>Email :</strong> <t t-esc="object.email" /></p>
-          <p><strong>Téléphone :</strong> <t t-esc="object.phone" /></p>
+            <table>
+            <tr>
+              <td><strong>Email :</strong></td>
+              <td><t t-esc="object.email" /></td>
+            </tr>
+            <tr>
+              <td><strong>Téléphone :</strong></td>
+              <td><t t-esc="object.phone" /></td>
+            </tr>
+            <tr>
+              <td><strong>Adresse :</strong></td>
+              <td><t t-esc="object.adresse" /></td>
+            </tr>
+            <tr>
+              <td><strong>État civil :</strong></td>
+              <td><t t-esc="object.etat_civil" /></td>
+            </tr>
+            </table>
 
           <h4>🎓 Formations</h4>
-          <ul>
-            <t t-foreach="object.formation_ids" t-as="formation">
-              <li>
-                <strong><t t-esc="formation.name" /></strong> — <t t-esc="formation.date_start"/> à <t t-esc="formation.date_end"/>
-                <p><t t-esc="formation.description"/></p>
-              </li>
-            </t>
-          </ul>
+            <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f2f2f2;">
+              <th style="border: 1px solid #ddd; padding: 8px;">Nom</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Début</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Fin</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="object.formation_ids" t-as="formation">
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="formation.name" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="formation.date_start" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="formation.date_end" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="formation.description" /></td>
+              </tr>
+              </t>
+            </tbody>
+            </table>
 
           <h4>💼 Expériences</h4>
-          <ul>
-            <t t-foreach="object.experience_ids" t-as="exp">
-              <li>
-                <strong><t t-esc="exp.name" /></strong> — <t t-esc="exp.date_start"/> à <t t-esc="exp.date_end"/>
-                <p><t t-esc="exp.description"/></p>
-              </li>
-            </t>
-          </ul>
+            <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f2f2f2;">
+              <th style="border: 1px solid #ddd; padding: 8px;">Nom</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Début</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Fin</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="object.experience_ids" t-as="exp">
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="exp.name" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="exp.date_start" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="exp.date_end" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="exp.description" /></td>
+              </tr>
+              </t>
+            </tbody>
+            </table>
 
           <h4>🏫 Éducation</h4>
-          <ul>
-            <t t-foreach="object.education_ids" t-as="edu">
-              <li>
-                <strong><t t-esc="edu.name" /></strong> — <t t-esc="edu.date_start"/> à <t t-esc="edu.date_end"/>
-                <p><t t-esc="edu.description"/></p>
-              </li>
-            </t>
-          </ul>
+            <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f2f2f2;">
+              <th style="border: 1px solid #ddd; padding: 8px;">Nom</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Début</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Fin</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="object.education_ids" t-as="edu">
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="edu.name" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="edu.date_start" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="edu.date_end" /></td>
+                <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="edu.description" /></td>
+              </tr>
+              </t>
+            </tbody>
+            </table>
 
           <h4>🧠 Compétences</h4>
           <ul>

@@ -37,3 +37,23 @@ class CandidatEspace(http.Controller):
 
         report_ref = 'website_bensizwe.report_cv_pdf'
         return request.redirect(f'/report/pdf/{report_ref}/{candidat.id}')
+
+    @http.route('/mon-espace/modifier', type='http', auth='user', website=True)
+    def candidat_modifier(self, **kwargs):
+        candidat = request.env['website.user'].sudo().search([('user_id', '=', request.env.user.id)], limit=1)
+        return request.render('website_bensizwe.candidat_update_template', {'candidat': candidat})
+
+    @http.route('/mon-espace/actualiser', type='http', auth='user', methods=['POST'], csrf=True, website=True)
+    def candidat_modifier_post(self, **post):
+        candidat = request.env['website.user'].sudo().browse(int(post.get('candidat_id')))
+        if candidat:
+            candidat.write({
+                'name': post.get('name'),
+                'email': post.get('email'),
+                'phone': post.get('phone'),
+                'nationalite': post.get('nationalite'),
+                'adresse': post.get('adresse'),
+                'date_naissance': post.get('date_naissance'),
+                'etat_civil': post.get('etat_civil'),
+            })
+        return request.redirect('/mon-espace')

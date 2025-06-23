@@ -78,4 +78,60 @@
       </div>
     </t>
   </template>
+  <template id="candidat_update_template" name="Modification Informations Personnelles">
+  <t t-call="website.layout">
+    <div class="container mt-5 mb-5">
+      <h3 class="mb-4">✏️ Modifier mes informations</h3>
+      <form action="/mon-espace/actualiser" method="post" class="oe_website_form form-horizontal">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <input type="hidden" name="candidat_id" t-att-value="candidat.id"/>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nom</label>
+            <input type="text" name="name" class="form-control" t-att-value="candidat.name"/>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" t-att-value="candidat.email"/>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Téléphone</label>
+            <input type="text" name="phone" class="form-control" t-att-value="candidat.phone"/>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nationalité</label>
+            <input type="text" name="nationalite" class="form-control" t-att-value="candidat.nationalite"/>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Adresse</label>
+            <input type="text" name="adresse" class="form-control" t-att-value="candidat.adresse"/>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Date de naissance</label>
+            <input type="date" name="date_naissance" class="form-control" t-att-value="candidat.date_naissance"/>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">État civil</label>
+            <select name="etat_civil" class="form-select">
+              <option value="">-- Choisir --</option>
+              <option value="celibataire" t-att-selected="candidat.etat_civil == 'celibataire'">Célibataire</option>
+              <option value="marie" t-att-selected="candidat.etat_civil == 'marie'">Marié(e)</option>
+              <option value="divorce" t-att-selected="candidat.etat_civil == 'divorce'">Divorcé(e)</option>
+              <option value="veuf" t-att-selected="candidat.etat_civil == 'veuf'">Veuf/Veuve</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+          <a href="/mon-espace" class="btn btn-secondary">Annuler</a>
+        </div>
+      </form>
+    </div>
+  </t>
+</template>
 </odoo>
