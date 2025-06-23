@@ -18,6 +18,7 @@
                   <group string="Durée et localisation">
                     <field name="duree_contrat"/>
                     <field name="localisation"/>
+                    <field name="publication_state"/>
                     <field name="date_cloture"/>
                   </group>
                   

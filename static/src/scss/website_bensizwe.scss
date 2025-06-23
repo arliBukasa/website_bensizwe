@@ -272,3 +272,14 @@
     color: #666; /* Couleur douce pour placeholder */
     text-align: center;
   }
+
+  //jobs badges
+  .running-badge {
+  background-color: rgb(4, 208, 18) !important;
+  }
+  .closed-badge {
+      background-color: rgb(245, 19, 19) !important;
+    }
+  .urgent-badge {
+      background-color: rgb(250, 134, 25) !important;
+    }

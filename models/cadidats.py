@@ -1,5 +1,6 @@
 from odoo import models, fields, api
-
+# import datetime
+from datetime import timedelta
 #inherit hr.department
 class HrDepartment(models.Model):
     _inherit = 'hr.department'
@@ -80,7 +81,20 @@ class HrJob(models.Model):
     contexte = fields.Html(string="Contexte")
     description_poste = fields.Html(string="Description du poste")  # déjà existant, mais redéfini ici si besoin
     qualification = fields.Html(string="Qualification")
+    publication_state= fields.Selection([('en_cours', 'En cours'),('urgent', 'Urgent'), ('cloture', 'Clôturé')], string='État de publication', default='en_cours',compute='_compute_publication_state', store=True)
 
+    # actualisation de l'etat en fonction des date_cloture expire si date_cloture < today,ungent si la date de cloture est dans moins d'une semaine
+    @api.model
+    def _compute_publication_state(self):
+        today = fields.Date.today()
+        jobs = self.search([])
+        for job in jobs:
+            if job.date_cloture and job.date_cloture < today:
+                job.publication_state = 'cloture'
+            elif job.date_cloture and job.date_cloture <= today + timedelta(days=7):
+                job.publication_state = 'urgent'
+            else:
+                job.publication_state = 'en_cours'
 
 class WebsiteTraining(models.Model):
     _name = 'website.training'
