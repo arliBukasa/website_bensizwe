@@ -40,11 +40,23 @@
                         </group>
                         <group>
                             <field name="is_published"/>
-                            <field name="applicant_id"/>
                             <field name="image" widget="image" class="oe_avatar"/>
                             <field name="header" widget="image" class="oe_avatar" options="{'preview_image': 'header'}"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page name="Candidatures" string="Candidatures">
+                           <field name="candidat_ids">
+                               <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="phone"/>
+                                    <field name="adresse"/>
+                                    <field name="nationalite"/>
+                               </tree>
+                           </field>
+                        </page>
+                    </notebook>
                     
                 </sheet>
             </form>

@@ -113,7 +113,7 @@ class WebsiteTraining(models.Model):
         ('termine', 'Terminé'),
         ('annule', 'Annulé')
     ], string='Status', default='en_cours')
-    candidat_ids = fields.One2many('website.user', 'training_ids', string='Candidats', store=True)
+    candidat_ids = fields.Many2many('website.user', compute='_compute_candidat_ids',string="Candidats inscrits",store=False)
     is_published = fields.Boolean(string='Publié', default=False)
     image = fields.Image(string="Image", max_width=1024, max_height=1024)
 
@@ -144,7 +144,12 @@ class WebsiteTraining(models.Model):
                 attachment.write({'public': True})
                 # Construction manuelle de l'URL
                 attachment.url = f'/web/image/{attachment.res_model}/{attachment.res_id}/{attachment.res_field}'
-
+    api.depends('name')
+    def _compute_candidat_ids(self):
+        for record in self:
+            record.candidat_ids = self.env['website.user'].search([
+                ('training_ids', 'in', record.id)
+            ])
 class WebsiteUser(models.Model):
     _name = 'website.user'
     _description = 'Compte utilisateur'

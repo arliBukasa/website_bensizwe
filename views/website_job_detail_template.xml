@@ -132,7 +132,7 @@
   <!-- surcharge du tempplate: website_hr_recruitment.index -->
   <template id="job_filter_logic" inherit_id="website_hr_recruitment.index">
     <xpath expr="//div[@id='jobs_grid']" position="replace">
-
+      
     </xpath>
   </template>
   
