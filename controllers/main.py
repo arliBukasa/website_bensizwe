@@ -78,7 +78,7 @@ class Main(http.Controller):
         })
     
     # Route de validation de l'inscription
-    @http.route('/formation/valider_inscription/<int:id>', type='http', auth='user', website=True)
+    @http.route('/formation/valider_inscription/<int:id>', type='http', auth='public', website=True)
     def valider_inscription(self, id, **kw):
         formation = request.env['website.training'].sudo().browse(id)
         candidat = request.env['website.user'].sudo().search([('user_id', '=', request.env.user.id)])
