@@ -133,7 +133,7 @@ var DJobs = publicWidget.Widget.extend({
       let formationhtml = ``;
       data.forEach(trainings => {
         const expiredClass = !trainings['is_published'] ? 'expired-training' : '';
-        const expiredBadge = !trainings['is_published'] ? `<span class="badge badge-danger expired-badge" style="position: absolute; top: 5px; right: 10px;">Expiré</span>`
+        const expiredBadge = !trainings['is_published'] ? `<span class="badge badge-danger expired-badge" style="">Expiré</span>`
             : '';
 
         if (trainings['is_published'] === false){
@@ -148,26 +148,26 @@ var DJobs = publicWidget.Widget.extend({
             data-date-end="${trainings['date_end']}"
             data-url="${trainings['url']}">
             ${expiredBadge}
-            <div class="row s_col_no_resize s_col_no_bgcolor no-gutters o_cc o_cc1 rounded o_colored_level align-items-top ${expiredClass}" style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 0px 0;align-items:top !important;margin:15px;">
+            <div class="row flex-nowrap s_col_no_resize s_col_no_bgcolor no-gutters o_cc o_cc1  rounded o_colored_level align-items-top ${expiredClass}" style="background-color: rgb(251, 251, 251); border: none; border-bottom: 2px solid rgb(69, 163, 245); padding: 0px 0;align-items:top !important;margin:15px;">
               
-            <div class="align-self-stretch s_media_list_img_wrapper col-lg-3" style ="">
+              <div class="align-self-stretch s_media_list_img_wrapper col-lg-2 tranning-image" style ="">
                 <img src="data:image/png;base64,${trainings['header']}" class="s_media_list_img w-100 h-auto" loading="lazy" style =""/>
               </div>
-              <div class="col-lg-8 tranning-time" style="items-align: top;padding-left: 15px; margin-left: 5px;">
-                <p class="" style ="margin-bottom: 0px;padding-top:15px;">
+              <div class="col-lg-9 tranning-time" style="items-align: top;padding-left: 15px; margin-left: 5px;">
+                <p class="tranning-name" style ="margin-bottom: 0px;padding-top:15px;">
                   <strong><span style="font-size: 20px;color:#444444">${trainings['name']}</span></strong>
                 </p>
                 <p class="col" style="margin: 0;padding: 0;">
-                  <span><strong style="color:#767373">Du ${trainings['date_start']} au ${trainings['date_end']}</strong></span><br/> 
-                  <strong><span style="font-size: 24px;"><font class="text-o-color-1">${trainings['cout']}$</font></span></strong>
+                  <span class="tranning-date"><strong style="color:#767373">Du ${trainings['date_start']} au ${trainings['date_end']}</strong></span><br/> 
+                  <strong><span class="tranning-cost" style="font-size: 24px;"><font class="text-o-color-1">${trainings['cout']}$</font></span></strong>
                 </p>
                 </p>
               </div>
             </div>
           </a>`;
       });
-      formations.innerHTML = formationhtml+ `<a class="btn btn-custom bg-o-color-2 rounded-circle" href="/academy-1" style="border-width: 1px; border-style: solid; color: rgb(245, 242, 242);" data-original-title="" data-url="/academy-1" title="">
-                                                      Decouvrir Bensizwe Academy
+      formations.innerHTML = formationhtml+ `<a class="btn btn-custom bg-o-color-2 rounded-circle btn-bzac" href="/academy-1" style="border-width: 1px; border-style: solid; color: rgb(245, 242, 242);" data-original-title="" data-url="/academy-1" title="">
+                                                      <span>Decouvrir Bensizwe Academy</span>
                                                   <span class="fa fa-angle-double-right">​</span>
                                               </a>`;
     });

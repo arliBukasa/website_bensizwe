@@ -163,8 +163,66 @@
     text-align: left !important;
     height: auto !important;
   }
+  .tranning-name span{
+    font-size:12px !important;
+    line-height: 80%; 
+  }
+  .tranning-date strong{
+    font-size:10px !important;
+  }
+  .tranning-cost{
+    font-size:12px !important;
+  }
+  .tranning-image{
+    width: 40% !important;
+    height: 100% !important;
+  }
+  .tranning-image img {
+    height: 100% !important;
+  }
+  .btn-bzac span{
+    font-size: 10px !important;
 
+  }
+  .btn-bzac{
+    font-size: 10px !important;
 
+  }
+  .banner-rh{
+    height: 100% !important;
+    width: 100% !important;
+    background-image: url('/website_bensizwe/static/src/img/banner_rh.png.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% !important;
+    background-position: center !important;
+    line-height: 0.2 !important;
+  }
+  .banner-rh span{
+    font-size: 12px !important;
+  }
+  .banner-rh font{
+    font-size: 9px !important;
+    // reduire les interlignes
+    line-height: 0.98 !important;
+  }
+  .quatre-img-txt{
+        margin:15px;
+        width: 100%;
+    
+    }
+    // quatres images animation survol
+    .quatre-img-txt:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+      // ajouter filtre blue
+      filter: brightness(0.8);
+      
+    }
+    .badge-contrat {
+      font-size: 11px !important;
+      white-space: nowrap;
+      width: 10%;
+    }
 
 }
 
@@ -195,13 +253,10 @@
 }
 
 .expired-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background-color: rgb(250, 52, 52);
   color: white;
   font-size: 12px;
-  padding: 5px 10px;
+  padding-bottom: 5px;
   border-radius: 5px;
 }
 .job-info-row{
@@ -283,3 +338,11 @@
   .urgent-badge {
       background-color: rgb(250, 134, 25) !important;
     }
+// quatres images animation survol
+.quatre-img-txt:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+  // ajouter filtre blue
+  filter: brightness(0.8);
+  
+}
