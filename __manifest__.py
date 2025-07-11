@@ -1,12 +1,19 @@
 {
     'name': 'website_bensizwe',
-    'version': '1.0',
-    'summary': 'Custom website module for Bensizwe',
-    'description': 'This module provides custom website functionalities for Bensizwe.',
-    'author': 'Your Name',
+    'version': '2.0',
+    'summary': 'Custom website module for Bensizwe with modern user space',
+    'description': '''
+    This module provides custom website functionalities for Bensizwe including:
+    - Modern user space with timeline, cards, and responsive design
+    - Enhanced profile management with avatar support
+    - Improved candidate experience with statistics and navigation
+    - Advanced form validation and user interactions
+    - Modern CSS animations and responsive design
+    ''',
+    'author': 'Bensizwe Development Team',
     'website': 'http://www.bensizwe.com',
     'category': 'Website',
-    'depends': ['website', 'website_hr_recruitment','hr'],
+    'depends': ['website', 'website_hr_recruitment', 'hr'],
     "data": [
         "security/ir.model.access.csv",
         "views/hr_applicant_views.xml",
@@ -28,13 +35,28 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            # Images et icônes
             'website_bensizwe/static/src/img/*',
-            'website_bensizwe/static/src/scss/*.scss',
-            'website_bensizwe/static/src/js/*.js',
             'website_bensizwe/static/src/img/icons/*.svg',
+            
+            # Styles CSS/SCSS
+            'website_bensizwe/static/src/scss/website_bensizwe.scss',
+            
+            # JavaScript pour l'interactivité
+            'website_bensizwe/static/src/js/user_space.js',
+            'website_bensizwe/static/src/js/*.js',
         ],
     },
     'installable': True,
     'application': True,
     'auto_install': False,
+    'license': 'LGPL-3',
+    'external_dependencies': {
+        'python': [],
+    },
+    'demo': [],
+    'test': [],
+    'pre_init_hook': None,
+    'post_init_hook': None,
+    'uninstall_hook': None,
 }

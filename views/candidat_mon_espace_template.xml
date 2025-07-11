@@ -2,175 +2,431 @@
 <odoo>
   <data>
 
-    <template id="candidat_espace_template" name="Espace Candidat Complet">
+    <template id="candidat_espace_template" name="Espace Candidat Moderne">
         <t t-call-assets="web.assets_frontend"/>
         <t t-call="website.layout">
-          <div class="container mt-5 mb-5">
-            <h2 class="text-center mb-4">🎓 Espace personnel du candidat</h2>
-
-            <!-- INFOS PERSONNELLES -->
-            <div class="card mb-4">
-              <div class="card-body">
-                <h5 class="card-title">👤 Informations personnelles</h5>
-                <p><strong>Nom :</strong> <t t-esc="candidat.name" /></p>
-                <p><strong>Email :</strong> <t t-esc="candidat.email" /></p>
-                <p><strong>Téléphone :</strong> <t t-esc="candidat.phone" /></p>
-                <a href="/mon-espace/modifier" class="btn btn-outline-primary btn-sm">Modifier mes informations</a>
-              </div>
-            </div>
-
-            <!-- CANDIDATURES -->
-            <div class="card mb-4">
-              <div class="card-body">
-                <h5 class="card-title">📄 Mes candidatures</h5>
-                <t t-if="candidat.application_ids">
-                  <ul class="list-group">
-                    <t t-foreach="candidat.application_ids" t-as="app">
-                      <li class="list-group-item">
-                        <strong><t t-esc="app.job_id.name" /></strong> — <t t-esc="app.stage_id.name" />
-                      </li>
-                    </t>
-                  </ul>
-                </t>
-                <t t-else="">
-                  <p>Aucune candidature soumise.</p>
-                </t>
-              </div>
-            </div>
-
-            <!-- OFFRES DISPONIBLES -->
-            <div class="mb-4">
-              <h5 class="mb-3">🚀 Offres disponibles</h5>
-              <div style="overflow-x:auto; white-space: nowrap;">
-                <t t-foreach="offres" t-as="offre">
-                  <div class="card d-inline-block me-3" style="width: 300px;">
-                    <div class="card-body">
-                      <h6 class="card-title"><t t-esc="offre.name" /></h6>
-                      <p><t t-esc="offre.description" /></p>
-                      <a t-attf-href="{{offre.website_url}}" class="btn btn-sm btn-outline-success">Voir le poste</a>
+          
+          <!-- Container principal avec design moderne -->
+          <div class="user-space-container">
+            <div class="container">
+              
+              <!-- Header avec photo de profil -->
+              <div class="user-profile-header slide-in-up">
+                <div class="profile-content">
+                  <div class="avatar-container">
+                    <div class="avatar" t-if="candidat.avatar">
+                     <img t-att-src="candidat.avatar_url" alt="Photo de profil" class="avatar"/>
+                    </div>
+                    <div class="avatar" t-else="">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <button class="avatar-upload-btn" onclick="document.getElementById('avatar_upload').click()">
+                      <i class="fa fa-camera"></i>
+                    </button>
+                    <input type="file" id="avatar_upload" accept="image/*" style="display: none;"/>
+                  </div>
+                  
+                  <div class="user-info">
+                    <h1>
+                      <span t-esc="candidat.first_name or 'Prénom'"/> 
+                      <span t-esc="candidat.last_name or candidat.name"/>
+                    </h1>
+                    <div class="user-meta col">
+                      <div class="meta-item">
+                        <i class="fa fa-envelope" style="color: #666; font-size: 14px;"></i>
+                        <span t-esc="candidat.email" style="color: #666; font-size: 14px;"/>
+                      </div>
+                      <div class="meta-item" t-if="candidat.phone">
+                        <i class="fa fa-phone" style="color: #666; font-size: 14px;"></i>
+                        <span t-esc="candidat.phone" style="color: #666; font-size: 14px;"/>
+                      </div>
+                      <div class="meta-item" t-if="candidat.city">
+                        <i class="fa fa-map-marker" style="color: #666; font-size: 14px;"></i>
+                        <span t-esc="candidat.city" style="color: #666; font-size: 14px;"/>
+                      </div>
                     </div>
                   </div>
-                </t>
+                </div>
               </div>
-            </div>
 
-            <!-- PROFIL COMPLET -->
-            <div class="card mb-4">
-              <div class="card-body">
-
-                <!-- FORMATIONS -->
-                <h5 class="d-flex justify-content-between align-items-center">
-                  📘 Formations
-                  <a href="/mon-espace/ajouter/formation" class="btn btn-outline-primary btn-sm">
-                    <i class="fa fa-plus"></i> Ajouter
+              <!-- Navigation rapide -->
+              <div class="quick-nav slide-in-up">
+                <h3 class="nav-title">Navigation rapide</h3>
+                <div class="nav-items">
+                  <a href="#profile" class="nav-item">
+                    <div class="nav-icon">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <div class="nav-content">
+                      <div class="nav-label">Mon Profil</div>
+                      <p class="nav-desc">Modifier mes informations personnelles</p>
+                    </div>
                   </a>
-                </h5>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-4">
+                  
+                  <a href="#applications" class="nav-item">
+                    <div class="nav-icon">
+                      <i class="fa fa-briefcase"></i>
+                    </div>
+                    <div class="nav-content">
+                      <div class="nav-label">Candidatures</div>
+                      <p class="nav-desc">Suivre mes candidatures en cours</p>
+                    </div>
+                  </a>
+                  
+                  <a href="#jobs" class="nav-item">
+                    <div class="nav-icon">
+                      <i class="fa fa-search"></i>
+                    </div>
+                    <div class="nav-content">
+                      <div class="nav-label">Offres d'emploi</div>
+                      <p class="nav-desc">Découvrir les nouvelles offres</p>
+                    </div>
+                  </a>
+                  
+                  <a href="#trainings" class="nav-item">
+                    <div class="nav-icon">
+                      <i class="fa fa-graduation-cap"></i>
+                    </div>
+                    <div class="nav-content">
+                      <div class="nav-label">Formations</div>
+                      <p class="nav-desc">Mes formations et certifications</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Statistiques en cards -->
+              <div class="stats-cards">
+                <div class="stat-card applications">
+                  <div class="stat-header">
+                    <div class="stat-icon applications">
+                      <i class="fa fa-file"></i>
+                    </div>
+                    <div class="stat-trend up">
+                     <i class="fa fa-arrow-up" aria-hidden="true"></i> +12%
+                    </div>
+                  </div>
+                  <div class="stat-number" t-esc="len(candidat.application_ids or [])">0</div>
+                  <p class="stat-label">Candidatures soumises</p>
+                </div>
+
+                <div class="stat-card interviews">
+                  <div class="stat-header">
+                    <div class="stat-icon interviews">
+                      <i class="fa fa-handshake-o"></i>
+                    </div>
+                    <div class="stat-trend up">
+                      <i class="fa fa-arrow-up"></i> +5%
+                    </div>
+                  </div>
+                  <div class="stat-number">3</div>
+                  <p class="stat-label">Entretiens programmés</p>
+                </div>
+
+                <div class="stat-card offers">
+                  <div class="stat-header">
+                    <div class="stat-icon offers">
+                      <i class="fa fa-trophy"></i>
+                    </div>
+                    <div class="stat-trend up">
+                      <i class="fa fa-arrow-up"></i> +100%
+                    </div>
+                  </div>
+                  <div class="stat-number">1</div>
+                  <p class="stat-label">Offres reçues</p>
+                </div>
+
+                <div class="stat-card trainings">
+                  <div class="stat-header">
+                    <div class="stat-icon trainings">
+                      <i class="fa fa-certificate"></i>
+                    </div>
+                    <div class="stat-trend up">
+                      <i class="fa fa-arrow-up"></i> +25%
+                    </div>
+                  </div>
+                  <div class="stat-number" t-esc="len(candidat.formation_ids or [])">0</div>
+                  <p class="stat-label">Formations complétées</p>
+                </div>
+              </div>
+
+              <!-- Timeline d'activité -->
+              <div class="activity-timeline" id="applications">
+                <h2 class="timeline-title">
+                  <i class="fa fa-history"></i>
+                  Historique de mes candidatures
+                </h2>
+                
+                <div class="timeline">
+                  <t t-if="candidat.application_ids">
+                    <t t-foreach="candidat.application_ids" t-as="app">
+                      <div class="timeline-item completed">
+                        <div class="timeline-content completed">
+                          <div class="timeline-header">
+                            <h4 class="timeline-title" t-esc="app.job_id.name"/>
+                            <span class="timeline-date" t-esc="app.create_date"/>
+                          </div>
+                          <p class="timeline-description">
+                            Candidature soumise pour le poste de <strong t-esc="app.job_id.name"/>.
+                            Statut actuel : <strong t-esc="app.stage_id.name"/>.
+                          </p>
+                          <span class="timeline-badge status-completed" t-esc="app.stage_id.name"/>
+                        </div>
+                      </div>
+                    </t>
+                  </t>
+                  
+                  <!-- Exemples d'activités récentes -->
+                  <div class="timeline-item pending">
+                    <div class="timeline-content pending">
+                      <div class="timeline-header">
+                        <h4 class="timeline-title">Entretien RH programmé</h4>
+                        <span class="timeline-date">Dans 3 jours</span>
+                      </div>
+                      <p class="timeline-description">
+                        Entretien téléphonique avec l'équipe RH prévu le vendredi 11 juillet à 14h00.
+                      </p>
+                      <span class="timeline-badge status-pending">En attente</span>
+                    </div>
+                  </div>
+
+                  <div class="timeline-item completed">
+                    <div class="timeline-content completed">
+                      <div class="timeline-header">
+                        <h4 class="timeline-title">Profil mis à jour</h4>
+                        <span class="timeline-date">Il y a 2 jours</span>
+                      </div>
+                      <p class="timeline-description">
+                        Ajout de nouvelles compétences et mise à jour du CV.
+                      </p>
+                      <span class="timeline-badge status-completed">Terminé</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Offres disponibles -->
+              <div class="quick-nav" id="jobs">
+                <h3 class="nav-title">
+                  <i class="fa fa-rocket"></i>
+                  Offres recommandées pour vous
+                </h3>
+                <div class="nav-items">
+                  <t t-foreach="offres[:4]" t-as="offre">
+                    <a t-att-href="offre.website_url" class="nav-item">
+                      <div class="nav-icon">
+                        <i class="fa fa-briefcase"></i>
+                      </div>
+                      <div class="nav-content">
+                        <div class="nav-label" t-esc="offre.name"/>
+                        <p class="nav-desc" t-esc="offre.description[:100] + '...' if len(offre.description or '') > 100 else offre.description"/>
+                      </div>
+                    </a>
+                  </t>
+                </div>
+                <div class="text-center mt-3">
+                  <a href="/jobs" class="btn btn-primary">
+                    <i class="fa fa-search"></i>
+                    Voir toutes les offres
+                  </a>
+                </div>
+              </div>
+
+              <!-- Formulaire de modification du profil -->
+              <div class="profile-edit-form" id="profile">
+                <h2 class="form-title">
+                  <i class="fa fa-user-cog"></i>
+                  Modifier mon profil
+                </h2>
+                
+                <form method="post" action="/mon-espace/update" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                  
+                  <!-- Informations personnelles -->
+                  <div class="form-section">
+                    <h3 class="section-title">Informations personnelles</h3>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label" for="first_name">Prénom *</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" 
+                               t-att-value="candidat.first_name" required="required"/>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="form-label" for="last_name">Nom de famille *</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" 
+                               t-att-value="candidat.last_name or candidat.name" required="required"/>
+                      </div>
+                    </div>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label" for="email">Email *</label>
+                        <input type="email" id="email" name="email" class="form-control" 
+                               t-att-value="candidat.email" required="required"/>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="form-label" for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" 
+                               t-att-value="candidat.phone"/>
+                      </div>
+                    </div>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label" for="birth_date">Date de naissance</label>
+                        <input type="date" id="birth_date" name="birth_date" class="form-control" 
+                               t-att-value="candidat.birth_date"/>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="form-label" for="gender">Genre</label>
+                        <select id="gender" name="gender" class="form-control">
+                          <option value="">Sélectionner...</option>
+                          <option value="male" t-att-selected="candidat.gender == 'male'">Homme</option>
+                          <option value="female" t-att-selected="candidat.gender == 'female'">Femme</option>
+                          <option value="other" t-att-selected="candidat.gender == 'other'">Autre</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Adresse -->
+                  <div class="form-section">
+                    <h3 class="section-title">Adresse</h3>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label" for="street">Rue</label>
+                        <input type="text" id="street" name="street" class="form-control" 
+                               t-att-value="candidat.street"/>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="form-label" for="city">Ville</label>
+                        <input type="text" id="city" name="city" class="form-control" 
+                               t-att-value="candidat.city"/>
+                      </div>
+                    </div>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label" for="zip_code">Code postal</label>
+                        <input type="text" id="zip_code" name="zip_code" class="form-control" 
+                               t-att-value="candidat.zip_code"/>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="form-label" for="country">Pays</label>
+                        <input type="text" id="country" name="country" class="form-control" 
+                               t-att-value="candidat.country"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informations professionnelles -->
+                  <div class="form-section">
+                    <h3 class="section-title">Informations professionnelles</h3>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label class="form-label" for="current_position">Poste actuel</label>
+                        <input type="text" id="current_position" name="current_position" class="form-control" 
+                               t-att-value="candidat.current_position"/>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label class="form-label" for="experience_years">Années d'expérience</label>
+                        <select id="experience_years" name="experience_years" class="form-control">
+                          <option value="">Sélectionner...</option>
+                          <option value="0-1" t-att-selected="candidat.experience_years == '0-1'">0-1 an</option>
+                          <option value="2-5" t-att-selected="candidat.experience_years == '2-5'">2-5 ans</option>
+                          <option value="6-10" t-att-selected="candidat.experience_years == '6-10'">6-10 ans</option>
+                          <option value="10+" t-att-selected="candidat.experience_years == '10+'">Plus de 10 ans</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="form-label" for="bio">Présentation personnelle</label>
+                      <textarea id="bio" name="bio" class="form-control" rows="4" 
+                                placeholder="Parlez-nous de vous, vos objectifs professionnels..."><t t-esc="candidat.bio"/></textarea>
+                      <div class="form-text">Maximum 500 caractères</div>
+                    </div>
+                  </div>
+
+                  <!-- Actions du formulaire -->
+                  <div class="form-actions">
+                    <button type="button" class="btn btn-secondary">
+                      <i class="fa fa-times"></i>
+                      Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fa fa-save"></i>
+                      Enregistrer les modifications
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Section Formations -->
+              <div class="profile-edit-form" id="trainings">
+                <h2 class="form-title">
+                  <i class="fa fa-graduation-cap"></i>
+                  Mes formations
+                </h2>
+                
+                <div class="stats-cards">
                   <t t-foreach="candidat.formation_ids" t-as="formation">
-                    <div class="col">
-                      <div class="card h-100">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="card-title mb-1"><t t-esc="formation.name" /></h6>
-                            <a href="#" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center" title="Modifier">
-                              <i class="fa fa-pencil-alt me-1"></i> Modifier
-                            </a>
-                          </div>
-                          <p class="mb-1"><strong>📅</strong> <t t-esc="formation.date_start" /> - <t t-esc="formation.date_end" /></p>
-                          <p class="mb-1"><strong>📄</strong> <t t-esc="formation.document_obtenu" /></p>
-                          <p class="small text-muted"><t t-esc="formation.description" /></p>
+                    <div class="stat-card trainings">
+                      <div class="stat-header">
+                        <div class="stat-icon trainings">
+                          <i class="fa fa-certificate"></i>
                         </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-edit"></i>
+                        </a>
                       </div>
+                      <h4 t-esc="formation.name"/>
+                      <p class="stat-label">
+                        <span t-esc="formation.date_start"/> - <span t-esc="formation.date_end"/>
+                      </p>
+                      <p t-if="formation.document_obtenu">
+                        <strong>Diplôme :</strong> <span t-esc="formation.document_obtenu"/>
+                      </p>
                     </div>
                   </t>
                 </div>
-
-                <!-- EXPERIENCES -->
-                <h5 class="d-flex justify-content-between align-items-center">
-                  💼 Expériences
-                  <a href="/mon-espace/ajouter/experience" class="btn btn-outline-primary btn-sm">
-                    <i class="fa fa-plus"></i> Ajouter
+                
+                <div class="text-center mt-4">
+                  <a href="/mon-espace/ajouter/formation" class="btn btn-primary">
+                    <i class="fa fa-plus"></i>
+                    Ajouter une formation
                   </a>
-                </h5>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-4">
-                  <t t-foreach="candidat.experience_ids" t-as="exp">
-                    <div class="col">
-                      <div class="card h-100">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="card-title mb-1"><t t-esc="exp.name" /></h6>
-                            <a href="#" class="btn btn-sm btn-light" title="Modifier">
-                              <i class="fa fa-pencil-alt"></i>
-                            </a>
-                          </div>
-                          <p class="mb-1"><strong>📅</strong> <t t-esc="exp.date_start" /> - <t t-esc="exp.date_end" /></p>
-                          <p class="small text-muted"><t t-esc="exp.description" /></p>
-                        </div>
-                      </div>
-                    </div>
-                  </t>
                 </div>
+              </div>
 
-                <!-- EDUCATION -->
-                <h5 class="d-flex justify-content-between align-items-center">
-                  🎓 Éducation
-                  <a href="/mon-espace/ajouter/education" class="btn btn-outline-primary btn-sm">
-                    <i class="fa fa-plus"></i> Ajouter
-                  </a>
-                </h5>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-4">
-                  <t t-foreach="candidat.education_ids" t-as="edu">
-                    <div class="col">
-                      <div class="card h-100">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="card-title mb-1"><t t-esc="edu.name" /></h6>
-                            <a href="#" class="btn btn-sm btn-light" title="Modifier">
-                              <i class="fa fa-pencil-alt"></i>
-                            </a>
-                          </div>
-                          <p class="mb-1"><strong>📅</strong> <t t-esc="edu.date_start" /> - <t t-esc="edu.date_end" /></p>
-                          <p class="mb-1"><strong>🏫</strong> <t t-esc="edu.institution" /></p>
-                          <p class="mb-1"><strong>🎓</strong> <t t-esc="edu.diplome" /></p>
-                          <p class="small text-muted"><t t-esc="edu.description" /></p>
-                        </div>
-                      </div>
-                    </div>
-                  </t>
-                </div>
-
-                <!-- LANGAGES -->
-                <h5 class="d-flex justify-content-between align-items-center">
-                  🌐 Langages
-                  <a href="/mon-espace/ajouter/langage" class="btn btn-outline-primary btn-sm">
-                    <i class="fa fa-plus"></i> Ajouter
-                  </a>
-                </h5>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-                  <t t-foreach="candidat.langage_ids" t-as="langue">
-                    <div class="col">
-                      <div class="card h-100">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                          <div>
-                            <h6 class="card-title mb-1"><t t-esc="langue.name" /></h6>
-                            <p class="small text-muted"><t t-esc="langue.description" /></p>
-                          </div>
-                          <a href="#" class="btn btn-sm btn-light" title="Modifier">
-                            <i class="fa fa-pencil-alt"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </t>
-                </div>
-
+            </div>
+          </div>
+          
+          <!-- Preview modal pour l'avatar -->
+          <div class="avatar-preview">
+            <div class="preview-content">
+              <h4>Aperçu de votre photo</h4>
+              <img src="" alt="Aperçu" class="preview-image"/>
+              <div class="preview-actions">
+                <button class="btn btn-confirm">Confirmer</button>
+                <button class="btn btn-cancel">Annuler</button>
               </div>
             </div>
           </div>
+          
         </t>
       </template>
 
-
+    <!-- Template pour le rapport PDF (inchangé) -->
     <report
       id="report_cv_pdf"
       model="website.user"
@@ -180,5 +436,6 @@
       file="website_bensizwe.report_cv_pdf_template"
       print_report_name="'CV - %s' % object.name"
     />
+    
   </data>
 </odoo>

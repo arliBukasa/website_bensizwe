@@ -8,15 +8,19 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
                 <field name="user_id"/>
                 <field name="email"/>
                 <field name="phone"/>
-                <field name="adresse"/>
-                <field name="date_naissance"/>
+                <field name="city"/>
+                <field name="birth_date"/>
                 <field name="etat_civil"/>
                 <field name="nationalite"/>
+                <field name="current_position"/>
+                <field name="profile_completion" widget="progressbar"/>
+                <field name="is_active"/>
                 <field name="training_ids" widget="many2many_tags"/>
-                <field name="experience_ids" widget="many2many_tags"/>
             </tree>
         </field>
     </record>
@@ -28,82 +32,251 @@
         <field name="arch" type="xml">
             <form string="Website User">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="is_active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    
+                    <field name="avatar" widget="image" class="oe_avatar" options="{'preview_image': 'avatar', 'size': [150, 150]}"/>
+                    
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="Name..."/>
+                            <field name="name" placeholder="Nom complet..."/>
                         </h1>
-                        <group name="" string="string">
-                            <group name="" string="connection">
-                                <field name="user_id"/>
-                                <field name="email"/>
-                                <field name="phone"/> 
-                                <field name="adresse"/>  
-                                <field name="date_naissance"/>  
-                                <field name="etat_civil"/>
-                                <field name="nationalite"/>  
-                                <field name="training_ids"/>
-                                <field name="experience_ids">
-                                    <tree string="Experience">
+                        <div class="o_row">
+                            <field name="first_name" placeholder="Prénom"/>
+                            <field name="last_name" placeholder="Nom de famille"/>
+                        </div>
+                    </div>
+                    
+                    <notebook>
+                        <!-- Page Informations personnelles -->
+                        <page string="Informations personnelles" name="personal_info">
+                            <group name="personal_group">
+                                <group name="contact_info" string="Contact">
+                                    <field name="email" widget="email"/>
+                                    <field name="phone" widget="phone"/>
+                                    <field name="user_id"/>
+                                </group>
+                                
+                                <group name="personal_details" string="Détails personnels">
+                                    <field name="birth_date"/>
+                                    <field name="age" readonly="1"/>
+                                    <field name="gender"/>
+                                    <field name="etat_civil"/>
+                                    <field name="nationalite"/>
+                                </group>
+                            </group>
+                            
+                            <group name="address_group" string="Adresse">
+                                <group name="address_details">
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="city"/>
+                                    <field name="zip_code"/>
+                                    <field name="state"/>
+                                    <field name="country"/>
+                                </group>
+                                <group name="computed_address">
+                                    <field name="adresse" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Page Informations professionnelles -->
+                        <page string="Professionnel" name="professional_info">
+                            <group name="professional_group">
+                                <group name="current_position" string="Poste actuel">
+                                    <field name="current_position"/>
+                                    <field name="current_company"/>
+                                    <field name="experience_years"/>
+                                    <field name="salary_expectation"/>
+                                    <field name="availability"/>
+                                </group>
+                                
+                                <group name="profile_stats" string="Profil">
+                                    <field name="profile_completion" widget="progressbar"/>
+                                    <field name="last_connection" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <group name="bio_group" string="Présentation">
+                                <field name="bio" nolabel="1" placeholder="Décrivez-vous en quelques mots..."/>
+                                <field name="objective" nolabel="1" placeholder="Vos objectifs professionnels..."/>
+                            </group>
+                        </page>
+                        
+                        <!-- Page Réseaux sociaux -->
+                        <page string="Réseaux sociaux" name="social_networks">
+                            <group name="social_group" string="Liens professionnels">
+                                <field name="linkedin_url" widget="url"/>
+                                <field name="website_url" widget="url"/>
+                                <field name="portfolio_url" widget="url"/>
+                                <field name="github_url" widget="url"/>
+                            </group>
+                        </page>
+                        
+                        <!-- Page Expériences -->
+                        <page string="Expériences" name="experiences">
+                            <field name="experience_ids">
+                                <tree string="Expériences" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="description"/>
+                                </tree>
+                                <form string="Expérience">
+                                    <group>
                                         <field name="name"/>
                                         <field name="date_start"/>
                                         <field name="date_end"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <group name="candidatures" string="Candidatures">
-                                <notebook>
-                                <page name="Candidatures" string="Candidatures">
-                                    <field name="application_ids">
-                                        <tree string="Applications">
-                                            <field name="job_id"/>
-                                            <field name="stage_id"/>
-                                            <field name="date_closed"/>
-                                        </tree>
-                                    </field>
-                                    
-                                    </page>
-                                </notebook>
-                            </group>
-                            
-                        </group>
+                                        <field name="description"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
                         
-                    </div>
+                        <!-- Page Formations -->
+                        <page string="Formations" name="formations">
+                            <field name="formation_ids">
+                                <tree string="Formations" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="document_obtenu"/>
+                                    <field name="description"/>
+                                </tree>
+                                <form string="Formation">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="document_obtenu"/>
+                                        <field name="description"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        
+                        <!-- Page Éducation -->
+                        <page string="Éducation" name="education">
+                            <field name="education_ids">
+                                <tree string="Éducation" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="institution"/>
+                                    <field name="diplome"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="description"/>
+                                </tree>
+                                <form string="Éducation">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="institution"/>
+                                        <field name="diplome"/>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="description"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        
+                        <!-- Page Compétences -->
+                        <page string="Compétences" name="competences">
+                            <field name="competence_ids">
+                                <tree string="Compétences" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                </tree>
+                                <form string="Compétence">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        
+                        <!-- Page Langages -->
+                        <page string="Langages" name="langages">
+                            <field name="langage_ids" widget="many2many_tags"/>
+                        </page>
+                        
+                        <!-- Page Formations suivies -->
+                        <page string="Formations BENSIZWE" name="trainings">
+                            <field name="training_ids" widget="many2many">
+                                <tree string="Formations suivies">
+                                    <field name="name"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="status"/>
+                                    <field name="cout"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <!-- Page Candidatures -->
+                        <page string="Candidatures" name="applications">
+                            <field name="application_ids" readonly="1">
+                                <tree string="Candidatures">
+                                    <field name="job_id"/>
+                                    <field name="stage_id"/>
+                                    <field name="create_date"/>
+                                    <field name="priority" widget="priority"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <!-- Page Préférences -->
+                        <page string="Préférences" name="preferences">
+                            <group name="preferences_group">
+                                <group name="notifications" string="Notifications">
+                                    <field name="notification_email"/>
+                                    <field name="newsletter"/>
+                                    <field name="preferred_language"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
+                
+                <!-- <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div> -->
             </form>
         </field>
     </record>
 
-    <!-- View website.user search -->
-    <record id="view_website_user_search" model="ir.ui.view">
-        <field name="name">view.website.user.search</field>
-        <field name="model">website.user</field>
-        <field name="arch" type="xml">
-            <search>
-                <group expand="1" string="Group By">
-                    <filter string="Name" name="name" domain="[]" context="{'group_by':'name'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- Action website.user -->
+    <!-- Action pour website.user -->
     <record id="action_website_user" model="ir.actions.act_window">
-        <field name="name">Website User</field>
-        <field name="type">ir.actions.act_window</field>
+        <field name="name">Candidats</field>
         <field name="res_model">website.user</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
+        <field name="view_id" ref="view_website_user_tree"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                There is no examples click here to add new Website User.
+            <p class="o_view_nocontent_smiling_face">
+                Créer un nouveau candidat
+            </p>
+            <p>
+                Gérez les candidats et leurs profils.
             </p>
         </field>
     </record>
 
-    <!-- Menu website.user -->
-    <menuitem id="menu_website_user_root" name="Website Users" parent="website.menu_website_configuration"/>
-    <menuitem id="menu_website_user" name="Candidats" parent="website_bensizwe.menu_website_user_root" action="website_bensizwe.action_website_user"/>
+    <!-- Menu principal -->
+
+    <menuitem
+        id="website_bensizwe_root_menu"
+        name="gestion des candidats"
+        sequence="10"/>
+
+    <menuitem id="menu_website_user" name="Candidats" parent="website_bensizwe_root_menu" action="action_website_user" sequence="10"/>
+    <!-- candidatures -->
+
 
 </odoo>
