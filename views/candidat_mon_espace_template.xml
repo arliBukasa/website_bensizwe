@@ -3,7 +3,6 @@
   <data>
 
     <template id="candidat_espace_template" name="Espace Candidat Moderne">
-        <t t-call-assets="web.assets_frontend"/>
         <t t-call="website.layout">
           
           <!-- Container principal avec design moderne -->
@@ -45,6 +44,9 @@
                         <span t-esc="candidat.city" style="color: #666; font-size: 14px;"/>
                       </div>
                     </div>
+                    <button type="button" class="meta-item btn-edit-profile" id="openProfileModal" style="margin-left: 16px;">
+                      <i class="fa fa-edit"></i> Modifier profil
+                    </button>
                   </div>
                 </div>
               </div>
@@ -233,142 +235,128 @@
               </div>
 
               <!-- Formulaire de modification du profil -->
-              <div class="profile-edit-form" id="profile">
-                <h2 class="form-title">
-                  <i class="fa fa-user-cog"></i>
-                  Modifier mon profil
-                </h2>
-                
-                <form method="post" action="/mon-espace/update" enctype="multipart/form-data">
-                  <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                  
-                  <!-- Informations personnelles -->
-                  <div class="form-section">
-                    <h3 class="section-title">Informations personnelles</h3>
-                    
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label class="form-label" for="first_name">Prénom *</label>
-                        <input type="text" id="first_name" name="first_name" class="form-control" 
-                               t-att-value="candidat.first_name" required="required"/>
+              <!-- Modal pour modification du profil -->
+              <div id="profileModal" class="custom-modal">
+                <div class="custom-modal-dialog">
+                  <span class="close" id="closeProfileModal" style="position:absolute; top:12px; right:16px; font-size:28px; cursor:pointer;">×</span>
+                  <h2 class="form-title">
+                    <i class="fa fa-user-cog"></i>
+                    Modifier mon profil
+                  </h2>
+                  <form method="post" action="/mon-espace/update" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <!-- Informations personnelles -->
+                    <div class="form-section">
+                      <h3 class="section-title">Informations personnelles</h3>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label" for="first_name">Prénom *</label>
+                          <input type="text" id="first_name" name="first_name" class="form-control" 
+                                 t-att-value="candidat.first_name" required="required"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="last_name">Nom de famille *</label>
+                          <input type="text" id="last_name" name="last_name" class="form-control" 
+                                 t-att-value="candidat.last_name or candidat.name" required="required"/>
+                        </div>
                       </div>
-                      
-                      <div class="form-group">
-                        <label class="form-label" for="last_name">Nom de famille *</label>
-                        <input type="text" id="last_name" name="last_name" class="form-control" 
-                               t-att-value="candidat.last_name or candidat.name" required="required"/>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label" for="email">Email *</label>
+                          <input type="email" id="email" name="email" class="form-control" 
+                                 t-att-value="candidat.email" required="required"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="phone">Téléphone</label>
+                          <input type="tel" id="phone" name="phone" class="form-control" 
+                                 t-att-value="candidat.phone"/>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label class="form-label" for="email">Email *</label>
-                        <input type="email" id="email" name="email" class="form-control" 
-                               t-att-value="candidat.email" required="required"/>
-                      </div>
-                      
-                      <div class="form-group">
-                        <label class="form-label" for="phone">Téléphone</label>
-                        <input type="tel" id="phone" name="phone" class="form-control" 
-                               t-att-value="candidat.phone"/>
-                      </div>
-                    </div>
-                    
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label class="form-label" for="birth_date">Date de naissance</label>
-                        <input type="date" id="birth_date" name="birth_date" class="form-control" 
-                               t-att-value="candidat.birth_date"/>
-                      </div>
-                      
-                      <div class="form-group">
-                        <label class="form-label" for="gender">Genre</label>
-                        <select id="gender" name="gender" class="form-control">
-                          <option value="">Sélectionner...</option>
-                          <option value="male" t-att-selected="candidat.gender == 'male'">Homme</option>
-                          <option value="female" t-att-selected="candidat.gender == 'female'">Femme</option>
-                          <option value="other" t-att-selected="candidat.gender == 'other'">Autre</option>
-                        </select>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label" for="birth_date">Date de naissance</label>
+                          <input type="date" id="birth_date" name="birth_date" class="form-control" 
+                                 t-att-value="candidat.birth_date"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="gender">Genre</label>
+                          <select id="gender" name="gender" class="form-control">
+                            <option value="">Sélectionner...</option>
+                            <option value="male" t-att-selected="candidat.gender == 'male'">Homme</option>
+                            <option value="female" t-att-selected="candidat.gender == 'female'">Femme</option>
+                            <option value="other" t-att-selected="candidat.gender == 'other'">Autre</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  <!-- Adresse -->
-                  <div class="form-section">
-                    <h3 class="section-title">Adresse</h3>
-                    
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label class="form-label" for="street">Rue</label>
-                        <input type="text" id="street" name="street" class="form-control" 
-                               t-att-value="candidat.street"/>
+                    <!-- Adresse -->
+                    <div class="form-section">
+                      <h3 class="section-title">Adresse</h3>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label" for="street">Rue</label>
+                          <input type="text" id="street" name="street" class="form-control" 
+                                 t-att-value="candidat.street"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="city">Ville</label>
+                          <input type="text" id="city" name="city" class="form-control" 
+                                 t-att-value="candidat.city"/>
+                        </div>
                       </div>
-                      
-                      <div class="form-group">
-                        <label class="form-label" for="city">Ville</label>
-                        <input type="text" id="city" name="city" class="form-control" 
-                               t-att-value="candidat.city"/>
-                      </div>
-                    </div>
-                    
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label class="form-label" for="zip_code">Code postal</label>
-                        <input type="text" id="zip_code" name="zip_code" class="form-control" 
-                               t-att-value="candidat.zip_code"/>
-                      </div>
-                      
-                      <div class="form-group">
-                        <label class="form-label" for="country">Pays</label>
-                        <input type="text" id="country" name="country" class="form-control" 
-                               t-att-value="candidat.country"/>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label" for="zip_code">Code postal</label>
+                          <input type="text" id="zip_code" name="zip_code" class="form-control" 
+                                 t-att-value="candidat.zip_code"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="country">Pays</label>
+                          <input type="text" id="country" name="country" class="form-control" 
+                                 t-att-value="candidat.country"/>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  <!-- Informations professionnelles -->
-                  <div class="form-section">
-                    <h3 class="section-title">Informations professionnelles</h3>
-                    
-                    <div class="form-row">
-                      <div class="form-group">
-                        <label class="form-label" for="current_position">Poste actuel</label>
-                        <input type="text" id="current_position" name="current_position" class="form-control" 
-                               t-att-value="candidat.current_position"/>
+                    <!-- Informations professionnelles -->
+                    <div class="form-section">
+                      <h3 class="section-title">Informations professionnelles</h3>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label class="form-label" for="current_position">Poste actuel</label>
+                          <input type="text" id="current_position" name="current_position" class="form-control" 
+                                 t-att-value="candidat.current_position"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="form-label" for="experience_years">Années d'expérience</label>
+                          <select id="experience_years" name="experience_years" class="form-control">
+                            <option value="">Sélectionner...</option>
+                            <option value="0-1" t-att-selected="candidat.experience_years == '0-1'">0-1 an</option>
+                            <option value="2-5" t-att-selected="candidat.experience_years == '2-5'">2-5 ans</option>
+                            <option value="6-10" t-att-selected="candidat.experience_years == '6-10'">6-10 ans</option>
+                            <option value="10+" t-att-selected="candidat.experience_years == '10+'">Plus de 10 ans</option>
+                          </select>
+                        </div>
                       </div>
-                      
                       <div class="form-group">
-                        <label class="form-label" for="experience_years">Années d'expérience</label>
-                        <select id="experience_years" name="experience_years" class="form-control">
-                          <option value="">Sélectionner...</option>
-                          <option value="0-1" t-att-selected="candidat.experience_years == '0-1'">0-1 an</option>
-                          <option value="2-5" t-att-selected="candidat.experience_years == '2-5'">2-5 ans</option>
-                          <option value="6-10" t-att-selected="candidat.experience_years == '6-10'">6-10 ans</option>
-                          <option value="10+" t-att-selected="candidat.experience_years == '10+'">Plus de 10 ans</option>
-                        </select>
+                        <label class="form-label" for="bio">Présentation personnelle</label>
+                        <textarea id="bio" name="bio" class="form-control" rows="4" 
+                                  placeholder="Parlez-nous de vous, vos objectifs professionnels..."><t t-esc="candidat.bio"/></textarea>
+                        <div class="form-text">Maximum 500 caractères</div>
                       </div>
                     </div>
-                    
-                    <div class="form-group">
-                      <label class="form-label" for="bio">Présentation personnelle</label>
-                      <textarea id="bio" name="bio" class="form-control" rows="4" 
-                                placeholder="Parlez-nous de vous, vos objectifs professionnels..."><t t-esc="candidat.bio"/></textarea>
-                      <div class="form-text">Maximum 500 caractères</div>
+                    <!-- Actions du formulaire -->
+                    <div class="form-actions">
+                      <button type="button" class="btn btn-secondary" id="closeProfileModal2">
+                        <i class="fa fa-times"></i>
+                        Annuler
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save"></i>
+                        Enregistrer les modifications
+                      </button>
                     </div>
-                  </div>
-
-                  <!-- Actions du formulaire -->
-                  <div class="form-actions">
-                    <button type="button" class="btn btn-secondary">
-                      <i class="fa fa-times"></i>
-                      Annuler
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                      <i class="fa fa-save"></i>
-                      Enregistrer les modifications
-                    </button>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
 
               <!-- Section Formations -->

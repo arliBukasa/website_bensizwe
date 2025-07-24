@@ -41,9 +41,9 @@
             
             # Styles CSS/SCSS
             'website_bensizwe/static/src/scss/website_bensizwe.scss',
+            'website_bensizwe/static/src/scss/profile_modal.scss',
             
             # JavaScript pour l'interactivité
-            'website_bensizwe/static/src/js/user_space.js',
             'website_bensizwe/static/src/js/*.js',
         ],
     },

@@ -2,6 +2,7 @@
 
 import publicWidget from 'web.public.widget';
 console.log("ici avant random")
+
 var DJobsOut = publicWidget.Widget.extend({
     selector: '.s_row_out_jobs',
     read_events: {
@@ -9,6 +10,7 @@ var DJobsOut = publicWidget.Widget.extend({
         'click': '_onClickRefresh',
 
     },
+
 
     start() {
         console.log("ici dans random")
