@@ -13,7 +13,7 @@
     'author': 'Bensizwe Development Team',
     'website': 'http://www.bensizwe.com',
     'category': 'Website',
-    'depends': ['website', 'website_hr_recruitment', 'hr'],
+    'depends': ['website', 'website_hr_recruitment', 'hr', 'website_blog', 'portal', 'mail'],
     "data": [
         "security/ir.model.access.csv",
         "views/hr_applicant_views.xml",
@@ -31,7 +31,10 @@
         "views/forms/website_form_formation.xml",
         "views/forms/ajout_experience_education_langage_templates.xml",
         "views/report_cv_pdf_template.xml",
-        "views/snippets/snippet3collones_dynamic.xml"
+        "views/snippets/snippet3collones_dynamic.xml",
+        "views/website_blog_bensizwe.xml",
+        "views/formation_registration_templates.xml",
+        "views/portal_formations.xml",
     ],
     'assets': {
         'web.assets_frontend': [

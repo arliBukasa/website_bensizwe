@@ -23,9 +23,22 @@
                       <label for="login" class="form-label">Email</label>
                       <input type="text" name="login" class="form-control" required="required"/>
                     </div>
+
+                    <div class="mb-3">
+                      <label for="phone" class="form-label">Numéro de téléphone</label>
+                      <input type="text" name="phone" class="form-control" required="required"/>
+                    </div>
                     <div class="mb-3">
                       <label for="password" class="form-label">Mot de passe</label>
                       <input type="password" name="password" class="form-control" required="required"/>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me"/>
+                        <label class="form-check-label" for="remember_me">
+                          Se souvenir de moi
+                        </label>
+                      </div>  
                     </div>
                     <div class="d-grid">
                       <button type="submit" class="btn btn-primary">Se connecter</button>
@@ -79,6 +92,373 @@
 
                   <div class="text-center mt-3">
                     <a href="/candidat/login">Déjà inscrit ? Connectez-vous</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <!-- Template unifié pour inscription/connexion lors d'inscription aux formations -->
+    <template id="formation_auth_unified_template" name="Formation - Connexion/Inscription">
+      <t t-call="website.layout">
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+              <div class="card shadow">
+                <div class="card-body p-5">
+                  <div class="text-center mb-4">
+                    <h2 class="mb-3">
+                      <strong>
+                        <font class="text-o-color-2">Donnez un nouvel élan à votre carrière dès aujourd'hui</font>
+                      </strong>
+                    </h2>
+                  </div>
+
+                  <div class="tab-content" id="authTabsContent">
+                    <!-- Panneau de connexion -->
+                    <div t-attf-class="tab-pane fade #{'' if show_signup else 'show active'}" id="login-panel" role="tabpanel" aria-labelledby="login-tab">
+                      <div class="row">
+                        <div class="col-md-6 mx-auto">
+                          <t t-if="login_error">
+                            <div class="alert alert-danger" role="alert">
+                              <i class="fa fa-exclamation-triangle me-2"></i>
+                              <t t-esc="login_error" />
+                            </div>
+                          </t>
+
+                          <form method="post" action="/candidat/login/submit">
+                          
+                            <input type="hidden" name="formation_id" t-att-value="formation_id"/>
+                            <input type="hidden" name="redirect" t-att-value="redirect"/>
+
+
+                            <div class="mb-3">
+                              <label for="login_email" class="form-label">
+                                <i class="fa fa-envelope me-2"></i>Email
+                              </label>
+                              <input type="email" id="login_email" name="login" class="form-control form-control-lg" 
+                                     placeholder="votre.email@exemple.com" required="required" t-att-value="request.params.get('email', '')"/>
+                            </div>
+
+                            <!-- téléphone champs phone-->
+                            <div class="mb-3">
+                              <label for="login_phone" class="form-label">
+                                <i class="fa fa-phone me-2"></i>Téléphone
+                              </label>
+                              <input type="tel" id="login_phone" name="phone" class="form-control form-control-lg" 
+                                     placeholder="+243 XX XX XX XX" t-att-value="request.params.get('phone', '')" required="required"/>
+                            </div>
+
+                            <div class="mb-3">
+                              <label for="login_password" class="form-label">
+                                <i class="fa fa-lock me-2"></i>Mot de passe
+                              </label>
+                              <input type="password" id="login_password" name="password" class="form-control form-control-lg" 
+                                     placeholder="Votre mot de passe" required="required"/>
+                            </div>
+                            
+
+                            <div class="mb-3 form-check">
+                              <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me"/>
+                              <label class="form-check-label" for="remember_me">
+                                Se souvenir de moi
+                              </label>
+                            </div>
+
+                            <!-- boutons  créer compte et se connecter -->
+                            <div class="d-grid">
+                              <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fa fa-sign-in me-2"></i> Se connecter
+                              </button>
+                                <a href="/candidat/signup" class="btn btn-link">
+                                <i class="fa fa-user-plus me-2"></i> Créer un compte
+                                </a>
+                            </div>
+                          </form>
+
+                          <div class="text-center mt-3">
+                            <a href="/candidat/reset_password" class="text-muted">Mot de passe oublié ?</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Panneau d'inscription avec informations complètes -->
+                    <div t-attf-class="tab-pane fade #{'show active' if show_signup else ''}" id="signup-panel" role="tabpanel" aria-labelledby="signup-tab">
+                      <t t-if="signup_error">
+                        <div class="alert alert-danger" role="alert">
+                          <i class="fa fa-exclamation-triangle me-2"></i>
+                          <t t-esc="signup_error" />
+                        </div>
+                      </t>
+
+                      <form method="post" action="/candidat/trainning/submit">
+                        <!-- csrf token -->
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="formation_id" t-att-value="formation_id"/>
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+
+                        <div class="row">
+                          <!-- Informations personnelles contenue centré-->
+                          <div class="col-md-9 text-center mx-auto ">
+                            <h5 class="mb-3 text-primary">
+                              <i class=""></i>Formation pratique et certifiante!
+                            </h5>
+
+                            <div class="mb-3">
+                              <label for="name" class="form-label">Nom complet *</label>
+                              <input type="text" id="name" name="name" class="form-control" 
+                                     placeholder="Nom et Prénom" required="required" 
+                                     t-att-value="request.params.get('name', '')"/>
+                            </div>
+
+                            <div class="mb-3">
+                              <label for="email" class="form-label">Email *</label>
+                              <input type="email" id="email" name="email" class="form-control" 
+                                     placeholder="votre.email@exemple.com" required="required"
+                                     t-att-value="request.params.get('email', '')"/>
+                            </div>
+
+                            <div class="mb-3">
+                              <label for="phone" class="form-label">Téléphone *</label>
+                              <input type="tel" id="phone" name="phone" class="form-control" 
+                                     placeholder="+243 XX XX XX XX" required="required"
+                                     t-att-value="request.params.get('phone', '')"/>
+                            </div>
+                            <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                              <i class="fa fa-user-plus me-2"></i> Je m'inscris
+                            </button>
+                          </div>
+
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <!-- Informations sur la formation -->
+                  <div class="mt-5 p-3 bg-light rounded" t-if="formation">
+                    <h6 class="mb-2">
+                      <i class="fa fa-graduation-cap me-2"></i>Formation sélectionnée
+                    </h6>
+                    <div class="d-flex align-items-center">
+                      <div class="flex-grow-1">
+                        <strong t-esc="formation.name"/>
+                        <br/>
+                        <!-- <small class="text-muted">
+                          <i class="fa fa-calendar me-1"></i>
+                          <span t-if="formation.start_date" t-esc="formation.start_date"/>
+                          <span t-if="formation.duration"> - Durée: <t t-esc="formation.duration"/></span>
+                        </small> -->
+                      </div>
+                      <div class="text-end">
+                        <!-- <span class="badge bg-primary" t-if="formation.price">
+                          <t t-esc="formation.price"/> $
+                        </span> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JavaScript pour la validation du formulaire -->
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            // Validation des mots de passe
+            const password = document.getElementById('password');
+            const passwordConfirm = document.getElementById('password_confirm');
+            
+            function validatePasswords() {
+              if (password.value !== passwordConfirm.value) {
+                passwordConfirm.setCustomValidity('Les mots de passe ne correspondent pas');
+              } else {
+                passwordConfirm.setCustomValidity('');
+              }
+            }
+            
+            if (password &amp;&amp; passwordConfirm) {
+              password.addEventListener('change', validatePasswords);
+              passwordConfirm.addEventListener('keyup', validatePasswords);
+            }
+
+            // Format du téléphone
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+              phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.startsWith('223')) {
+                  value = '+' + value;
+                } else if (value.length > 0 &amp;&amp; !value.startsWith('+')) {
+                  value = '+223' + value;
+                }
+                e.target.value = value;
+              });
+            }
+
+            // Basculer vers l'onglet inscription si des erreurs d'inscription
+            <t t-if="signup_error">
+              const signupTab = new bootstrap.Tab(document.getElementById('signup-tab'));
+              signupTab.show();
+            </t>
+          });
+        </script>
+      </t>
+    </template>
+
+    <!-- Template de réinitialisation de mot de passe -->
+    <template id="candidat_reset_password_template" name="Réinitialisation mot de passe">
+      <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h3 class="mb-4 text-center">Réinitialiser le mot de passe</h3>
+                  
+                  <div class="text-center mb-4">
+                    <i class="fa fa-lock fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Entrez votre adresse email pour recevoir un lien de réinitialisation</p>
+                  </div>
+
+                  <t t-if="error">
+                    <div class="alert alert-danger" role="alert">
+                      <t t-esc="error" />
+                    </div>
+                  </t>
+
+                  <t t-if="success">
+                    <div class="alert alert-success" role="alert">
+                      <i class="fa fa-check-circle me-2"></i>
+                      Un email de réinitialisation a été envoyé à votre adresse.
+                    </div>
+                  </t>
+
+                  <form method="post" action="/candidat/reset_password/submit">
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Adresse email</label>
+                      <input type="email" name="email" class="form-control" placeholder="votre.email@exemple.com" required="required"/>
+                    </div>
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-paper-plane me-2"></i>Envoyer le lien
+                      </button>
+                    </div>
+                  </form>
+
+                  <div class="text-center mt-3">
+                    <a href="/candidat/login">Retour à la connexion</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <!-- Template de confirmation de réinitialisation avec token -->
+    <template id="candidat_reset_password_confirm_template" name="Confirmer nouveau mot de passe">
+      <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <h3 class="mb-4 text-center">Nouveau mot de passe</h3>
+                  
+                  <div class="text-center mb-4">
+                    <i class="fa fa-key fa-3x text-success mb-3"></i>
+                    <p class="text-muted">Définissez votre nouveau mot de passe</p>
+                  </div>
+
+                  <t t-if="error">
+                    <div class="alert alert-danger" role="alert">
+                      <i class="fa fa-exclamation-triangle me-2"></i>
+                      <t t-esc="error" />
+                    </div>
+                  </t>
+
+                  <form method="post" action="/candidat/reset_password/confirm/submit">
+                    <input type="hidden" name="token" t-att-value="token"/>
+                    
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Nouveau mot de passe *</label>
+                      <input type="password" name="password" id="password" class="form-control" 
+                             placeholder="Minimum 8 caractères" required="required" minlength="8"/>
+                      <div class="form-text">Le mot de passe doit contenir au moins 8 caractères</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="password_confirm" class="form-label">Confirmer le mot de passe *</label>
+                      <input type="password" name="password_confirm" id="password_confirm" class="form-control" 
+                             placeholder="Répétez le nouveau mot de passe" required="required" minlength="8"/>
+                    </div>
+                    
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fa fa-check me-2"></i>Confirmer le nouveau mot de passe
+                      </button>
+                    </div>
+                  </form>
+
+                  <div class="text-center mt-3">
+                    <a href="/candidat/login" class="text-muted">Retour à la connexion</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JavaScript pour la validation -->
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const password = document.getElementById('password');
+            const passwordConfirm = document.getElementById('password_confirm');
+            
+            function validatePasswords() {
+              if (password.value !== passwordConfirm.value) {
+                passwordConfirm.setCustomValidity('Les mots de passe ne correspondent pas');
+              } else {
+                passwordConfirm.setCustomValidity('');
+              }
+            }
+            
+            password.addEventListener('change', validatePasswords);
+            passwordConfirm.addEventListener('keyup', validatePasswords);
+          });
+        </script>
+      </t>
+    </template>
+
+    <!-- Template de succès de réinitialisation -->
+    <template id="candidat_reset_password_success_template" name="Mot de passe réinitialisé">
+      <t t-call="website.layout">
+        <div class="container mt-5 mb-5">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card shadow-sm border-success">
+                <div class="card-body">
+                  <div class="text-center">
+                    <i class="fa fa-check-circle fa-4x text-success mb-4"></i>
+                    <h3 class="mb-3 text-success">Mot de passe réinitialisé !</h3>
+                    <p class="text-muted mb-4">Votre mot de passe a été modifié avec succès.</p>
+                    
+                    <div class="d-grid gap-2">
+                      <a href="/candidat/login" class="btn btn-primary btn-lg">
+                        <i class="fa fa-sign-in me-2"></i>Se connecter maintenant
+                      </a>
+                      <a href="/mon-espace" class="btn btn-outline-secondary">
+                        <i class="fa fa-home me-2"></i>Aller à mon espace
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

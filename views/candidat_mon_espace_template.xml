@@ -85,13 +85,13 @@
                     </div>
                   </a>
                   
-                  <a href="#trainings" class="nav-item">
+                  <a href="/my/formations" class="nav-item">
                     <div class="nav-icon">
                       <i class="fa fa-graduation-cap"></i>
                     </div>
                     <div class="nav-content">
-                      <div class="nav-label">Formations</div>
-                      <p class="nav-desc">Mes formations et certifications</p>
+                      <div class="nav-label">Mes Formations</div>
+                      <p class="nav-desc">Gérer mes inscriptions aux formations</p>
                     </div>
                   </a>
                 </div>
@@ -208,7 +208,7 @@
               </div>
 
               <!-- Offres disponibles -->
-              <div class="quick-nav" id="jobs">
+              <div class="quick-nav" id="jobs" sytle="margin:30px;">
                 <h3 class="nav-title">
                   <i class="fa fa-rocket"></i>
                   Offres recommandées pour vous
@@ -238,7 +238,7 @@
               <!-- Modal pour modification du profil -->
               <div id="profileModal" class="custom-modal">
                 <div class="custom-modal-dialog">
-                  <span class="close" id="closeProfileModal" style="position:absolute; top:12px; right:16px; font-size:28px; cursor:pointer;">×</span>
+                  <span class="close o_close_modal" id="closeProfileModal" style="position:absolute; top:12px; right:16px; font-size:28px; cursor:pointer;">×</span>
                   <h2 class="form-title">
                     <i class="fa fa-user-cog"></i>
                     Modifier mon profil
@@ -246,27 +246,27 @@
                   <form method="post" action="/mon-espace/update" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <!-- Informations personnelles -->
-                    <div class="form-section">
+                    <div class="form-section col-lg-12">
                       <h3 class="section-title">Informations personnelles</h3>
-                      <div class="form-row">
-                        <div class="form-group">
+                      <div class="form-row ">
+                        <div class="form-group mb-3">
                           <label class="form-label" for="first_name">Prénom *</label>
                           <input type="text" id="first_name" name="first_name" class="form-control" 
                                  t-att-value="candidat.first_name" required="required"/>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                           <label class="form-label" for="last_name">Nom de famille *</label>
                           <input type="text" id="last_name" name="last_name" class="form-control" 
                                  t-att-value="candidat.last_name or candidat.name" required="required"/>
                         </div>
                       </div>
                       <div class="form-row">
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                           <label class="form-label" for="email">Email *</label>
                           <input type="email" id="email" name="email" class="form-control" 
                                  t-att-value="candidat.email" required="required"/>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                           <label class="form-label" for="phone">Téléphone</label>
                           <input type="tel" id="phone" name="phone" class="form-control" 
                                  t-att-value="candidat.phone"/>

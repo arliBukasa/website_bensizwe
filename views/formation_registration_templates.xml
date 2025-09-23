@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- Template de confirmation d'inscription à une formation -->
+    <template id="formation_registration_confirm" name="Confirmation d'inscription">
+      <t t-call="website.layout">
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <div class="card shadow">
+                <div class="card-body p-5">
+                  <div class="text-center mb-4">
+                    <i class="fa fa-graduation-cap fa-3x text-primary mb-3"></i>
+                    <h2 class="mb-3">Confirmer votre inscription</h2>
+                    <p class="text-muted">Vérifiez les détails de votre inscription à la formation</p>
+                  </div>
+
+                  <!-- Détails de la formation -->
+                  <div class="card bg-light mb-4">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <i class="fa fa-book me-2"></i>
+                        <t t-esc="formation.name"/>
+                      </h5>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-2">
+                            <strong>Date de début:</strong>
+                            <span t-if="formation.start_date" t-esc="formation.start_date"/>
+                            <span t-else="">À définir</span>
+                          </p>
+                          <p class="mb-2">
+                            <strong>Durée:</strong>
+                            <span t-if="formation.duration" t-esc="formation.duration"/>
+                            <span t-else="">À définir</span>
+                          </p>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-2">
+                            <strong>Prix:</strong>
+                            <span t-if="formation.price" class="text-success">
+                              <t t-esc="formation.price"/> FCFA
+                            </span>
+                            <span t-else="" class="text-success">Gratuit</span>
+                          </p>
+                          <p class="mb-2">
+                            <strong>Places disponibles:</strong>
+                            <span t-if="formation.max_participants" class="text-info">
+                              <t t-esc="formation.available_spots"/> / <t t-esc="formation.max_participants"/>
+                            </span>
+                            <span t-else="" class="text-info">Illimitées</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div t-if="formation.description" class="mt-3">
+                        <strong>Description:</strong>
+                        <div t-field="formation.description" class="mt-2"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informations du candidat -->
+                  <div class="card bg-light mb-4">
+                    <div class="card-body">
+                      <h6 class="card-title">
+                        <i class="fa fa-user me-2"></i>Vos informations
+                      </h6>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-1"><strong>Nom:</strong> <t t-esc="user.name"/></p>
+                          <p class="mb-1"><strong>Email:</strong> <t t-esc="user.email"/></p>
+                          <p class="mb-1" t-if="user.phone"><strong>Téléphone:</strong> <t t-esc="user.phone"/></p>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-1" t-if="user.current_job"><strong>Poste:</strong> <t t-esc="user.current_job"/></p>
+                          <p class="mb-1" t-if="user.company"><strong>Entreprise:</strong> <t t-esc="user.company"/></p>
+                          <p class="mb-1" t-if="user.education_level"><strong>Niveau:</strong> <t t-esc="user.education_level"/></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Boutons d'action -->
+                  <form method="post" action="/formation/$(formation.id)/register">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    
+                    <div class="d-flex justify-content-between">
+                      <a href="/formations" class="btn btn-outline-secondary">
+                        <i class="fa fa-arrow-left me-2"></i>Retour aux formations
+                      </a>
+                      <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fa fa-check me-2"></i>Confirmer mon inscription
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <!-- Template de succès d'inscription -->
+    <template id="formation_registration_success" name="Inscription réussie">
+      <t t-call="website.layout">
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <div class="card shadow border-success">
+                <div class="card-body p-5 text-center">
+                  <i class="fa fa-check-circle fa-4x text-success mb-4"></i>
+                  <h2 class="text-success mb-3">Inscription confirmée !</h2>
+                  <p class="lead mb-4">
+                    Félicitations ! Votre inscription à la formation 
+                    "<strong t-esc="formation.name"/>" a été enregistrée avec succès.
+                  </p>
+
+                  <!-- Informations sur la suite -->
+                  <div class="alert alert-info text-start">
+                    <h6><i class="fa fa-info-circle me-2"></i>Prochaines étapes</h6>
+                    <ul class="mb-0">
+                      <li>Vous recevrez un email de confirmation sous peu</li>
+                      <li>Les détails de la formation vous seront communiqués par email</li>
+                      <li>Vous pouvez suivre le statut de votre inscription dans votre espace personnel</li>
+                      <li t-if="formation.price">Le paiement de <strong t-esc="formation.price"/> FCFA devra être effectué avant le début de la formation</li>
+                    </ul>
+                  </div>
+
+                  <!-- Détails de l'inscription -->
+                  <div class="card bg-light mt-4">
+                    <div class="card-body text-start">
+                      <h6 class="mb-3">Récapitulatif de votre inscription</h6>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-2"><strong>Formation:</strong> <t t-esc="formation.name"/></p>
+                          <p class="mb-2"><strong>Date d'inscription:</strong> <t t-esc="registration.registration_date"/></p>
+                          <p class="mb-2"><strong>Numéro d'inscription:</strong> #<t t-esc="registration.id"/></p>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-2"><strong>Statut:</strong> <span class="badge bg-success">Inscrit</span></p>
+                          <p class="mb-2" t-if="formation.start_date"><strong>Début:</strong> <t t-esc="formation.start_date"/></p>
+                          <p class="mb-2" t-if="formation.price"><strong>Prix:</strong> <t t-esc="formation.price"/> FCFA</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="mt-4">
+                    <a href="/my/formations" class="btn btn-primary me-3">
+                      <i class="fa fa-user me-2"></i>Mon espace personnel
+                    </a>
+                    <a href="/formations" class="btn btn-outline-secondary">
+                      <i class="fa fa-graduation-cap me-2"></i>Voir d'autres formations
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <!-- Template pour inscription déjà existante -->
+    <template id="formation_already_registered" name="Déjà inscrit">
+      <t t-call="website.layout">
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
+              <div class="card shadow border-warning">
+                <div class="card-body p-5 text-center">
+                  <i class="fa fa-exclamation-triangle fa-4x text-warning mb-4"></i>
+                  <h2 class="text-warning mb-3">Déjà inscrit</h2>
+                  <p class="lead mb-4">
+                    Vous êtes déjà inscrit à la formation 
+                    "<strong t-esc="formation.name"/>".
+                  </p>
+
+                  <!-- Détails de l'inscription existante -->
+                  <div class="card bg-light">
+                    <div class="card-body text-start">
+                      <h6 class="mb-3">Votre inscription actuelle</h6>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p class="mb-2"><strong>Date d'inscription:</strong> <t t-esc="registration.registration_date"/></p>
+                          <p class="mb-2"><strong>Numéro:</strong> #<t t-esc="registration.id"/></p>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-2">
+                            <strong>Statut:</strong> 
+                            <span t-if="registration.state == 'registered'" class="badge bg-success">Inscrit</span>
+                            <span t-elif="registration.state == 'confirmed'" class="badge bg-primary">Confirmé</span>
+                            <span t-elif="registration.state == 'cancelled'" class="badge bg-danger">Annulé</span>
+                            <span t-else="" class="badge bg-secondary" t-esc="registration.state"/>
+                          </p>
+                          <p class="mb-2" t-if="formation.start_date"><strong>Début:</strong> <t t-esc="formation.start_date"/></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="mt-4">
+                    <a href="/my/formations" class="btn btn-primary me-3">
+                      <i class="fa fa-user me-2"></i>Gérer mes inscriptions
+                    </a>
+                    <a href="/formations" class="btn btn-outline-secondary">
+                      <i class="fa fa-graduation-cap me-2"></i>Autres formations
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+  </data>
+</odoo>

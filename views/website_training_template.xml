@@ -67,12 +67,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- BOUTON s'inscrire '/formation/valider_inscription/<int:id>' -->
+                            <!-- BOUTON s'inscrire vers système d'auth unifié -->
                             <div class="text-center mt-4">
-                                <a t-att-href="'/formation/valider_inscription/%s' % formation.id"
+                                <a t-att-href="'/formation/auth?formation_id=%s&amp;redirect=/formation/%s/register' % (formation.id, formation.id)"
                                    class="btn btn-primary btn-lg o_we_no_overlay o_not_editable"
                                    style="width: 300px; height: 60px; font-size: 20px;">
-                                    Valider l'inscription
+                                    S'inscrire à cette formation
                                 </a>
                             </div>
                              <section class="s_text_block o_colored_level pb0 pt0" data-snippet="s_text_block" data-name="Text" style="background-image: none;">

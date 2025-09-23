@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <!-- Blog/tag/post records commented out because they reference models from the website_blog module
+         If you want to enable these records, add 'website_blog' (and 'website') to this module's depends
+         in __manifest__.py and restore the records below. -->
+
+    <!--
+    <record id="blog_appels_offres" model="blog.blog">
+      <field name="name">Appels d'Offres</field>
+      <field name="website_id" ref="website.default_website"/>
+      <field name="description">Publications d'appels d'offres et opportunités</field>
+      <field name="active">True</field>
+      <field name="sequence">50</field>
+    </record>
+
+    <record id="tag_appel_offre" model="blog.tag">
+      <field name="name">Appel d'Offre</field>
+      <field name="blog_id" ref="website_bensizwe.blog_appels_offres"/>
+    </record>
+
+    <record id="blog_post_appel_offre_exemple" model="blog.post">
+      <field name="blog_id" ref="website_bensizwe.blog_appels_offres"/>
+      <field name="name">Appel d'Offre — Fourniture de services IT</field>
+      <field name="subtitle">Publication d’un appel d’offres ouvert</field>
+      <field name="author_id" ref="base.user_admin"/>
+      <field name="website_published">True</field>
+      <field name="tag_ids" eval="[(6, 0, [ref('website_bensizwe.tag_appel_offre')])]"/>
+      <field name="content" type="html"><![CDATA[
+        <section class="s_text_block">
+          <h2>Objet</h2>
+          <p>Fourniture de services IT (développement, TMA, intégration, support) pour une durée de 12 mois.</p>
+          <h3>Critères d’éligibilité</h3>
+          <ul>
+            <li>Expérience prouvée sur des projets similaires</li>
+            <li>Ressources qualifiées et certifiées</li>
+            <li>Respect des délais et normes de qualité</li>
+          </ul>
+          <h3>Modalités</h3>
+          <p>Dossier à soumettre avant le <strong>30/09</strong> à 18h00 via la plateforme.</p>
+          <p><a class="btn btn-primary" href="/contactus">Soumettre des questions</a></p>
+        </section>
+      ]]></field>
+    </record>
+    -->
+
+    <!-- Menu Website vers route stable -->
+    <record id="website_menu_appels_offres" model="website.menu">
+      <field name="name">Appels d'Offres</field>
+      <field name="website_id" ref="website.default_website"/>
+      <field name="parent_id" ref="website.main_menu"/>
+      <field name="url">/appels-offres</field>
+      <field name="sequence">45</field>
+    </record>
+
+  </data>
+</odoo>

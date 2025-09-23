@@ -10,3 +10,8 @@ models/__pycache__/cadidats.cpython-37.pyc
 __pycache__/__init__.cpython-37.pyc
 controllers/__pycache__/website_training.cpython-37.pyc
 controllers/__pycache__/website_training.cpython-37.pyc
+migrations/add_reset_password_fields.sql
+controllers/__pycache__/formation_auth.cpython-37.pyc
+controllers/__pycache__/candidate_portal.cpython-37.pyc
+controllers/__pycache__/appels_offres.cpython-37.pyc
+models/__pycache__/res_users.cpython-37.pyc

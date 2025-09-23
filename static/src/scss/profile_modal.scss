@@ -3,6 +3,7 @@
   display: none;
   position: fixed;
   z-index: 1050;
+  margin: 30px;
   left: 0;
   top: 0;
   width: 100vw;
@@ -22,12 +23,14 @@
   margin: auto;
   padding: 32px 24px 24px 24px;
   border-radius: 12px;
-  max-width: 500px;
+  max-width: 50%;
   width: 100%;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
   position: relative;
   animation: modalFadeIn 0.3s;
+  padding: 15px;
 }
+
 
 .custom-modal .close {
   position: absolute;
@@ -38,6 +41,16 @@
   color: #888;
   background: none;
   border: none;
+}
+.custom-modal > form-group{
+  margin: 1rem; /* espace vertical entre les champs */
+  padding: 15px;
+}
+.form-row {
+  display: flex;
+  justify-content: left; /* Centre les éléments horizontalement */
+  padding: 15px;
+  gap: 15px; /* Facultatif : ajoute un espacement entre les éléments */
 }
 
 @keyframes modalFadeIn {

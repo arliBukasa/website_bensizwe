@@ -82,8 +82,8 @@ class Main(http.Controller):
     def valider_inscription(self, id, **kw):
         formation = request.env['website.training'].sudo().browse(id)
         candidat = request.env['website.user'].sudo().search([('user_id', '=', request.env.user.id)])
-
-        if candidat and formation:
+        logging.info(' ================== candidat: %s name : %s vs webuser : %s', candidat.user_id.id,candidat.name,request.website.user_id.id)
+        if candidat and formation and candidat.name != "Public user":
             # Ajoute la formation s'il n'est pas déjà inscrit
             if formation not in candidat.training_ids:
                 candidat.write({'training_ids': [(4, formation.id)]})
@@ -91,7 +91,7 @@ class Main(http.Controller):
                 'formation': formation,
                 'candidat': candidat
             })
-        return request.redirect('/candidat/login')
+        return request.redirect('/candidat/signup/'+str(formation.id))
     
     """@http.route('/', type='http', auth='public', website=True)
     def homepage(self, **kwargs):
