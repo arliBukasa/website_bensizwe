@@ -1,0 +1,199 @@
+/**
+ * Formation Video Styles - CSS pour les vidéos de formation
+ * Module: website_bensizwe
+ * Description: Styles pour les vidéos YouTube intégrées avec animations et responsive design
+ */
+
+/* Conteneur vidéo principal */
+.video-container {
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.video-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Contrôles vidéo overlay */
+.video-overlay button {
+    transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: none !important;
+}
+
+.video-overlay button:hover {
+    opacity: 1 !important;
+    transform: scale(1.1);
+}
+
+/* Responsive design pour mobile */
+@media (max-width: 768px) {
+    .video-container iframe {
+        height: 250px !important;
+    }
+    
+    .video-container {
+        margin: 0 10px;
+    }
+    
+    .video-overlay {
+        margin: 10px !important;
+    }
+    
+    .video-overlay button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .video-container iframe {
+        height: 200px !important;
+    }
+}
+
+/* Animation de chargement */
+.video-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.video-container iframe {
+    position: relative;
+    z-index: 2;
+    border: none;
+    width: 100%;
+}
+
+/* Masquer l'animation après le chargement */
+.video-container.loaded::before {
+    opacity: 0;
+    animation: none;
+}
+
+/* Animation de rotation pour le loader */
+@keyframes spin {
+    0% { 
+        transform: translate(-50%, -50%) rotate(0deg); 
+    }
+    100% { 
+        transform: translate(-50%, -50%) rotate(360deg); 
+    }
+}
+
+/* Styles pour le titre de la vidéo */
+.video-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.video-title i {
+    font-size: 20px;
+    margin-right: 0.5rem;
+}
+
+.video-title h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Styles pour les informations sous la vidéo */
+.video-info {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.video-info small {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.video-info i {
+    margin-right: 0.25rem;
+}
+
+/* Container responsive pour l'embed */
+.embed-responsive {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.embed-responsive-16by9 {
+    padding-bottom: 56.25%; /* Ratio 16:9 */
+}
+
+.embed-responsive-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Amélioration de l'accessibilité */
+.video-container:focus-within {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Animation pour les boutons */
+.video-overlay button {
+    background: rgba(0, 0, 0, 0.6) !important;
+    color: white !important;
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-overlay button:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+    transform: scale(1.1);
+}
+
+.video-overlay button:active {
+    transform: scale(0.95);
+}
+
+/* Mode plein écran */
+.video-container:fullscreen {
+    border-radius: 0;
+}
+
+.video-container:fullscreen iframe {
+    border-radius: 0;
+}
+
+/* Optimisations pour les performances */
+.video-container iframe {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Préchargement optimisé */
+.video-container[data-loaded="true"]::before {
+    display: none;
+}

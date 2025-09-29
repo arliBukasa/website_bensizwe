@@ -119,6 +119,9 @@ class WebsiteTraining(models.Model):
     candidat_ids = fields.Many2many('website.user', compute='_compute_candidat_ids',string="Candidats inscrits",store=False)
     is_published = fields.Boolean(string='Publié', default=False)
     image = fields.Image(string="Image", max_width=1024, max_height=1024)
+    video_url = fields.Char(string="URL de la vidéo de présentation")
+    pourquoi_suivre = fields.Text(string="Pourquoi suivre cette formation ?")
+    objectifs = fields.Text(string="Objectifs de la formation")
 
     @api.model
     def create(self, vals):

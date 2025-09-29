@@ -35,12 +35,15 @@
                         <group>
                             <field name="description_html"/>
                             <field name="cout"/>
+                            <field name="pourquoi_suivre"/>
+                            <field name="objectifs"/>
                             <field name="date_start" class="oe_inline"/>
                             <field name="date_end" class="oe_inline"/>
                         </group>
                         <group>
                             <field name="is_published"/>
-                            <field name="image" widget="image" class="oe_avatar"/>
+                            <field name="image" widget="image" class="oe_avatar" invisible="1"/>
+                            <field name="video_url" widget="url"/>
                             <field name="header" widget="image" class="oe_avatar" options="{'preview_image': 'header'}"/>
                         </group>
                     </group>
