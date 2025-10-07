@@ -61,6 +61,40 @@
                                             </div>
                                         </div>
                                     </t>
+                                     <!-- block -->
+                                        <t t-if="formation.pourquoi_suivre">
+                                            <div style="margin:20px; padding:10px; border-radius:15px;">
+                                                <h3>
+                                                    <strong>
+                                                        <span style="font-size: 20px;">Pourquoi suivre formation?</span>
+                                                    </strong>
+                                                </h3>
+                                                <p>
+                                                    <strong>
+                                                        <span style="font-size: 18px;">
+                                                            <t t-raw="formation.pourquoi_suivre"/>
+                                                        </span>
+                                                    </strong>
+                                                </p>
+                                            </div>
+                                        </t>
+                                        <!-- block -->
+                                        <t t-if="formation.objectifs">
+                                            <div style="margin:20px; padding:10px; border-radius:15px;">
+                                                <h3>
+                                                    <strong>
+                                                        <span style="font-size: 20px;">Objectifs de la formation</span>
+                                                    </strong>
+                                                </h3>
+                                                <p>
+                                                    <strong>
+                                                        <span style="font-size: 18px;">
+                                                            <t t-raw="formation.objectifs"/>
+                                                        </span>
+                                                    </strong>
+                                                </p>
+                                            </div>
+                                        </t>
 
                                     <h3>
                                         <strong>

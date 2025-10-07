@@ -120,8 +120,8 @@ class WebsiteTraining(models.Model):
     is_published = fields.Boolean(string='Publié', default=False)
     image = fields.Image(string="Image", max_width=1024, max_height=1024)
     video_url = fields.Char(string="URL de la vidéo de présentation")
-    pourquoi_suivre = fields.Text(string="Pourquoi suivre cette formation ?")
-    objectifs = fields.Text(string="Objectifs de la formation")
+    pourquoi_suivre = fields.Html(string="Pourquoi suivre cette formation ?")
+    objectifs = fields.Html(string="Objectifs de la formation ?")
 
     @api.model
     def create(self, vals):
