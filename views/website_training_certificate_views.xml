@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_website_training_certificate_tree" model="ir.ui.view">
+        <field name="name">website.training.certificate.tree</field>
+        <field name="model">website.training.certificate</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'revoked'">
+                <field name="code"/>
+                <field name="participant_name"/>
+                <field name="training_id"/>
+                <field name="candidat_id" optional="hide"/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="show"/>
+                <field name="issue_date"/>
+                <field name="state" widget="badge" decoration-success="state == 'valid'" decoration-danger="state == 'revoked'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_website_training_certificate_form" model="ir.ui.view">
+        <field name="name">website.training.certificate.form</field>
+        <field name="model">website.training.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Certificat">
+                <header>
+                    <button name="%(website_bensizwe.action_report_training_certificate)d" type="action"
+                            string="Imprimer" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'valid')]}"/>
+                    <button name="action_revoke" type="object" string="Révoquer"
+                            attrs="{'invisible': [('state', '!=', 'valid')]}"
+                            confirm="Le certificat sera signalé comme révoqué sur la page de vérification. Continuer ?"/>
+                    <button name="action_validate" type="object" string="Rétablir"
+                            attrs="{'invisible': [('state', '!=', 'revoked')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1><field name="code"/></h1>
+                    </div>
+                    <group>
+                        <group string="Participant">
+                            <field name="training_id"/>
+                            <field name="candidat_id"/>
+                            <field name="participant_name"/>
+                        </group>
+                        <group string="Certificat">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="issue_date"/>
+                            <field name="place"/>
+                            <field name="trainer_name"/>
+                            <field name="director_name"/>
+                            <field name="verification_url" widget="url"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_website_training_certificate_search" model="ir.ui.view">
+        <field name="name">website.training.certificate.search</field>
+        <field name="model">website.training.certificate</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="participant_name"/>
+                <field name="training_id"/>
+                <filter name="valid" string="Valides" domain="[('state', '=', 'valid')]"/>
+                <filter name="revoked" string="Révoqués" domain="[('state', '=', 'revoked')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_training" string="Formation" context="{'group_by': 'training_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_website_training_certificate" model="ir.actions.act_window">
+        <field name="name">Certificats</field>
+        <field name="res_model">website.training.certificate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucun certificat enregistré</p>
+            <p>Depuis une formation, utilisez « Enregistrer les participants certifiés ».
+               Sélectionnez ensuite un ou plusieurs certificats puis Imprimer &gt; Certificat de formation.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_website_training_certificate" name="Certificats"
+              parent="website_bensizwe.menu_Trainning_root"
+              action="website_bensizwe.action_website_training_certificate" sequence="20"/>
+
+    <!-- Assistant : enregistrement des participants ayant complété la formation -->
+    <record id="view_website_training_certificate_wizard_form" model="ir.ui.view">
+        <field name="name">website.training.certificate.wizard.form</field>
+        <field name="model">website.training.certificate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Participants certifiés">
+                <group>
+                    <group>
+                        <field name="training_id" readonly="1" force_save="1"/>
+                    </group>
+                    <group>
+                        <field name="issue_date"/>
+                        <field name="place"/>
+                    </group>
+                </group>
+                <p class="text-muted">Les inscrits sans certificat sont présélectionnés. Retirez ceux qui n'ont pas complété la formation.</p>
+                <field name="candidat_ids">
+                    <tree>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="phone"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_generate" type="object" string="Générer les certificats" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

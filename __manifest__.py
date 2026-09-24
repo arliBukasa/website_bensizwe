@@ -35,6 +35,10 @@
         "views/website_blog_bensizwe.xml",
         "views/formation_registration_templates.xml",
         "views/portal_formations.xml",
+        "data/certificate_data.xml",
+        "report/training_certificate_report.xml",
+        "views/website_training_certificate_views.xml",
+        "views/certificate_verification_templates.xml",
     ],
     'assets': {
         'web.assets_frontend': [

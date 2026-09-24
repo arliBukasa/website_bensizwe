@@ -24,7 +24,19 @@
         <field name="model">website.training</field>
         <field name="arch" type="xml">
             <form string="Website Training">
+                <header>
+                    <button name="action_open_certificate_wizard" type="object"
+                            string="Enregistrer les participants certifiés" class="oe_highlight"/>
+                    <button name="action_print_certificates" type="object"
+                            string="Imprimer tous les certificats"
+                            attrs="{'invisible': [('certificate_count', '=', 0)]}"/>
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_certificates" type="object" class="oe_stat_button" icon="fa-certificate">
+                            <field name="certificate_count" widget="statinfo" string="Certificats"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -58,6 +70,25 @@
                                     <field name="nationalite"/>
                                </tree>
                            </field>
+                        </page>
+                        <page name="certificats" string="Certificats">
+                            <group>
+                                <group>
+                                    <field name="certificate_title" placeholder="Formation d'Agent d'Accueil en Milieu Hospitalier"/>
+                                </group>
+                                <group>
+                                    <field name="trainer_name"/>
+                                    <field name="director_name"/>
+                                </group>
+                            </group>
+                            <field name="certificate_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="participant_name"/>
+                                    <field name="issue_date"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'valid'" decoration-danger="state == 'revoked'"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     

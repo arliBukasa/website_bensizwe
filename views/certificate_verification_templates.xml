@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="certificate_verification_page" name="Vérification de certificat">
+        <t t-call="website.layout">
+            <t t-set="title">Vérification de certificat - Bensizwe Academy</t>
+            <div id="wrap" class="bsz-verify">
+                <style>
+                    .bsz-verify { background: linear-gradient(180deg, #f3f6fb 0%, #ffffff 60%); }
+                    .bsz-verify .bsz-verify-head h1 { color: #0b2a5c; letter-spacing: .12em; font-weight: 700; }
+                    .bsz-verify .bsz-verify-head .bsz-rule { width: 64px; height: 3px; margin: 12px auto 0; background: linear-gradient(90deg, #1565c0, #c9a24a); }
+                    .bsz-verify .bsz-card { border: 0; border-radius: 14px; box-shadow: 0 8px 30px rgba(11, 42, 92, .08); }
+                    .bsz-verify .bsz-code-input { font-family: monospace; letter-spacing: .08em; text-transform: uppercase; }
+                    .bsz-verify .bsz-status { border-radius: 14px 14px 0 0; padding: 18px 24px; color: #fff; }
+                    .bsz-verify .bsz-status.valid { background: #1e7e46; }
+                    .bsz-verify .bsz-status.revoked { background: #b3261e; }
+                    .bsz-verify .bsz-status.unknown { background: #6c757d; }
+                    .bsz-verify dl dt { color: #6c757d; font-weight: 500; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+                    .bsz-verify dl dd { color: #0b2a5c; font-size: 1.05rem; margin-bottom: 1rem; }
+                </style>
+                <div class="container py-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="bsz-verify-head text-center mb-4">
+                                <h1 class="h3 text-uppercase">Vérification de certificat</h1>
+                                <p class="text-muted mb-0">Saisissez le code imprimé sous le QR code du certificat, ou scannez le QR code.</p>
+                                <div class="bsz-rule"/>
+                            </div>
+
+                            <div class="card bsz-card mb-4">
+                                <div class="card-body">
+                                    <form action="/certificat/verification" method="get" class="form-row align-items-center">
+                                        <div class="col-md-9 mb-2 mb-md-0">
+                                            <label class="sr-only" for="bsz_code">Code du certificat</label>
+                                            <input type="text" id="bsz_code" name="code" required="required"
+                                                   class="form-control form-control-lg bsz-code-input"
+                                                   placeholder="BSZ-2026-XXXXXXXX" t-att-value="code" autocomplete="off"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                                <i class="fa fa-search mr-1"/> Vérifier
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <t t-if="searched">
+                                <div class="card bsz-card">
+                                    <t t-if="not certificate">
+                                        <div class="bsz-status unknown">
+                                            <i class="fa fa-question-circle mr-2"/>
+                                            <strong>Certificat introuvable</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="mb-0">Aucun certificat ne correspond au code <code t-esc="code"/>.
+                                                Vérifiez la saisie. Si le problème persiste, ce document n'a pas été délivré par Bensizwe Academy.</p>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div t-attf-class="bsz-status #{certificate.state}">
+                                            <t t-if="certificate.state == 'valid'">
+                                                <i class="fa fa-check-circle mr-2"/>
+                                                <strong>Certificat authentique</strong> – délivré par Bensizwe Academy
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-times-circle mr-2"/>
+                                                <strong>Certificat révoqué</strong> – ce certificat n'est plus valide
+                                            </t>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <dl class="row mb-0">
+                                                <div class="col-sm-6">
+                                                    <dt>Participant</dt>
+                                                    <dd t-esc="certificate.participant_name"/>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <dt>Code</dt>
+                                                    <dd><code t-esc="certificate.code"/></dd>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <dt>Formation</dt>
+                                                    <dd t-esc="certificate.training_id.certificate_title or certificate.training_id.name"/>
+                                                </div>
+                                                <div class="col-sm-6" t-if="certificate.date_start">
+                                                    <dt>Période</dt>
+                                                    <dd t-esc="certificate.get_period_text().capitalize()"/>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <dt>Délivré</dt>
+                                                    <dd>à <t t-esc="certificate.place or 'Kinshasa'"/>, le <t t-esc="certificate.issue_date.strftime('%d/%m/%Y')"/></dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

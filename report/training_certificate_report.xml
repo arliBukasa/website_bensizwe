@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_training_certificate" model="report.paperformat">
+        <field name="name">Certificat Bensizwe (A4 paysage, sans marge)</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+        <field name="disable_shrinking" eval="True"/>
+    </record>
+
+    <record id="action_report_training_certificate" model="ir.actions.report">
+        <field name="name">Certificat de formation</field>
+        <field name="model">website.training.certificate</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">website_bensizwe.report_training_certificate</field>
+        <field name="report_file">website_bensizwe.report_training_certificate</field>
+        <field name="print_report_name">'Certificat - %s - %s' % (object.participant_name, object.code)</field>
+        <field name="paperformat_id" ref="paperformat_training_certificate"/>
+        <field name="binding_model_id" ref="model_website_training_certificate"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--
+        Maquette : fond pré-imprimé (static/src/img/certificat/fond_certificat.jpg, A4 paysage)
+        sur lequel les textes sont positionnés en absolu (unités en mm).
+    -->
+    <template id="report_training_certificate">
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="name_len" t-value="len(o.participant_name or '')"/>
+                <!-- .article : chaque certificat est rendu dans web.minimal_layout (charset, base url) = 1 page -->
+                <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
+                    <style>
+                        html, body, body.container, body.container-fluid, #wrapwrap, main {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            max-width: none !important;
+                            width: 297mm !important;
+                            background: #fff;
+                        }
+                        .bsz-cert {
+                            position: relative;
+                            width: 297mm;
+                            height: 209.5mm;
+                            overflow: hidden;
+                            font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                            color: #111;
+                        }
+                        .bsz-cert-bg {
+                            position: absolute;
+                            top: 0; left: 0;
+                            width: 297mm;
+                            height: 210mm;
+                        }
+                        .bsz-abs { position: absolute; }
+                        .bsz-name {
+                            top: 100mm; left: 64mm; width: 169mm;
+                            height: 13mm; line-height: 13mm;
+                            text-align: center;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            white-space: nowrap;
+                        }
+                        .bsz-body {
+                            top: 117.5mm; left: 48mm; width: 201mm;
+                            text-align: center;
+                            font-size: 15pt;
+                            line-height: 1.3;
+                        }
+                        .bsz-sign {
+                            top: 160.5mm; width: 60mm;
+                            font-size: 9pt;
+                            font-weight: bold;
+                            color: #0b2a5c;
+                        }
+                        .bsz-place {
+                            top: 166.5mm; left: 98.5mm; width: 100mm;
+                            text-align: center;
+                            font-size: 9pt;
+                        }
+                        .bsz-brevet {
+                            top: 176mm; left: 57mm; width: 183mm;
+                            text-align: center;
+                            font-size: 7.5pt;
+                        }
+                        .bsz-qr {
+                            top: 170mm; left: 28.4mm;
+                            width: 21mm; height: 21mm;
+                        }
+                        .bsz-code {
+                            top: 195.5mm; left: 13mm; width: 52mm;
+                            text-align: center;
+                            font-size: 7pt;
+                            font-weight: bold;
+                            color: #0b2a5c;
+                            letter-spacing: 0.3pt;
+                        }
+                    </style>
+                    <div class="bsz-cert">
+                        <img class="bsz-cert-bg" src="/website_bensizwe/static/src/img/certificat/fond_certificat.jpg"/>
+
+                        <div class="bsz-abs bsz-name"
+                             t-att-style="'font-size: %spt;' % (20 if name_len &lt;= 32 else 16 if name_len &lt;= 42 else 13)"
+                             t-esc="o.participant_name"/>
+
+                        <div class="bsz-abs bsz-body">
+                            a suivi la <t t-esc="o.get_training_label()"/><br/>
+                            <t t-if="o.date_start">en date <t t-esc="o.get_period_text()"/>.</t>
+                        </div>
+
+                        <div class="bsz-abs bsz-sign" style="left: 82.4mm;" t-if="o.trainer_name" t-esc="o.trainer_name"/>
+                        <div class="bsz-abs bsz-sign" style="left: 171.5mm;" t-if="o.director_name" t-esc="o.director_name"/>
+
+                        <div class="bsz-abs bsz-place">
+                            Fait à <t t-esc="o.place or 'Kinshasa'"/>, le <t t-esc="o.issue_date.strftime('%d/%m/%Y')"/>
+                        </div>
+
+                        <div class="bsz-abs bsz-brevet" t-esc="o.get_brevet_text()"/>
+
+                        <img class="bsz-abs bsz-qr" t-att-src="o.get_qr_code_data_uri()"/>
+                        <div class="bsz-abs bsz-code">N° <t t-esc="o.code"/></div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
