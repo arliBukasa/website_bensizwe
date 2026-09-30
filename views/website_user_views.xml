@@ -268,14 +268,10 @@
         </field>
     </record>
 
-    <!-- Menu principal -->
-
-    <menuitem
-        id="website_bensizwe_root_menu"
-        name="gestion des candidats"
-        sequence="10"/>
-
-    <menuitem id="menu_website_user" name="Candidats" parent="website_bensizwe_root_menu" action="action_website_user" sequence="10"/>
+    <!-- Profil complet des candidats : uniquement dans Recrutement > Candidatures
+         (côté Formation : fiche réduite, voir website_user_training_views.xml) -->
+    <menuitem id="menu_website_user" name="Candidats" parent="hr_recruitment.menu_crm_case_categ0_act_job"
+              action="action_website_user" sequence="5"/>
     <!-- candidatures -->
 
 

@@ -51,7 +51,7 @@
                 <sheet>
                     <div class="oe_title">
                         <label for="candidat_id"/>
-                        <h1><field name="candidat_id" placeholder="Candidat..." options="{'no_quick_create': True}"/></h1>
+                        <h1><field name="candidat_id" placeholder="Candidat..." options="{'no_quick_create': True}" context="{'form_view_ref': 'website_bensizwe.view_website_user_training_form'}"/></h1>
                         <field name="phone" readonly="1"/> <span class="text-muted"> · </span> <field name="email" readonly="1"/>
                     </div>
                     <group>

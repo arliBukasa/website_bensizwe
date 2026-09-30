@@ -92,7 +92,7 @@
                             </p>
                             <field name="registration_ids">
                                 <tree editable="bottom" decoration-muted="state == 'cancelled'" decoration-success="state == 'confirmed'">
-                                    <field name="candidat_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                                    <field name="candidat_id" attrs="{'readonly': [('id', '!=', False)]}" options="{'no_quick_create': True}" context="{'form_view_ref': 'website_bensizwe.view_website_user_training_form'}"/>
                                     <field name="phone" optional="show"/>
                                     <field name="source" optional="show"/>
                                     <field name="registration_date" optional="hide"/>

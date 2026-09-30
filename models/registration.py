@@ -200,6 +200,14 @@ class WebsiteUserRegistration(models.Model):
     _inherit = 'website.user'
 
     registration_ids = fields.One2many('website.training.registration', 'candidat_id', string='Inscriptions')
+    registration_count = fields.Integer(compute='_compute_registration_stats', string='Inscriptions')
+    participation_count = fields.Integer(compute='_compute_registration_stats', string='Participations')
+
+    @api.depends('registration_ids.state')
+    def _compute_registration_stats(self):
+        for candidat in self:
+            candidat.registration_count = len(candidat.registration_ids)
+            candidat.participation_count = len(candidat.registration_ids.filtered(lambda r: r.state == 'confirmed'))
 
     def _sync_training_registrations(self):
         """Les flux du site ajoutent la formation dans training_ids : on crée l'inscription correspondante."""

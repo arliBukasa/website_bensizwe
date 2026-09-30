@@ -42,6 +42,7 @@
         "security/registration_security.xml",
         "report/training_participants_report.xml",
         "views/website_training_registration_views.xml",
+        "views/website_user_training_views.xml",
     ],
     'assets': {
         'web.assets_frontend': [

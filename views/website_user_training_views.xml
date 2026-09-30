@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Candidats côté FORMATION : fiche réduite (identité, contact, formations concernées).
+        Le profil complet (expériences, éducation, compétences, candidatures...) reste au Recrutement.
+        Priorité 20 : les vues complètes (priorité 16) restent les vues par défaut du modèle.
+    -->
+
+    <record id="view_website_user_training_tree" model="ir.ui.view">
+        <field name="name">website.user.training.tree</field>
+        <field name="model">website.user</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="city" optional="hide"/>
+                <field name="registration_count"/>
+                <field name="participation_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_website_user_training_form" model="ir.ui.view">
+        <field name="name">website.user.training.form</field>
+        <field name="model">website.user</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Candidat">
+                <sheet>
+                    <field name="avatar" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nom complet..."/></h1>
+                        <div class="o_row">
+                            <field name="first_name" placeholder="Prénom"/>
+                            <field name="last_name" placeholder="Nom de famille"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Contact">
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="city"/>
+                        </group>
+                        <group string="Formations">
+                            <field name="registration_count"/>
+                            <field name="participation_count"/>
+                        </group>
+                    </group>
+                    <separator string="Formations concernées"/>
+                    <field name="registration_ids">
+                        <tree editable="bottom" decoration-muted="state == 'cancelled'" decoration-success="state == 'confirmed'">
+                            <field name="training_id" options="{'no_create': True}" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="date_start"/>
+                            <field name="date_end" optional="hide"/>
+                            <field name="source" optional="show"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_due"/>
+                            <field name="amount_paid"/>
+                            <field name="balance" optional="show"/>
+                            <field name="payment_method" optional="hide"/>
+                            <field name="is_exempt" optional="show"/>
+                            <field name="payment_state" widget="badge" decoration-success="payment_state in ('paid', 'exempt')"
+                                   decoration-warning="payment_state == 'partial'" decoration-danger="payment_state == 'unpaid'"/>
+                            <field name="state" widget="badge" decoration-success="state == 'confirmed'"
+                                   decoration-info="state == 'registered'" decoration-muted="state == 'cancelled'"/>
+                            <field name="certificate_code"/>
+                            <button name="action_confirm" type="object" icon="fa-check" title="Enregistrer comme participant"
+                                    attrs="{'invisible': [('state', '!=', 'registered')]}"/>
+                            <button name="action_mark_paid" type="object" icon="fa-money" title="Paiement intégral reçu + participant"
+                                    attrs="{'invisible': [('state', '!=', 'registered')]}"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_website_user_training_search" model="ir.ui.view">
+        <field name="name">website.user.training.search</field>
+        <field name="model">website.user</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="registration_ids" string="Formation" filter_domain="[('registration_ids.training_id', 'ilike', self)]"/>
+                <filter name="participants" string="Participants" domain="[('registration_ids.state', '=', 'confirmed')]"/>
+                <filter name="pending" string="En attente de paiement" domain="[('registration_ids.state', '=', 'registered')]"/>
+                <filter name="certified" string="Certifiés" domain="[('registration_ids.certificate_ids', '!=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_website_user_training" model="ir.actions.act_window">
+        <field name="name">Candidats</field>
+        <field name="res_model">website.user</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('registration_ids', '!=', False)]</field>
+        <field name="search_view_id" ref="view_website_user_training_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucun candidat inscrit à une formation</p>
+            <p>Créez un candidat (inscription sur fiche) et ajoutez la formation concernée dans « Formations concernées ».</p>
+        </field>
+    </record>
+    <record id="action_website_user_training_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_website_user_training_tree"/>
+        <field name="act_window_id" ref="action_website_user_training"/>
+    </record>
+    <record id="action_website_user_training_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_website_user_training_form"/>
+        <field name="act_window_id" ref="action_website_user_training"/>
+    </record>
+
+    <menuitem id="menu_website_user_training" name="Candidats"
+              parent="website_bensizwe.menu_Trainning_root"
+              action="website_bensizwe.action_website_user_training" sequence="12"/>
+
+</odoo>
