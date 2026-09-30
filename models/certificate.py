@@ -12,7 +12,9 @@ PREFIX_STOPWORDS = {
 }
 PREFIX_MAX_WORDS = 4
 PREFIX_RE = re.compile(r'^[A-Z0-9]{2,10}$')
-CODE_RE = re.compile(r'^([A-Z0-9]+)-0*(\d+)$')
+CODE_PREFIX = 'BSZ'
+# Tout ce qui précède le dernier segment numérique, qu'on complète à 3 chiffres
+CODE_RE = re.compile(r'^([A-Z0-9-]+)-0*(\d+)$')
 
 MOIS_FR = [
     'JANVIER', 'FÉVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN',
@@ -57,7 +59,7 @@ class WebsiteTraining(models.Model):
     certificate_count = fields.Integer(compute='_compute_certificate_count', string='Nombre de certificats')
     certificate_prefix = fields.Char(
         string='Préfixe des certificats', copy=False,
-        help="Initiales de la formation utilisées pour numéroter les certificats (ex : AT → AT-001). "
+        help="Initiales de la formation utilisées pour numéroter les certificats (ex : FI → BSZ-2026-FI-001). "
              "Attribué automatiquement au premier certificat s'il est vide, puis figé.")
     certificate_sequence = fields.Integer(string='Dernier n° de certificat', default=0, copy=False, readonly=True)
 
@@ -95,15 +97,18 @@ class WebsiteTraining(models.Model):
             self.sudo().certificate_prefix = prefix
         return self.certificate_prefix
 
-    def _next_certificate_code(self):
-        """Réserve le numéro suivant (verrou sur la formation : pas de doublon en concurrence)."""
+    def _next_certificate_code(self, year):
+        """Réserve le numéro suivant (verrou sur la formation : pas de doublon en concurrence).
+
+        Format : BSZ-<année de délivrance>-<préfixe>-<n° d'ordre>, ex : BSZ-2026-FI-001.
+        """
         self.ensure_one()
         prefix = self._get_certificate_prefix()
         self.env.cr.execute('SELECT certificate_sequence FROM website_training WHERE id = %s FOR UPDATE', [self.id])
         number = (self.env.cr.fetchone()[0] or 0) + 1
         self.env.cr.execute('UPDATE website_training SET certificate_sequence = %s WHERE id = %s', [number, self.id])
         self.invalidate_cache(['certificate_sequence'], self.ids)
-        return '%s-%03d' % (prefix, number)
+        return '%s-%s-%s-%03d' % (CODE_PREFIX, year, prefix, number)
 
     @api.depends('certificate_ids')
     def _compute_certificate_count(self):
@@ -143,7 +148,7 @@ class WebsiteTrainingCertificate(models.Model):
     _order = 'issue_date desc, id desc'
     _rec_name = 'code'
 
-    # Numéro de série = préfixe de la formation + n° d'ordre (ex : AT-001), attribué à la création
+    # Numéro de série BSZ-<année>-<préfixe formation>-<n° d'ordre> (ex : BSZ-2026-FI-001), attribué à la création
     code = fields.Char(string='N° de série', readonly=True, copy=False, index=True)
     training_id = fields.Many2one('website.training', string='Formation', required=True, ondelete='restrict')
     candidat_id = fields.Many2one('website.user', string='Candidat',
@@ -170,8 +175,8 @@ class WebsiteTrainingCertificate(models.Model):
 
     @api.model
     def normalize_code(self, code):
-        """' at-1 ' -> 'AT-001' : tolère la casse, les espaces et les zéros manquants."""
-        code = re.sub(r'\s+', '', code or '').upper()
+        """' bsz 2026-fi-1 ' -> 'BSZ-2026-FI-001' : tolère la casse, les espaces et les zéros manquants."""
+        code = re.sub(r'[\s_-]+', '-', (code or '').strip()).strip('-').upper()
         match = CODE_RE.match(code)
         return '%s-%03d' % (match.group(1), int(match.group(2))) if match else code
 
@@ -204,7 +209,8 @@ class WebsiteTrainingCertificate(models.Model):
             if not vals.get('participant_name') and vals.get('candidat_id'):
                 vals['participant_name'] = self.env['website.user'].browse(vals['candidat_id']).name
             if not vals.get('code') and training:
-                vals['code'] = training._next_certificate_code()
+                issue_date = fields.Date.to_date(vals.get('issue_date')) or fields.Date.context_today(self)
+                vals['code'] = training._next_certificate_code(issue_date.year)
         return super().create(vals_list)
 
     @api.constrains('date_start', 'date_end')

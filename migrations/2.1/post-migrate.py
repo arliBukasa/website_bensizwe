@@ -10,8 +10,8 @@ def migrate(cr, version):
     if old_param:
         old_param.unlink()
 
-    # Anciens codes aléatoires (BSZ-2026-XXXXXXXX) -> numéro de série par formation (AT-001)
+    # Anciens codes aléatoires (BSZ-2026-XXXXXXXX) -> numéro de série par formation (BSZ-2026-FI-001)
     certificates = env['website.training.certificate'].search(
         [('code', '=like', 'BSZ-%')], order='training_id, issue_date, id')
     for certificate in certificates:
-        certificate.code = certificate.training_id._next_certificate_code()
+        certificate.code = certificate.training_id._next_certificate_code(certificate.issue_date.year)
