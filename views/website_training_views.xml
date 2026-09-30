@@ -75,6 +75,9 @@
                             <group>
                                 <group>
                                     <field name="certificate_title" placeholder="Formation d'Agent d'Accueil en Milieu Hospitalier"/>
+                                    <field name="certificate_prefix" placeholder="Automatique (initiales)"
+                                           attrs="{'readonly': [('certificate_count', '>', 0)]}"/>
+                                    <field name="certificate_sequence"/>
                                 </group>
                                 <group>
                                     <field name="trainer_name"/>

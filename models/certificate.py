@@ -1,20 +1,47 @@
 import base64
-import secrets
+import re
+import unicodedata
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
-# Alphabet sans caractères ambigus (0/O, 1/I/L) pour faciliter la saisie manuelle du code
-CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
-CODE_LENGTH = 8
+# Mots ignorés pour construire les initiales d'une formation
+PREFIX_STOPWORDS = {
+    'A', 'AU', 'AUX', 'D', 'DE', 'DES', 'DU', 'EN', 'ENTRE', 'ET', 'L', 'LA', 'LE', 'LES',
+    'OU', 'PAR', 'POUR', 'SUR', 'UN', 'UNE', 'DANS', 'AVEC',
+}
+PREFIX_MAX_WORDS = 4
+PREFIX_RE = re.compile(r'^[A-Z0-9]{2,10}$')
+CODE_RE = re.compile(r'^([A-Z0-9]+)-0*(\d+)$')
 
 MOIS_FR = [
     'JANVIER', 'FÉVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN',
     'JUILLET', 'AOÛT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DÉCEMBRE',
 ]
 
-DEFAULT_BREVET = ("BREVET N° CD-BSZW-001 - ARRETE MINISTÉRIEL N°030/CABMIN/MIN-FPMA/JNP/RLK/SPDY/2020 "
-                  "DU 05 NOVEMBRE 2020")
+# Seule la référence de l'arrêté est fixe : le n° du brevet est le code du certificat
+DEFAULT_ARRETE = "ARRETE MINISTÉRIEL N°030/CABMIN/MIN-FPMA/JNP/RLK/SPDY/2020 DU 05 NOVEMBRE 2020"
+
+
+def _prefix_candidates(name):
+    """Préfixes possibles, du plus court au plus long, pour le nom d'une formation.
+
+    Initiales des mots significatifs (2 premières lettres pour un mot seul), puis on
+    approfondit avec les lettres suivantes du dernier mot : Transport -> TR, Travail -> TRA.
+    """
+    text = unicodedata.normalize('NFKD', name or '').encode('ascii', 'ignore').decode().upper()
+    # Les mots d'une lettre sont ignorés : « Assistant(e) » -> ASSISTANT
+    words = [w for w in re.split(r'[^A-Z0-9]+', text) if len(w) > 1 and w not in PREFIX_STOPWORDS]
+    words = words[:PREFIX_MAX_WORDS] or ['FORMATION']
+    head = ''.join(w[0] for w in words[:-1])
+    last = words[-1]
+    start = 1 if head else 2
+    seen = []
+    for depth in range(start, len(last) + 1):
+        candidate = (head + last[:depth])[:10]
+        if len(candidate) >= 2 and candidate not in seen:
+            seen.append(candidate)
+    return seen
 
 
 class WebsiteTraining(models.Model):
@@ -28,6 +55,55 @@ class WebsiteTraining(models.Model):
     director_name = fields.Char(string='Directeur Général')
     certificate_ids = fields.One2many('website.training.certificate', 'training_id', string='Certificats')
     certificate_count = fields.Integer(compute='_compute_certificate_count', string='Nombre de certificats')
+    certificate_prefix = fields.Char(
+        string='Préfixe des certificats', copy=False,
+        help="Initiales de la formation utilisées pour numéroter les certificats (ex : AT → AT-001). "
+             "Attribué automatiquement au premier certificat s'il est vide, puis figé.")
+    certificate_sequence = fields.Integer(string='Dernier n° de certificat', default=0, copy=False, readonly=True)
+
+    _sql_constraints = [
+        ('certificate_prefix_unique', 'unique(certificate_prefix)',
+         'Ce préfixe de certificat est déjà utilisé par une autre formation.'),
+    ]
+
+    @api.constrains('certificate_prefix')
+    def _check_certificate_prefix(self):
+        for rec in self:
+            if rec.certificate_prefix and not PREFIX_RE.match(rec.certificate_prefix):
+                raise ValidationError(_("Le préfixe doit contenir de 2 à 10 lettres majuscules ou chiffres."))
+
+    def write(self, vals):
+        if vals.get('certificate_prefix'):
+            vals['certificate_prefix'] = vals['certificate_prefix'].strip().upper()
+            if any(rec.certificate_ids and rec.certificate_prefix and rec.certificate_prefix != vals['certificate_prefix']
+                   for rec in self):
+                raise UserError(_("Le préfixe ne peut plus être modifié : des certificats ont déjà été numérotés."))
+        return super().write(vals)
+
+    def _get_certificate_prefix(self):
+        self.ensure_one()
+        if not self.certificate_prefix:
+            taken = set(self.sudo().search([('certificate_prefix', '!=', False), ('id', '!=', self.id)])
+                        .mapped('certificate_prefix'))
+            candidates = _prefix_candidates(self.name)
+            prefix = next((c for c in candidates if c not in taken), None)
+            n = 2
+            while not prefix:
+                # Toutes les profondeurs sont prises : on suffixe par un chiffre
+                prefix = next((c + str(n) for c in candidates if c + str(n) not in taken), None)
+                n += 1
+            self.sudo().certificate_prefix = prefix
+        return self.certificate_prefix
+
+    def _next_certificate_code(self):
+        """Réserve le numéro suivant (verrou sur la formation : pas de doublon en concurrence)."""
+        self.ensure_one()
+        prefix = self._get_certificate_prefix()
+        self.env.cr.execute('SELECT certificate_sequence FROM website_training WHERE id = %s FOR UPDATE', [self.id])
+        number = (self.env.cr.fetchone()[0] or 0) + 1
+        self.env.cr.execute('UPDATE website_training SET certificate_sequence = %s WHERE id = %s', [number, self.id])
+        self.invalidate_cache(['certificate_sequence'], self.ids)
+        return '%s-%03d' % (prefix, number)
 
     @api.depends('certificate_ids')
     def _compute_certificate_count(self):
@@ -67,8 +143,8 @@ class WebsiteTrainingCertificate(models.Model):
     _order = 'issue_date desc, id desc'
     _rec_name = 'code'
 
-    code = fields.Char(string='Code de vérification', required=True, readonly=True, copy=False,
-                       index=True, default=lambda self: self._generate_code())
+    # Numéro de série = préfixe de la formation + n° d'ordre (ex : AT-001), attribué à la création
+    code = fields.Char(string='N° de série', readonly=True, copy=False, index=True)
     training_id = fields.Many2one('website.training', string='Formation', required=True, ondelete='restrict')
     candidat_id = fields.Many2one('website.user', string='Candidat',
                                   help="Laisser vide pour un participant non inscrit via le site.")
@@ -93,17 +169,11 @@ class WebsiteTrainingCertificate(models.Model):
     ]
 
     @api.model
-    def _generate_code(self):
-        year = fields.Date.context_today(self).year
-        while True:
-            suffix = ''.join(secrets.choice(CODE_ALPHABET) for _i in range(CODE_LENGTH))
-            code = 'BSZ-%s-%s' % (year, suffix)
-            if not self.sudo().search_count([('code', '=', code)]):
-                return code
-
-    @api.model
     def normalize_code(self, code):
-        return (code or '').strip().upper()
+        """' at-1 ' -> 'AT-001' : tolère la casse, les espaces et les zéros manquants."""
+        code = re.sub(r'\s+', '', code or '').upper()
+        match = CODE_RE.match(code)
+        return '%s-%03d' % (match.group(1), int(match.group(2))) if match else code
 
     @api.depends('code')
     def _compute_verification_url(self):
@@ -133,6 +203,8 @@ class WebsiteTrainingCertificate(models.Model):
                     vals[field] = training[field]
             if not vals.get('participant_name') and vals.get('candidat_id'):
                 vals['participant_name'] = self.env['website.user'].browse(vals['candidat_id']).name
+            if not vals.get('code') and training:
+                vals['code'] = training._next_certificate_code()
         return super().create(vals_list)
 
     @api.constrains('date_start', 'date_end')
@@ -179,8 +251,10 @@ class WebsiteTrainingCertificate(models.Model):
         return _('du %s au %s') % (fmt(start, month=False, year=False), fmt(end))
 
     def get_brevet_text(self):
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'website_bensizwe.certificate_brevet', DEFAULT_BREVET)
+        self.ensure_one()
+        arrete = self.env['ir.config_parameter'].sudo().get_param(
+            'website_bensizwe.certificate_arrete', DEFAULT_ARRETE)
+        return 'BREVET N° %s - %s' % (self.code, arrete)
 
     def get_qr_code_data_uri(self):
         self.ensure_one()

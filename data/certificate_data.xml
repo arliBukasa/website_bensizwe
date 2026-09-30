@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-    <!-- Mention légale imprimée en bas du certificat (modifiable dans Paramètres > Technique > Paramètres système) -->
-    <record id="config_certificate_brevet" model="ir.config_parameter">
-        <field name="key">website_bensizwe.certificate_brevet</field>
-        <field name="value">BREVET N° CD-BSZW-001 - ARRETE MINISTÉRIEL N°030/CABMIN/MIN-FPMA/JNP/RLK/SPDY/2020 DU 05 NOVEMBRE 2020</field>
+    <!-- Référence de l'arrêté imprimée après « BREVET N° <n° de série> - » en bas du certificat
+         (modifiable dans Paramètres > Technique > Paramètres système) -->
+    <record id="config_certificate_arrete" model="ir.config_parameter">
+        <field name="key">website_bensizwe.certificate_arrete</field>
+        <field name="value">ARRETE MINISTÉRIEL N°030/CABMIN/MIN-FPMA/JNP/RLK/SPDY/2020 DU 05 NOVEMBRE 2020</field>
     </record>
 </odoo>

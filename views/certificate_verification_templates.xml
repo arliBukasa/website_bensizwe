@@ -23,7 +23,7 @@
                         <div class="col-lg-8">
                             <div class="bsz-verify-head text-center mb-4">
                                 <h1 class="h3 text-uppercase">Vérification de certificat</h1>
-                                <p class="text-muted mb-0">Saisissez le code imprimé sous le QR code du certificat, ou scannez le QR code.</p>
+                                <p class="text-muted mb-0">Saisissez le numéro de série imprimé sous le QR code du certificat (ex : AT-001), ou scannez le QR code.</p>
                                 <div class="bsz-rule"/>
                             </div>
 
@@ -34,7 +34,7 @@
                                             <label class="sr-only" for="bsz_code">Code du certificat</label>
                                             <input type="text" id="bsz_code" name="code" required="required"
                                                    class="form-control form-control-lg bsz-code-input"
-                                                   placeholder="BSZ-2026-XXXXXXXX" t-att-value="code" autocomplete="off"/>
+                                                   placeholder="Ex : AT-001" t-att-value="code" autocomplete="off"/>
                                         </div>
                                         <div class="col-md-3">
                                             <button type="submit" class="btn btn-primary btn-lg btn-block">
