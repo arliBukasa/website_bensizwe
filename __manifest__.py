@@ -1,6 +1,6 @@
 {
     'name': 'website_bensizwe',
-    'version': '2.2',
+    'version': '2.3',
     'summary': 'Custom website module for Bensizwe with modern user space',
     'description': '''
     This module provides custom website functionalities for Bensizwe including:
@@ -39,6 +39,9 @@
         "report/training_certificate_report.xml",
         "views/website_training_certificate_views.xml",
         "views/certificate_verification_templates.xml",
+        "security/registration_security.xml",
+        "report/training_participants_report.xml",
+        "views/website_training_registration_views.xml",
     ],
     'assets': {
         'web.assets_frontend': [

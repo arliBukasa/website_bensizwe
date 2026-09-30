@@ -40,7 +40,8 @@
                     </div>
                     <group>
                         <group string="Participant">
-                            <field name="training_id"/>
+                            <field name="training_id" options="{'no_create': True}"/>
+                            <field name="registration_id" options="{'no_create': True}"/>
                             <field name="candidat_id"/>
                             <field name="participant_name"/>
                         </group>
@@ -106,12 +107,14 @@
                         <field name="place"/>
                     </group>
                 </group>
-                <p class="text-muted">Les inscrits sans certificat sont présélectionnés. Retirez ceux qui n'ont pas complété la formation.</p>
-                <field name="candidat_ids">
+                <p class="text-muted">Seuls les participants (paiement soldé ou exonéré) sans certificat sont proposés et présélectionnés.
+                    Retirez ceux qui n'ont pas complété la formation.</p>
+                <field name="registration_ids">
                     <tree>
-                        <field name="name"/>
-                        <field name="email"/>
+                        <field name="candidat_id"/>
                         <field name="phone"/>
+                        <field name="email"/>
+                        <field name="payment_state"/>
                     </tree>
                 </field>
                 <footer>

@@ -71,7 +71,7 @@
                         <div t-if="registration.training_id.description" class="mb-3">
                           <small class="text-muted">Description:</small>
                           <div class="text-truncate" style="max-height: 60px; overflow: hidden;">
-                            <t t-field="registration.training_id.description"/>
+                            <div t-field="registration.training_id.description"/>
                           </div>
                         </div>
                       </div>

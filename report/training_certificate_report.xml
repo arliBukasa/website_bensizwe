@@ -81,6 +81,11 @@
                             font-weight: bold;
                             color: #0b2a5c;
                         }
+                        .bsz-signature {
+                            top: 148mm; left: 167.5mm; width: 44mm; height: 13mm;
+                            text-align: center;
+                        }
+                        .bsz-signature img { max-width: 44mm; max-height: 13mm; }
                         .bsz-place {
                             top: 166.5mm; left: 98.5mm; width: 100mm;
                             text-align: center;
@@ -118,6 +123,10 @@
 
                         <div class="bsz-abs bsz-sign" style="left: 82.4mm;" t-if="o.trainer_name" t-esc="o.trainer_name"/>
                         <div class="bsz-abs bsz-sign" style="left: 171.5mm;" t-if="o.director_name" t-esc="o.director_name"/>
+                        <!-- Signature du DG, posée sur la ligne pointillée, uniquement si renseignée -->
+                        <div class="bsz-abs bsz-signature" t-if="o.training_id.director_signature">
+                            <img t-att-src="image_data_uri(o.training_id.director_signature)"/>
+                        </div>
 
                         <div class="bsz-abs bsz-place">
                             Fait à <t t-esc="o.place or 'Kinshasa'"/>, le <t t-esc="o.issue_date.strftime('%d/%m/%Y')"/>

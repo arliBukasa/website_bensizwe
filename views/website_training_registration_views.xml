@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================== INSCRIPTIONS / PARTICIPANTS ===================== -->
+
+    <record id="view_website_training_registration_tree" model="ir.ui.view">
+        <field name="name">website.training.registration.tree</field>
+        <field name="model">website.training.registration</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'cancelled'" decoration-success="state == 'confirmed'">
+                <field name="candidat_id"/>
+                <field name="phone" optional="show"/>
+                <field name="email" optional="hide"/>
+                <field name="training_id"/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="hide"/>
+                <field name="registration_date" optional="show"/>
+                <field name="source" optional="show"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="amount_due" sum="Total dû" optional="show"/>
+                <field name="amount_paid" sum="Total payé"/>
+                <field name="balance" sum="Reste" optional="show"/>
+                <field name="payment_state" widget="badge" decoration-success="payment_state in ('paid', 'exempt')"
+                       decoration-warning="payment_state == 'partial'" decoration-danger="payment_state == 'unpaid'"/>
+                <field name="state" widget="badge" decoration-success="state == 'confirmed'"
+                       decoration-info="state == 'registered'" decoration-muted="state == 'cancelled'"/>
+                <field name="certificate_code" optional="show"/>
+                <button name="action_mark_paid" type="object" icon="fa-money" title="Paiement intégral et passage en participant"
+                        attrs="{'invisible': [('state', '!=', 'registered')]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_website_training_registration_form" model="ir.ui.view">
+        <field name="name">website.training.registration.form</field>
+        <field name="model">website.training.registration</field>
+        <field name="arch" type="xml">
+            <form string="Inscription">
+                <header>
+                    <button name="action_confirm" type="object" string="Enregistrer comme participant" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'registered')]}"/>
+                    <button name="action_mark_paid" type="object" string="Paiement intégral reçu"
+                            attrs="{'invisible': [('state', '!=', 'registered')]}"
+                            confirm="Enregistrer le paiement du montant total et passer le candidat en participant ?"/>
+                    <button name="action_cancel" type="object" string="Annuler l'inscription"
+                            attrs="{'invisible': ['|', ('state', '=', 'cancelled'), ('certificate_ids', '!=', [])]}"/>
+                    <button name="action_reset" type="object" string="Repasser en candidat"
+                            attrs="{'invisible': ['|', ('state', '=', 'registered'), ('certificate_ids', '!=', [])]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="registered,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="candidat_id"/>
+                        <h1><field name="candidat_id" placeholder="Candidat..." options="{'no_quick_create': True}"/></h1>
+                        <field name="phone" readonly="1"/> <span class="text-muted"> · </span> <field name="email" readonly="1"/>
+                    </div>
+                    <group>
+                        <group string="Inscription">
+                            <field name="training_id" options="{'no_create': True}"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="registration_date"/>
+                            <field name="source"/>
+                            <field name="certificate_code" attrs="{'invisible': [('certificate_code', '=', False)]}"/>
+                            <field name="certificate_ids" invisible="1"/>
+                        </group>
+                        <group string="Paiement">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_due"/>
+                            <field name="amount_paid"/>
+                            <field name="balance"/>
+                            <field name="payment_date"/>
+                            <field name="payment_method"/>
+                            <field name="payment_ref"/>
+                            <field name="is_exempt"/>
+                            <field name="payment_state" widget="badge" decoration-success="payment_state in ('paid', 'exempt')"
+                                   decoration-warning="payment_state == 'partial'" decoration-danger="payment_state == 'unpaid'"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Note interne..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_website_training_registration_search" model="ir.ui.view">
+        <field name="name">website.training.registration.search</field>
+        <field name="model">website.training.registration</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="candidat_id"/>
+                <field name="training_id"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <filter name="registered" string="Candidats (non participants)" domain="[('state', '=', 'registered')]"/>
+                <filter name="confirmed" string="Participants" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="cancelled" string="Annulés" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="unpaid" string="Non payé" domain="[('payment_state', '=', 'unpaid')]"/>
+                <filter name="partial" string="Paiement partiel" domain="[('payment_state', '=', 'partial')]"/>
+                <filter name="balance" string="Reste à payer" domain="[('balance', '>', 0), ('state', '!=', 'cancelled')]"/>
+                <separator/>
+                <filter name="online" string="Inscrits en ligne" domain="[('source', '=', 'website')]"/>
+                <filter name="fiche" string="Inscrits sur fiche" domain="[('source', '=', 'fiche')]"/>
+                <separator/>
+                <filter name="training_period" string="Période de la formation" date="date_start"/>
+                <filter name="registration_period" string="Date d'inscription" date="registration_date"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_training" string="Formation" context="{'group_by': 'training_id'}"/>
+                    <filter name="group_state" string="Statut" context="{'group_by': 'state'}"/>
+                    <filter name="group_payment" string="Paiement" context="{'group_by': 'payment_state'}"/>
+                    <filter name="group_source" string="Source" context="{'group_by': 'source'}"/>
+                    <filter name="group_month" string="Mois de la formation" context="{'group_by': 'date_start:month'}"/>
+                    <filter name="group_year" string="Année de la formation" context="{'group_by': 'date_start:year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_website_training_registration_pivot" model="ir.ui.view">
+        <field name="name">website.training.registration.pivot</field>
+        <field name="model">website.training.registration</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des inscriptions" sample="1">
+                <field name="date_start" interval="month" type="row"/>
+                <field name="state" type="col"/>
+                <field name="participation_rate" type="measure"/>
+                <field name="amount_paid" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_website_training_registration_graph" model="ir.ui.view">
+        <field name="name">website.training.registration.graph</field>
+        <field name="model">website.training.registration</field>
+        <field name="arch" type="xml">
+            <graph string="Inscriptions par mois" type="bar" stacked="1" sample="1">
+                <field name="date_start" interval="month"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_website_training_registration" model="ir.actions.act_window">
+        <field name="name">Inscriptions &amp; participants</field>
+        <field name="res_model">website.training.registration</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_group_training': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucune inscription</p>
+            <p>Les inscriptions en ligne arrivent ici automatiquement. Créez une inscription pour un candidat
+               inscrit sur fiche, enregistrez son paiement puis passez-le en participant.</p>
+        </field>
+    </record>
+
+    <record id="action_website_training_registration_analysis" model="ir.actions.act_window">
+        <field name="name">Analyse des inscriptions</field>
+        <field name="res_model">website.training.registration</field>
+        <field name="view_mode">pivot,graph,tree</field>
+    </record>
+
+    <!-- ===================== TABLEAU DE BORD ===================== -->
+
+    <record id="view_website_training_dashboard_form" model="ir.ui.view">
+        <field name="name">website.training.dashboard.form</field>
+        <field name="model">website.training.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Tableau de bord des formations" create="0" edit="1">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Tableau de bord des formations</h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="date_from" string="Période"/>
+                            <div class="o_row">
+                                <field name="date_from"/> <span>au</span> <field name="date_to"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <div class="row mt-2">
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center h-100"><div class="card-body">
+                                <div class="text-muted small text-uppercase">Formations organisées</div>
+                                <div class="h2 mb-1"><field name="training_count"/></div>
+                                <div class="small">
+                                    <field name="upcoming_count"/> à venir · <field name="ongoing_count"/> en cours ·
+                                    <field name="done_count"/> terminées · <field name="cancelled_count"/> annulées
+                                </div>
+                                <button name="action_open_trainings" type="object" string="Voir les formations" class="btn-link"/>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center h-100"><div class="card-body">
+                                <div class="text-muted small text-uppercase">Candidats inscrits</div>
+                                <div class="h2 mb-1"><field name="registration_count"/></div>
+                                <div class="small"><field name="online_count"/> en ligne · <field name="fiche_count"/> sur fiche</div>
+                                <button name="action_open_registrations" type="object" string="Voir les inscrits" class="btn-link"/>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center h-100 border-success"><div class="card-body">
+                                <div class="text-muted small text-uppercase">Participants</div>
+                                <div class="h2 mb-1 text-success"><field name="participant_count"/></div>
+                                <div class="small">Taux global : <strong><field name="participation_rate" widget="float" digits="[16, 1]"/> %</strong></div>
+                                <button name="action_open_participants" type="object" string="Voir les participants" class="btn-link"/>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center h-100 border-warning"><div class="card-body">
+                                <div class="text-muted small text-uppercase">En attente de paiement</div>
+                                <div class="h2 mb-1 text-warning"><field name="pending_count"/></div>
+                                <div class="small">Reste à encaisser : <field name="amount_remaining"/></div>
+                                <button name="action_open_pending" type="object" string="Relancer" class="btn-link"/>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center h-100"><div class="card-body">
+                                <div class="text-muted small text-uppercase">Montant encaissé</div>
+                                <div class="h3 mb-1"><field name="amount_collected"/></div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center h-100"><div class="card-body">
+                                <div class="text-muted small text-uppercase">Certificats délivrés</div>
+                                <div class="h3 mb-1"><field name="certified_count"/></div>
+                                <div class="small"><field name="certification_rate" widget="float" digits="[16, 1]"/> % des participants</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-6 mb-3 d-flex align-items-center justify-content-center">
+                            <button name="action_open_analysis" type="object" class="btn btn-primary"
+                                    string="Analyse détaillée (tableau croisé / graphique)" icon="fa-bar-chart"/>
+                        </div>
+                    </div>
+
+                    <separator string="Suivi des formations de la période"/>
+                    <field name="training_ids" readonly="1">
+                        <tree decoration-muted="period_state == 'cancelled'" decoration-info="period_state == 'upcoming'"
+                              decoration-success="period_state == 'ongoing'">
+                            <field name="name"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="period_state" widget="badge"/>
+                            <field name="registration_count" sum="Total"/>
+                            <field name="participant_count" sum="Total"/>
+                            <field name="participation_rate" widget="progressbar"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_collected" sum="Total"/>
+                            <field name="amount_remaining" sum="Total"/>
+                            <field name="certified_count" sum="Total"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_website_training_dashboard" model="ir.actions.act_window">
+        <field name="name">Tableau de bord</field>
+        <field name="res_model">website.training.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <!-- ===================== MENUS ===================== -->
+
+    <menuitem id="menu_website_training_dashboard" name="Tableau de bord"
+              parent="website_bensizwe.menu_Trainning_root"
+              action="website_bensizwe.action_website_training_dashboard" sequence="1"/>
+    <menuitem id="menu_website_training_registration" name="Inscriptions &amp; participants"
+              parent="website_bensizwe.menu_Trainning_root"
+              action="website_bensizwe.action_website_training_registration" sequence="15"/>
+    <menuitem id="menu_website_training_registration_analysis" name="Analyse"
+              parent="website_bensizwe.menu_Trainning_root"
+              action="website_bensizwe.action_website_training_registration_analysis" sequence="30"/>
+
+</odoo>

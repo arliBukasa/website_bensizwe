@@ -292,7 +292,7 @@ class FormationAuthController(http.Controller):
             return request.not_found()
 
         # Vérifier si l'utilisateur est déjà inscrit
-        existing_registration = request.env['website.training.registration'].search([
+        existing_registration = request.env['website.training.registration'].sudo().search([
             ('training_id', '=', formation_id),
             ('user_id', '=', request.env.user.id),
         ], limit=1)
@@ -312,7 +312,8 @@ class FormationAuthController(http.Controller):
                 'state': 'registered',
             }
             
-            registration = request.env['website.training.registration'].create(registration_values)
+            # sudo : le portail n'a que la lecture ; l'utilisateur est forcé à celui connecté
+            registration = request.env['website.training.registration'].sudo().create(registration_values)
             
             return request.render('website_bensizwe.formation_registration_success', {
                 'formation': formation,

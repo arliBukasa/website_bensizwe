@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_training_participants" model="ir.actions.report">
+        <field name="name">Liste des participants</field>
+        <field name="model">website.training</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">website_bensizwe.report_training_participants</field>
+        <field name="report_file">website_bensizwe.report_training_participants</field>
+        <field name="print_report_name">'Participants - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_website_training"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_training_participants">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <t t-set="participants" t-value="o.registration_ids.filtered(lambda r: r.state == 'confirmed').sorted(lambda r: (r.candidat_id.name or '').lower())"/>
+                    <t t-set="others" t-value="(o.registration_ids - participants).sorted(lambda r: (r.state, (r.candidat_id.name or '').lower()))"/>
+                    <div class="page">
+                        <h3 class="mb-1">Liste des participants</h3>
+                        <h5 class="text-primary mb-3" t-esc="o.name"/>
+                        <table class="table table-sm table-borderless mb-3" style="width: auto;">
+                            <tr t-if="o.date_start">
+                                <td><strong>Période :</strong></td>
+                                <td>du <span t-field="o.date_start"/><t t-if="o.date_end"> au <span t-field="o.date_end"/></t></td>
+                            </tr>
+                            <tr t-if="o.trainer_name">
+                                <td><strong>Formateur :</strong></td>
+                                <td><t t-esc="o.trainer_name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Effectif :</strong></td>
+                                <td>
+                                    <t t-esc="o.participant_count"/> participant(s) sur <t t-esc="o.registration_count"/> candidat(s) inscrit(s)
+                                    — taux de participation <t t-esc="'%.0f' % o.participation_rate"/> %
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h5>Participants</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Nom</th>
+                                    <th>Téléphone</th>
+                                    <th>Email</th>
+                                    <th class="text-right">Payé</th>
+                                    <th>Paiement</th>
+                                    <th>N° certificat</th>
+                                    <th style="width: 22%;">Émargement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="participants" t-as="r">
+                                    <td class="text-center"><t t-esc="r_index + 1"/></td>
+                                    <td><t t-esc="r.candidat_id.name"/></td>
+                                    <td><t t-esc="r.phone"/></td>
+                                    <td><t t-esc="r.email"/></td>
+                                    <td class="text-right"><span t-field="r.amount_paid"/></td>
+                                    <td><span t-field="r.payment_state"/></td>
+                                    <td style="white-space: nowrap;"><t t-esc="r.certificate_code or ''"/></td>
+                                    <td/>
+                                </tr>
+                                <tr t-if="not participants">
+                                    <td colspan="8" class="text-center text-muted">Aucun participant enregistré.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-if="others">
+                            <h5 class="mt-4">Candidats inscrits non participants</h5>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Nom</th>
+                                        <th>Téléphone</th>
+                                        <th>Email</th>
+                                        <th>Source</th>
+                                        <th class="text-right">Payé</th>
+                                        <th class="text-right">Reste</th>
+                                        <th>Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="others" t-as="r">
+                                        <td class="text-center"><t t-esc="r_index + 1"/></td>
+                                        <td><t t-esc="r.candidat_id.name"/></td>
+                                        <td><t t-esc="r.phone"/></td>
+                                        <td><t t-esc="r.email"/></td>
+                                        <td><span t-field="r.source"/></td>
+                                        <td class="text-right"><span t-field="r.amount_paid"/></td>
+                                        <td class="text-right"><span t-field="r.balance"/></td>
+                                        <td><span t-field="r.state"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

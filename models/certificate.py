@@ -55,6 +55,10 @@ class WebsiteTraining(models.Model):
              "Ex : Formation d'Agent d'Accueil en Milieu Hospitalier")
     trainer_name = fields.Char(string='Formateur')
     director_name = fields.Char(string='Directeur Général')
+    director_signature = fields.Image(
+        string='Signature du DG', max_width=800, max_height=400,
+        help="Image de la signature (PNG à fond transparent de préférence). "
+             "Imprimée au-dessus de la ligne « Directeur Général » si renseignée.")
     certificate_ids = fields.One2many('website.training.certificate', 'training_id', string='Certificats')
     certificate_count = fields.Integer(compute='_compute_certificate_count', string='Nombre de certificats')
     certificate_prefix = fields.Char(
@@ -151,8 +155,11 @@ class WebsiteTrainingCertificate(models.Model):
     # Numéro de série BSZ-<année>-<préfixe formation>-<n° d'ordre> (ex : BSZ-2026-FI-001), attribué à la création
     code = fields.Char(string='N° de série', readonly=True, copy=False, index=True)
     training_id = fields.Many2one('website.training', string='Formation', required=True, ondelete='restrict')
-    candidat_id = fields.Many2one('website.user', string='Candidat',
-                                  help="Laisser vide pour un participant non inscrit via le site.")
+    registration_id = fields.Many2one(
+        'website.training.registration', string='Participant', index=True, ondelete='restrict',
+        domain="[('training_id', '=', training_id), ('state', '=', 'confirmed')]",
+        help="Seuls les candidats enregistrés comme participants (paiement soldé ou exonéré) peuvent être certifiés.")
+    candidat_id = fields.Many2one('website.user', string='Candidat', readonly=True)
     participant_name = fields.Char(string='Nom du participant', required=True,
                                    help="Nom tel qu'il apparaîtra sur le certificat.")
     date_start = fields.Date(string='Début de la formation')
@@ -185,10 +192,11 @@ class WebsiteTrainingCertificate(models.Model):
         for rec in self:
             rec.verification_url = '%s/certificat/verification/%s' % (rec.get_base_url(), rec.code)
 
-    @api.onchange('candidat_id')
-    def _onchange_candidat_id(self):
-        if self.candidat_id:
-            self.participant_name = self.candidat_id.name
+    @api.onchange('registration_id')
+    def _onchange_registration_id(self):
+        if self.registration_id:
+            self.candidat_id = self.registration_id.candidat_id
+            self.participant_name = self.registration_id.candidat_id.name
 
     @api.onchange('training_id')
     def _onchange_training_id(self):
@@ -202,6 +210,10 @@ class WebsiteTrainingCertificate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            registration = self.env['website.training.registration'].browse(vals.get('registration_id'))
+            if registration:
+                vals.setdefault('training_id', registration.training_id.id)
+                vals['candidat_id'] = registration.candidat_id.id
             training = self.env['website.training'].browse(vals.get('training_id'))
             for field in ('date_start', 'date_end', 'trainer_name', 'director_name'):
                 if not vals.get(field) and training:
@@ -212,6 +224,15 @@ class WebsiteTrainingCertificate(models.Model):
                 issue_date = fields.Date.to_date(vals.get('issue_date')) or fields.Date.context_today(self)
                 vals['code'] = training._next_certificate_code(issue_date.year)
         return super().create(vals_list)
+
+    @api.constrains('registration_id', 'training_id')
+    def _check_participant(self):
+        for rec in self:
+            reg = rec.registration_id
+            if not reg or reg.training_id != rec.training_id or reg.state != 'confirmed':
+                raise ValidationError(_(
+                    "Seuls les participants de la formation « %s » (inscription au statut Participant) "
+                    "peuvent recevoir un certificat.") % rec.training_id.name)
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
@@ -274,33 +295,32 @@ class WebsiteTrainingCertificateWizard(models.TransientModel):
     _description = 'Enregistrement des participants ayant complété la formation'
 
     training_id = fields.Many2one('website.training', string='Formation', required=True)
-    candidat_ids = fields.Many2many(
-        'website.user', string='Participants ayant complété la formation',
-        domain="[('training_ids', 'in', training_id)]")
+    registration_ids = fields.Many2many(
+        'website.training.registration', 'bsz_certificate_wizard_registration_rel', 'wizard_id', 'registration_id',
+        string='Participants ayant complété la formation',
+        domain="[('training_id', '=', training_id), ('state', '=', 'confirmed'), ('certificate_ids', '=', False)]")
     issue_date = fields.Date(string='Date de délivrance', required=True, default=fields.Date.context_today)
     place = fields.Char(string='Lieu', default='Kinshasa', required=True)
 
     @api.onchange('training_id')
     def _onchange_training_id(self):
-        # Pré-sélectionne les inscrits qui n'ont pas encore de certificat
+        # Pré-sélectionne les participants (paiement soldé ou exonéré) qui n'ont pas encore de certificat
         if self.training_id:
-            already = self.training_id.certificate_ids.candidat_id
-            registered = self.env['website.user'].search([('training_ids', 'in', self.training_id.id)])
-            self.candidat_ids = registered - already
+            self.registration_ids = self.training_id.registration_ids.filtered(
+                lambda r: r.state == 'confirmed' and not r.certificate_ids)
 
     def action_generate(self):
         self.ensure_one()
-        if not self.candidat_ids:
+        if not self.registration_ids:
             raise UserError(_("Veuillez sélectionner au moins un participant."))
-        already = self.training_id.certificate_ids.candidat_id
-        to_create = self.candidat_ids - already
+        to_create = self.registration_ids.filtered(lambda r: r.state == 'confirmed' and not r.certificate_ids)
         certificates = self.env['website.training.certificate'].create([{
             'training_id': self.training_id.id,
-            'candidat_id': candidat.id,
-            'participant_name': candidat.name,
+            'registration_id': reg.id,
+            'participant_name': reg.candidat_id.name,
             'issue_date': self.issue_date,
             'place': self.place,
-        } for candidat in to_create])
+        } for reg in to_create])
         action = self.training_id.action_view_certificates()
         if certificates:
             action['domain'] = [('id', 'in', certificates.ids)]

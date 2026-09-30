@@ -6,14 +6,20 @@
         <field name="name">view.website.training.tree</field>
         <field name="model">website.training</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-muted="period_state == 'cancelled'" decoration-info="period_state == 'upcoming'"
+                  decoration-success="period_state == 'ongoing'">
                 <field name="name"/>
-                <field name="description_html"/>
-                <field name="cout" />
                 <field name="date_start"/>
                 <field name="date_end"/>
-                <field name="applicant_id"/>
-                <field name="is_published"/>
+                <field name="period_state" widget="badge"/>
+                <field name="cout" optional="show"/>
+                <field name="registration_count" sum="Total"/>
+                <field name="participant_count" sum="Total"/>
+                <field name="participation_rate" widget="progressbar" optional="show"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="amount_collected" sum="Total" optional="show"/>
+                <field name="certified_count" sum="Total" optional="show"/>
+                <field name="is_published" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -26,13 +32,28 @@
             <form string="Website Training">
                 <header>
                     <button name="action_open_certificate_wizard" type="object"
-                            string="Enregistrer les participants certifiés" class="oe_highlight"/>
+                            string="Enregistrer les participants certifiés" class="oe_highlight"
+                            attrs="{'invisible': [('participant_count', '=', 0)]}"/>
+                    <button name="action_print_participants" type="object" string="Liste des participants"
+                            attrs="{'invisible': [('registration_count', '=', 0)]}"/>
                     <button name="action_print_certificates" type="object"
                             string="Imprimer tous les certificats"
                             attrs="{'invisible': [('certificate_count', '=', 0)]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_registrations" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="participant_count"/> / <field name="registration_count"/></span>
+                                <span class="o_stat_text">Participants / inscrits</span>
+                            </div>
+                        </button>
+                        <button name="action_view_registrations" type="object" class="oe_stat_button" icon="fa-pie-chart">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="participation_rate" widget="float" digits="[16, 0]"/> %</span>
+                                <span class="o_stat_text">Participation</span>
+                            </div>
+                        </button>
                         <button name="action_view_certificates" type="object" class="oe_stat_button" icon="fa-certificate">
                             <field name="certificate_count" widget="statinfo" string="Certificats"/>
                         </button>
@@ -53,6 +74,10 @@
                             <field name="date_end" class="oe_inline"/>
                         </group>
                         <group>
+                            <field name="period_state" widget="badge"/>
+                            <field name="status"/>
+                            <field name="max_participants"/>
+                            <field name="available_spots" attrs="{'invisible': [('max_participants', '=', 0)]}"/>
                             <field name="is_published"/>
                             <field name="image" widget="image" class="oe_avatar" invisible="1"/>
                             <field name="video_url" widget="url"/>
@@ -60,16 +85,35 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="Candidatures" string="Candidatures">
-                           <field name="candidat_ids">
-                               <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="email"/>
-                                    <field name="phone"/>
-                                    <field name="adresse"/>
-                                    <field name="nationalite"/>
-                               </tree>
-                           </field>
+                        <page name="inscriptions" string="Inscriptions &amp; participants">
+                            <p class="text-muted">
+                                Un candidat devient participant quand son paiement est soldé (ou qu'il est exonéré).
+                                Seuls les participants peuvent recevoir un certificat.
+                            </p>
+                            <field name="registration_ids">
+                                <tree editable="bottom" decoration-muted="state == 'cancelled'" decoration-success="state == 'confirmed'">
+                                    <field name="candidat_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                                    <field name="phone" optional="show"/>
+                                    <field name="source" optional="show"/>
+                                    <field name="registration_date" optional="hide"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount_due" sum="Total"/>
+                                    <field name="amount_paid" sum="Total"/>
+                                    <field name="balance" sum="Total" optional="show"/>
+                                    <field name="payment_date" optional="hide"/>
+                                    <field name="payment_method" optional="show"/>
+                                    <field name="is_exempt" optional="show"/>
+                                    <field name="payment_state" widget="badge" decoration-success="payment_state in ('paid', 'exempt')"
+                                           decoration-warning="payment_state == 'partial'" decoration-danger="payment_state == 'unpaid'"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'confirmed'"
+                                           decoration-info="state == 'registered'" decoration-muted="state == 'cancelled'"/>
+                                    <field name="certificate_code" optional="show"/>
+                                    <button name="action_confirm" type="object" icon="fa-check" title="Enregistrer comme participant"
+                                            attrs="{'invisible': [('state', '!=', 'registered')]}"/>
+                                    <button name="action_mark_paid" type="object" icon="fa-money" title="Paiement intégral reçu + participant"
+                                            attrs="{'invisible': [('state', '!=', 'registered')]}"/>
+                                </tree>
+                            </field>
                         </page>
                         <page name="certificats" string="Certificats">
                             <group>
@@ -82,6 +126,7 @@
                                 <group>
                                     <field name="trainer_name"/>
                                     <field name="director_name"/>
+                                    <field name="director_signature" widget="image" options="{'size': [180, 90]}"/>
                                 </group>
                             </group>
                             <field name="certificate_ids">
@@ -107,8 +152,22 @@
         <field name="model">website.training</field>
         <field name="arch" type="xml">
             <search>
-                <group expand="1" string="Group By">
-                    <filter string="Name" name="name" domain="[]" context="{'group_by':'name'}"/>
+                <field name="name"/>
+                <filter name="upcoming" string="À venir"
+                        domain="[('date_start', '&gt;', context_today().strftime('%Y-%m-%d')), ('status', '!=', 'annule')]"/>
+                <filter name="ongoing" string="En cours"
+                        domain="[('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')), '|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date_end', '=', False), ('status', '!=', 'annule')]"/>
+                <filter name="done" string="Terminées"
+                        domain="[('date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('status', '!=', 'annule')]"/>
+                <filter name="cancelled" string="Annulées" domain="[('status', '=', 'annule')]"/>
+                <separator/>
+                <filter name="period" string="Période" date="date_start"/>
+                <filter name="published" string="Publiées" domain="[('is_published', '=', True)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_month" string="Mois" context="{'group_by': 'date_start:month'}"/>
+                    <filter name="group_quarter" string="Trimestre" context="{'group_by': 'date_start:quarter'}"/>
+                    <filter name="group_year" string="Année" context="{'group_by': 'date_start:year'}"/>
+                    <filter name="group_status" string="Statut" context="{'group_by': 'status'}"/>
                 </group>
             </search>
         </field>
@@ -116,10 +175,10 @@
 
     <!-- Action website.training -->
     <record id="action_website_training" model="ir.actions.act_window">
-        <field name="name">Website Training</field>
+        <field name="name">Formations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">website.training</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="help" type="html">
@@ -131,7 +190,31 @@
    
     <!-- Menu gestions formations root -->
     <menuitem id="menu_Trainning_root" name="Trainning Management" sequence="10"/>
-    <menuitem id="menu_website_training" name="Website Training" parent="website_bensizwe.menu_Trainning_root" action="website_bensizwe.action_website_training"/>
+    <menuitem id="menu_website_training" name="Formations" parent="website_bensizwe.menu_Trainning_root" action="website_bensizwe.action_website_training" sequence="10"/>
+
+    <record id="view_website_training_pivot" model="ir.ui.view">
+        <field name="name">view.website.training.pivot</field>
+        <field name="model">website.training</field>
+        <field name="arch" type="xml">
+            <pivot string="Formations" sample="1">
+                <field name="date_start" interval="quarter" type="row"/>
+                <field name="registration_count" type="measure"/>
+                <field name="participant_count" type="measure"/>
+                <field name="amount_collected" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_website_training_graph" model="ir.ui.view">
+        <field name="name">view.website.training.graph</field>
+        <field name="model">website.training</field>
+        <field name="arch" type="xml">
+            <graph string="Participants par mois" type="bar" sample="1">
+                <field name="date_start" interval="month"/>
+                <field name="participant_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
 
 
 </odoo>
