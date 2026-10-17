@@ -118,7 +118,9 @@
                         <page name="certificats" string="Certificats">
                             <group>
                                 <group>
-                                    <field name="certificate_title" placeholder="Formation d'Agent d'Accueil en Milieu Hospitalier"/>
+                                    <field name="certificate_title" placeholder="Santé et Sécurité au Travail"/>
+                                    <field name="certificate_hours" widget="float_time"/>
+                                    <field name="certificate_mode" placeholder="Théorie + Pratique"/>
                                     <field name="certificate_prefix" placeholder="Automatique (initiales)"
                                            attrs="{'readonly': [('certificate_count', '>', 0)]}"/>
                                     <field name="certificate_sequence"/>

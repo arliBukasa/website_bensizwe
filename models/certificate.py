@@ -51,8 +51,15 @@ class WebsiteTraining(models.Model):
 
     certificate_title = fields.Char(
         string='Intitulé sur le certificat',
-        help="Texte affiché après « a suivi la » sur le certificat. "
-             "Ex : Formation d'Agent d'Accueil en Milieu Hospitalier")
+        help="Titre affiché en bleu sous « CERTIFICAT DE FORMATION ». "
+             "Ex : Santé et Sécurité au Travail. Si vide, le nom de la formation est utilisé.")
+    certificate_hours = fields.Float(
+        string='Durée (heures)',
+        help="Durée de la formation, imprimée sur le certificat : 14 → « 14h00 », 7.5 → « 7h30 ». "
+             "Laisser à 0 pour ne rien imprimer.")
+    certificate_mode = fields.Char(
+        string='Modalités',
+        help="Imprimé entre parenthèses après la durée. Ex : Théorie + Pratique")
     trainer_name = fields.Char(string='Formateur')
     director_name = fields.Char(string='Directeur Général')
     director_signature = fields.Image(
@@ -251,8 +258,28 @@ class WebsiteTrainingCertificate(models.Model):
     # ===================================
 
     def get_training_label(self):
+        """Titre imprimé en bleu sous « CERTIFICAT DE FORMATION »."""
         self.ensure_one()
-        return self.training_id.certificate_title or _('formation « %s »') % self.training_id.name
+        return self.training_id.certificate_title or self.training_id.name
+
+    def get_hours_text(self):
+        """14.0 -> '14h00', 7.5 -> '7h30' ; vide si aucune durée n'est renseignée."""
+        self.ensure_one()
+        hours = self.training_id.certificate_hours
+        if not hours:
+            return ''
+        h, m = divmod(int(round(hours * 60)), 60)
+        return '%dh%02d' % (h, m)
+
+    def get_sentence(self):
+        """« A suivi avec succès la formation de 14h00 (Théorie + Pratique) » (durée et modalités facultatives)."""
+        self.ensure_one()
+        sentence = _('A suivi avec succès la formation')
+        if self.get_hours_text():
+            sentence += _(' de %s') % self.get_hours_text()
+        if self.training_id.certificate_mode:
+            sentence += ' (%s)' % self.training_id.certificate_mode.strip()
+        return sentence
 
     def get_period_text(self):
         """Ex : 'du 17 au 31 AOÛT 2026', 'du 28 JUILLET au 03 AOÛT 2026', 'le 17 AOÛT 2026'."""

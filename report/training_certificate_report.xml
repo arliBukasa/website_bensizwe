@@ -28,13 +28,19 @@
     </record>
 
     <!--
-        Maquette : fond pré-imprimé (static/src/img/certificat/fond_certificat.jpg, A4 paysage)
-        sur lequel les textes sont positionnés en absolu (unités en mm).
+        Maquette « CERTIFICAT BENSIZWE ACADEMY (Update) » : fond sans texte
+        (static/src/img/certificat/fond_certificat.jpg, A4 paysage, image du PDF fourni) sur lequel les
+        textes sont positionnés en absolu. Unités en mm sur A4 (297 x 210) ; chaque position vient du PDF
+        de la maquette (780 x 540 pt) converti : x_mm = x_pt x 0.3808, y_mm = y_pt x 0.3808.
+        Textes en Montserrat (la maquette est en Calibri, absente du serveur), tailles réglées pour
+        occuper la même largeur.
     -->
     <template id="report_training_certificate">
         <t t-set="full_width" t-value="True"/>
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
+                <t t-set="title" t-value="o.get_training_label()"/>
+                <t t-set="sentence" t-value="o.get_sentence()"/>
                 <t t-set="name_len" t-value="len(o.participant_name or '')"/>
                 <!-- .article : chaque certificat est rendu dans web.minimal_layout (charset, base url) = 1 page -->
                 <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
@@ -52,7 +58,7 @@
                             height: 209.5mm;
                             overflow: hidden;
                             font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                            color: #111;
+                            color: #000;
                         }
                         .bsz-cert-bg {
                             position: absolute;
@@ -61,81 +67,75 @@
                             height: 210mm;
                         }
                         .bsz-abs { position: absolute; }
+                        /* Blocs centrés sur la ligne du nom (centre = 150.5 mm), 1 ou 2 lignes centrées verticalement */
+                        .bsz-mid { display: table; width: 200mm; left: 50.5mm; }
+                        .bsz-mid > div { display: table-cell; vertical-align: middle; text-align: center; }
+                        .bsz-title { top: 78mm; height: 11mm; color: #0070c0; font-weight: bold; line-height: 1.15; }
                         .bsz-name {
-                            top: 100mm; left: 64mm; width: 169mm;
-                            height: 13mm; line-height: 13mm;
+                            top: 98.8mm; left: 66.5mm; width: 168mm;
+                            height: 8mm; line-height: 8mm;
                             text-align: center;
                             font-weight: bold;
                             text-transform: uppercase;
                             white-space: nowrap;
                         }
-                        .bsz-body {
-                            top: 117.5mm; left: 48mm; width: 201mm;
-                            text-align: center;
-                            font-size: 15pt;
-                            line-height: 1.3;
+                        .bsz-sentence { top: 111.9mm; height: 12mm; line-height: 1.25; }
+                        .bsz-info {
+                            left: 37.2mm; width: 120mm;
+                            height: 4.4mm; line-height: 4.4mm;
+                            font-size: 8.6pt;
+                            white-space: nowrap;
                         }
                         .bsz-sign {
-                            top: 160.5mm; width: 60mm;
-                            font-size: 9pt;
+                            top: 188.3mm; width: 60mm; height: 4mm; line-height: 4mm;
+                            text-align: center;
+                            font-size: 8pt;
                             font-weight: bold;
                             color: #0b2a5c;
+                            white-space: nowrap;
                         }
                         .bsz-signature {
-                            top: 148mm; left: 167.5mm; width: 44mm; height: 13mm;
-                            text-align: center;
+                            display: table;
+                            top: 177mm; left: 194.2mm; width: 44mm; height: 9.2mm;
                         }
-                        .bsz-signature img { max-width: 44mm; max-height: 13mm; }
-                        .bsz-place {
-                            top: 166.5mm; left: 98.5mm; width: 100mm;
-                            text-align: center;
-                            font-size: 9pt;
-                        }
-                        .bsz-brevet {
-                            top: 176mm; left: 57mm; width: 183mm;
-                            text-align: center;
-                            font-size: 7.5pt;
-                        }
-                        .bsz-qr {
-                            top: 170mm; left: 28.4mm;
-                            width: 21mm; height: 21mm;
-                        }
-                        .bsz-code {
-                            top: 195.5mm; left: 13mm; width: 52mm;
-                            text-align: center;
-                            font-size: 7pt;
-                            font-weight: bold;
-                            color: #0b2a5c;
-                            letter-spacing: 0.3pt;
-                        }
+                        .bsz-signature > div { display: table-cell; vertical-align: bottom; text-align: center; }
+                        .bsz-signature img { max-width: 44mm; max-height: 9.2mm; }
+                        .bsz-qr { top: 142.9mm; left: 253.8mm; width: 16.5mm; height: 16.5mm; }
                     </style>
                     <div class="bsz-cert">
                         <img class="bsz-cert-bg" src="/website_bensizwe/static/src/img/certificat/fond_certificat.jpg"/>
 
+                        <!-- Intitulé (bleu), sous « CERTIFICAT DE FORMATION » -->
+                        <div class="bsz-abs bsz-mid bsz-title">
+                            <div t-att-style="'font-size: %spt;' % (17 if len(title) &lt;= 45 else 13 if len(title) &lt;= 70 else 10.5)"
+                                 t-esc="title"/>
+                        </div>
+
+                        <!-- Nom, posé sur la ligne du fond -->
                         <div class="bsz-abs bsz-name"
-                             t-att-style="'font-size: %spt;' % (20 if name_len &lt;= 32 else 16 if name_len &lt;= 42 else 13)"
+                             t-att-style="'font-size: %spt;' % (15 if name_len &lt;= 28 else 13.5 if name_len &lt;= 36 else 11.5 if name_len &lt;= 44 else 9.5)"
                              t-esc="o.participant_name"/>
 
-                        <div class="bsz-abs bsz-body">
-                            a suivi la <t t-esc="o.get_training_label()"/><br/>
-                            <t t-if="o.date_start">en date <t t-esc="o.get_period_text()"/>.</t>
+                        <!-- A suivi avec succès la formation de 14h00 (Théorie + Pratique) -->
+                        <div class="bsz-abs bsz-mid bsz-sentence">
+                            <div t-att-style="'font-size: %spt;' % (15 if len(sentence) &lt;= 70 else 13 if len(sentence) &lt;= 100 else 11)"
+                                 t-esc="sentence"/>
                         </div>
 
-                        <div class="bsz-abs bsz-sign" style="left: 82.4mm;" t-if="o.trainer_name" t-esc="o.trainer_name"/>
-                        <div class="bsz-abs bsz-sign" style="left: 171.5mm;" t-if="o.director_name" t-esc="o.director_name"/>
-                        <!-- Signature du DG, posée sur la ligne pointillée, uniquement si renseignée -->
-                        <div class="bsz-abs bsz-signature" t-if="o.training_id.director_signature">
-                            <img t-att-src="image_data_uri(o.training_id.director_signature)"/>
-                        </div>
+                        <!-- Date, lieu, référence -->
+                        <div class="bsz-abs bsz-info" style="top: 146.7mm;">Date : <t t-esc="o.issue_date.strftime('%d/%m/%Y')"/></div>
+                        <div class="bsz-abs bsz-info" style="top: 151.1mm;">Lieu : BENSIZWE ACADEMY - <t t-esc="o.place or 'Kinshasa'"/></div>
+                        <div class="bsz-abs bsz-info" style="top: 155.4mm;">Réf Certificat : <t t-esc="o.code"/></div>
 
-                        <div class="bsz-abs bsz-place">
-                            Fait à <t t-esc="o.place or 'Kinshasa'"/>, le <t t-esc="o.issue_date.strftime('%d/%m/%Y')"/>
-                        </div>
-
-                        <div class="bsz-abs bsz-brevet" t-esc="o.get_brevet_text()"/>
-
+                        <!-- QR code dans le cadre du fond -->
                         <img class="bsz-abs bsz-qr" t-att-src="o.get_qr_code_data_uri()"/>
-                        <div class="bsz-abs bsz-code">N° <t t-esc="o.code"/></div>
+
+                        <!-- Formateur / Directeur Général : noms sous les pointillés, signature du DG si renseignée -->
+                        <div class="bsz-abs bsz-sign" style="left: 43mm;" t-if="o.trainer_name" t-esc="o.trainer_name"/>
+                        <div class="bsz-abs bsz-sign" style="left: 185mm;" t-if="o.director_name" t-esc="o.director_name"/>
+                        <div class="bsz-abs bsz-signature" t-if="o.training_id.director_signature">
+                            <div><img t-att-src="image_data_uri(o.training_id.director_signature)"/></div>
+                        </div>
                     </div>
                 </div>
             </t>
