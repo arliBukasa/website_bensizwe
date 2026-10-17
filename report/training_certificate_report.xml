@@ -45,6 +45,16 @@
                 <!-- .article : chaque certificat est rendu dans web.minimal_layout (charset, base url) = 1 page -->
                 <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
                     <style>
+                        /* Odoo ne charge que Montserrat Regular pour les rapports : on déclare aussi le Bold
+                           (sinon le gras dépend du moteur : synthétisé sous Windows, absent dans Docker). */
+                        @font-face {
+                            font-family: 'BszMontserrat'; font-weight: 400; font-style: normal;
+                            src: url('/web/static/fonts/google/Montserrat/Montserrat-Regular.ttf') format('truetype');
+                        }
+                        @font-face {
+                            font-family: 'BszMontserrat'; font-weight: 700; font-style: normal;
+                            src: url('/web/static/fonts/google/Montserrat/Montserrat-Bold.ttf') format('truetype');
+                        }
                         html, body, body.container, body.container-fluid, #wrapwrap, main {
                             margin: 0 !important;
                             padding: 0 !important;
@@ -57,7 +67,7 @@
                             width: 297mm;
                             height: 209.5mm;
                             overflow: hidden;
-                            font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                            font-family: 'BszMontserrat', 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
                             color: #000;
                         }
                         .bsz-cert-bg {
