@@ -69,6 +69,10 @@ class WebsiteTrainingRegistration(models.Model):
         ('paid', 'Payé'),
         ('exempt', 'Exonéré'),
     ], string='Paiement', compute='_compute_payment', store=True)
+    fully_paid = fields.Boolean(
+        string='Payé intégralement', compute='_compute_fully_paid', inverse='_inverse_fully_paid',
+        help="Cocher = paiement intégral créé d'un coup (montant payé = montant dû, date du jour). "
+             "Décocher remet le montant payé à zéro.")
 
     # Indicateurs agrégeables (moyenne = taux) pour les tableaux croisés
     is_participant = fields.Boolean(compute='_compute_participation', store=True, string='Participant ?')
@@ -103,6 +107,31 @@ class WebsiteTrainingRegistration(models.Model):
                 rec.payment_state = 'partial'
             else:
                 rec.payment_state = 'paid' if not rec.amount_due else 'unpaid'
+
+    @api.depends('payment_state', 'amount_due')
+    def _compute_fully_paid(self):
+        for rec in self:
+            rec.fully_paid = rec.payment_state == 'paid' and rec.amount_due > 0
+
+    def _inverse_fully_paid(self):
+        # Seul « coché » agit : le client web envoie « False » à chaque création de ligne, et décocher y envoie
+        # déjà amount_paid = 0 (voir _onchange_fully_paid). Un « False » ne doit donc jamais effacer un montant.
+        today = fields.Date.context_today(self)
+        for rec in self.filtered('fully_paid'):
+            vals = {'amount_paid': max(rec.amount_paid, rec.amount_due)}
+            if not rec.payment_date:
+                vals['payment_date'] = today
+            rec.write(vals)
+
+    @api.onchange('fully_paid')
+    def _onchange_fully_paid(self):
+        # Même effet à l'écran, avant l'enregistrement
+        if self.fully_paid:
+            self.amount_paid = max(self.amount_paid, self.amount_due)
+            if not self.payment_date:
+                self.payment_date = fields.Date.context_today(self)
+        else:
+            self.amount_paid = 0.0
 
     @api.depends('state')
     def _compute_participation(self):
@@ -144,7 +173,8 @@ class WebsiteTrainingRegistration(models.Model):
             user_id = vals.pop('user_id', None)
             if not vals.get('candidat_id') and user_id:
                 vals['candidat_id'] = self._candidat_from_user(self.env['res.users'].browse(user_id)).id
-            if 'amount_due' not in vals and vals.get('training_id'):
+            # Montant dû = prix de la formation (même quand le client web envoie 0 par défaut)
+            if not vals.get('amount_due') and vals.get('training_id'):
                 vals['amount_due'] = self.env['website.training'].browse(vals['training_id']).cout
         records = super().create(vals_list)
         if not self.env.context.get('skip_training_sync'):

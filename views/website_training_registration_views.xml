@@ -68,6 +68,7 @@
                             <field name="currency_id" invisible="1"/>
                             <field name="amount_due"/>
                             <field name="amount_paid"/>
+                            <field name="fully_paid"/>
                             <field name="balance"/>
                             <field name="payment_date"/>
                             <field name="payment_method"/>

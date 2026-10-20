@@ -4,6 +4,22 @@ import unicodedata
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import file_open
+
+# Signataires par défaut des certificats (modifiables formation par formation)
+DEFAULT_TRAINER = 'Papy KIDIDI'
+DEFAULT_DIRECTOR = 'Didier CIBALONZA'
+SIGNATURE_DIR = 'website_bensizwe/static/src/img/certificat/'
+
+
+def _default_signature(filename):
+    """Image de signature livrée avec le module (base64), ou False si le fichier est absent."""
+    try:
+        with file_open(SIGNATURE_DIR + filename, 'rb') as f:
+            return base64.b64encode(f.read())
+    except OSError:
+        return False
+
 
 # Mots ignorés pour construire les initiales d'une formation
 PREFIX_STOPWORDS = {
@@ -60,10 +76,16 @@ class WebsiteTraining(models.Model):
     certificate_mode = fields.Char(
         string='Modalités',
         help="Imprimé entre parenthèses après la durée. Ex : Théorie + Pratique")
-    trainer_name = fields.Char(string='Formateur')
-    director_name = fields.Char(string='Directeur Général')
+    trainer_name = fields.Char(string='Formateur', default=DEFAULT_TRAINER)
+    trainer_signature = fields.Image(
+        string='Signature du formateur', max_width=800, max_height=400,
+        default=lambda self: _default_signature('signature_formateur.png'),
+        help="Image de la signature (PNG à fond transparent de préférence). "
+             "Imprimée au-dessus de la ligne « Formateur » si renseignée.")
+    director_name = fields.Char(string='Directeur Général', default=DEFAULT_DIRECTOR)
     director_signature = fields.Image(
         string='Signature du DG', max_width=800, max_height=400,
+        default=lambda self: _default_signature('signature_dg.png'),
         help="Image de la signature (PNG à fond transparent de préférence). "
              "Imprimée au-dessus de la ligne « Directeur Général » si renseignée.")
     certificate_ids = fields.One2many('website.training.certificate', 'training_id', string='Certificats')
@@ -276,7 +298,7 @@ class WebsiteTrainingCertificate(models.Model):
         self.ensure_one()
         sentence = _('A suivi avec succès la formation')
         if self.get_hours_text():
-            sentence += _(' de %s') % self.get_hours_text()
+            sentence += _(' durant %s') % self.get_hours_text()
         if self.training_id.certificate_mode:
             sentence += ' (%s)' % self.training_id.certificate_mode.strip()
         return sentence

@@ -106,7 +106,7 @@
                         }
                         .bsz-signature {
                             display: table;
-                            top: 177mm; left: 194.2mm; width: 44mm; height: 9.2mm;
+                            top: 177mm; width: 44mm; height: 9.2mm;
                         }
                         .bsz-signature > div { display: table-cell; vertical-align: bottom; text-align: center; }
                         .bsz-signature img { max-width: 44mm; max-height: 9.2mm; }
@@ -133,7 +133,7 @@
                         </div>
 
                         <!-- Date, lieu, référence -->
-                        <div class="bsz-abs bsz-info" style="top: 146.7mm;">Date : <t t-esc="o.issue_date.strftime('%d/%m/%Y')"/></div>
+                        <div class="bsz-abs bsz-info" style="top: 146.7mm;">Date de délivrance : <t t-esc="o.issue_date.strftime('%d/%m/%Y')"/></div>
                         <div class="bsz-abs bsz-info" style="top: 151.1mm;">Lieu : BENSIZWE ACADEMY - <t t-esc="o.place or 'Kinshasa'"/></div>
                         <div class="bsz-abs bsz-info" style="top: 155.4mm;">Réf Certificat : <t t-esc="o.code"/></div>
 
@@ -143,7 +143,10 @@
                         <!-- Formateur / Directeur Général : noms sous les pointillés, signature du DG si renseignée -->
                         <div class="bsz-abs bsz-sign" style="left: 43mm;" t-if="o.trainer_name" t-esc="o.trainer_name"/>
                         <div class="bsz-abs bsz-sign" style="left: 185mm;" t-if="o.director_name" t-esc="o.director_name"/>
-                        <div class="bsz-abs bsz-signature" t-if="o.training_id.director_signature">
+                        <div class="bsz-abs bsz-signature" style="left: 49.3mm;" t-if="o.training_id.trainer_signature">
+                            <div><img t-att-src="image_data_uri(o.training_id.trainer_signature)"/></div>
+                        </div>
+                        <div class="bsz-abs bsz-signature" style="left: 194.2mm;" t-if="o.training_id.director_signature">
                             <div><img t-att-src="image_data_uri(o.training_id.director_signature)"/></div>
                         </div>
                     </div>
