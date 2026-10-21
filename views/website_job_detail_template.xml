@@ -81,9 +81,9 @@
                 <!-- Ligne 3 : CDI + Lieu + Clôture -->
                 <div class="d-flex flex-wrap align-items-center">
                   
-                  <span class="badge bg-success text-white" style="font-size: 14px; margin-right: 20px;"><t t-esc="job.duree_contrat.upper()"/></span>
+                  <span t-if="job.duree_contrat" class="badge bg-success text-white" style="font-size: 14px; margin-right: 20px;"><t t-esc="job.duree_contrat.upper()"/></span>
                   <p class="mb-0" style="margin-right: 20px;"><strong><img src="/website_bensizwe/static/src/img/icons/location-dot-solid.svg" width="12" style="margin-right:4px;"/></strong> <t t-esc="job.localisation"/></p>
-                  <p class="mb-0 text-success"><strong><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="12" style="margin-right:4px;"/></strong><t t-esc="job.date_cloture.strftime('%d %B %Y')"/></p>
+                  <p t-if="job.date_cloture" class="mb-0 text-success"><strong><img src="/website_bensizwe/static/src/img/icons/clock-regular.svg" width="12" style="margin-right:4px;"/></strong><t t-esc="job.date_cloture.strftime('%d %B %Y')"/></p>
                 </div>
 
               </div>
