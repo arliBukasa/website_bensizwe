@@ -94,7 +94,15 @@ class WebsiteTraining(models.Model):
         string='Préfixe des certificats', copy=False,
         help="Initiales de la formation utilisées pour numéroter les certificats (ex : FI → BSZ-2026-FI-001). "
              "Attribué automatiquement au premier certificat s'il est vide, puis figé.")
-    certificate_sequence = fields.Integer(string='Dernier n° de certificat', default=0, copy=False, readonly=True)
+    certificate_sequence = fields.Integer(
+        string='Dernier n° de certificat', default=0, copy=False,
+        help="Dernier numéro attribué (stocké). On le règle plutôt via « Prochain n° de certificat ».")
+    certificate_next_number = fields.Integer(
+        string='Prochain n° de certificat', compute='_compute_certificate_next_number',
+        inverse='_inverse_certificate_next_number',
+        help="Numéro que recevra le prochain certificat de cette formation (ex : 3 → BSZ-2026-FI-003). "
+             "Modifiable, par exemple pour repartir de 1 après avoir supprimé des certificats. "
+             "Si ce numéro est déjà pris pour l'année en cours, le suivant de libre est utilisé.")
 
     _sql_constraints = [
         ('certificate_prefix_unique', 'unique(certificate_prefix)',
@@ -137,11 +145,36 @@ class WebsiteTraining(models.Model):
         """
         self.ensure_one()
         prefix = self._get_certificate_prefix()
+        # Le SQL ci-dessous ignore les écritures ORM en attente (ex : prochain n° réglé juste avant) : on les envoie d'abord
+        self.flush(['certificate_sequence'], self)
         self.env.cr.execute('SELECT certificate_sequence FROM website_training WHERE id = %s FOR UPDATE', [self.id])
         number = (self.env.cr.fetchone()[0] or 0) + 1
+        # La séquence est modifiable à la main : on saute les numéros déjà utilisés (pas d'erreur de doublon)
+        Certificate = self.env['website.training.certificate'].sudo()
+        code = '%s-%s-%s-%03d' % (CODE_PREFIX, year, prefix, number)
+        while Certificate.search_count([('code', '=', code)]):
+            number += 1
+            code = '%s-%s-%s-%03d' % (CODE_PREFIX, year, prefix, number)
         self.env.cr.execute('UPDATE website_training SET certificate_sequence = %s WHERE id = %s', [number, self.id])
-        self.invalidate_cache(['certificate_sequence'], self.ids)
-        return '%s-%s-%s-%03d' % (CODE_PREFIX, year, prefix, number)
+        self.invalidate_cache(['certificate_sequence', 'certificate_next_number'], self.ids)
+        return code
+
+    @api.depends('certificate_sequence')
+    def _compute_certificate_next_number(self):
+        for rec in self:
+            rec.certificate_next_number = (rec.certificate_sequence or 0) + 1
+
+    def _inverse_certificate_next_number(self):
+        for rec in self:
+            if rec.certificate_next_number < 1:
+                raise ValidationError(_("Le prochain numéro de certificat doit être au moins 1."))
+            rec.certificate_sequence = rec.certificate_next_number - 1
+
+    @api.constrains('certificate_sequence')
+    def _check_certificate_sequence(self):
+        for rec in self:
+            if rec.certificate_sequence < 0:
+                raise ValidationError(_("Le numéro de séquence des certificats ne peut pas être négatif."))
 
     @api.depends('certificate_ids')
     def _compute_certificate_count(self):

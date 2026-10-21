@@ -124,7 +124,7 @@
                                     <field name="certificate_mode" placeholder="Théorie + Pratique"/>
                                     <field name="certificate_prefix" placeholder="Automatique (initiales)"
                                            attrs="{'readonly': [('certificate_count', '>', 0)]}"/>
-                                    <field name="certificate_sequence"/>
+                                    <field name="certificate_next_number"/>
                                 </group>
                                 <group>
                                     <field name="trainer_name"/>
