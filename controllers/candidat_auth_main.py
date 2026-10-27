@@ -133,14 +133,14 @@ class CandidatAuth(http.Controller):
             }
             return request.render('website_bensizwe.formation_auth_unified_template', values)
 
-    @http.route('/candidat/signup/<int:id>', type='http', auth='public', website=True)
-    def candidat_signup(self, id, **post):
-        # Utiliser le nouveau template d'authentification unifié avec onglet inscription actif
-        # get formation id
-        formation_id = id
-        logging.info("=================== Signup page for training ID: %s, post: %s", formation_id, post)
-        formation = request.env['website.training'].sudo().browse(int(formation_id)) if formation_id else None
-        logging.info("=================== Signup page for training ID: %s, formation: %s", formation_id, formation)
+    @http.route(['/candidat/signup', '/candidat/signup/<int:id>'], type='http', auth='public', website=True)
+    def candidat_signup(self, id=None, **post):
+        # Inscription avec ou sans formation : sans numéro (lien « Créer un compte », /mon-espace), on crée
+        # simplement le compte candidat ; avec un numéro, l'inscription est liée à cette formation.
+        if not request.env.user._is_public():
+            return request.redirect('/mon-espace')
+        formation = request.env['website.training'].sudo().browse(id).exists() if id else None
+        formation_id = formation.id if formation else None
         values = {
             'formation_id': formation_id,
             'formation': formation,
@@ -290,11 +290,20 @@ class CandidatAuth(http.Controller):
                 else:
                     logging.warning(" =================    No training found with ID: %s", formation_id)
             
-            # Connecter automatiquement le nouvel utilisateur crée
-            
-
             logging.info("=============New candidate registered!: %s (ID: %s)", email, new_user.id)
-            # Redirection vers l'espace candidat
+
+            # Nouveau compte : connexion automatique (mot de passe initial = téléphone) puis retour à la page
+            # d'origine (ex : /mon-espace). Un compte existant n'est jamais connecté sans son mot de passe.
+            if not existing_user:
+                # authenticate() ouvre son propre curseur : il faut valider la création avant (comme auth_signup)
+                request.env.cr.commit()
+                target = redirect if redirect and redirect.startswith('/') and not redirect.startswith('//') else '/mon-espace'
+                try:
+                    request.session.authenticate(request.session.db, email, phone)
+                    return request.redirect(target)
+                except Exception as e:
+                    logging.warning("Connexion automatique impossible pour %s : %s", email, e)
+                    return request.redirect('/candidat/login')
             return request.redirect('/')
         except Exception as e:
             logging.error("============Unexpected error during signup for email %s: %s", email, str(e))

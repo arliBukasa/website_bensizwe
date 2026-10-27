@@ -11,6 +11,30 @@ _logger = logging.getLogger(__name__)
 
 class CandidatEspace(http.Controller):
 
+    def _provision_candidat(self):
+        """Fiche candidat d'un utilisateur du portail connecté qui n'en a pas (compte créé par un autre
+        parcours) : rattache la fiche de même e-mail encore libre, sinon en crée une.
+        Les comptes internes (employés) ne deviennent pas candidats : fiche vide renvoyée."""
+        user = request.env.user
+        WebsiteUser = request.env['website.user'].sudo()
+        if user._is_public() or not user.share:
+            return WebsiteUser
+        email = (user.email or user.login or '').strip().lower()
+        candidat = WebsiteUser.search([('email', '=ilike', email)], limit=1) if email else WebsiteUser
+        if candidat:
+            if candidat.user_id and candidat.user_id != user:
+                _logger.warning("Fiche candidat %s déjà liée à un autre compte que %s", email, user.login)
+                return WebsiteUser
+            if not candidat.user_id:
+                candidat.write({'user_id': user.id})
+            return candidat
+        _logger.info("Création de la fiche candidat manquante pour %s", user.login)
+        return WebsiteUser.create({'name': user.name, 'email': email, 'user_id': user.id})
+
+    def _no_candidat_redirect(self):
+        # Portail sans fiche possible -> accueil du portail ; employé -> back-office
+        return request.redirect('/my' if request.env.user.share else '/web')
+
     @http.route('/mon-espace', type='http', auth='public', website=True)
     def espace_candidat(self, **kwargs):
         """Page principale de l'espace candidat moderne"""
@@ -22,7 +46,9 @@ class CandidatEspace(http.Controller):
         ], limit=1)
 
         if not candidat:
-            return request.redirect('/candidat/signup')
+            candidat = self._provision_candidat()
+        if not candidat:
+            return self._no_candidat_redirect()
 
         # Mise à jour de la dernière connexion
         candidat.update_last_connection()
@@ -53,7 +79,9 @@ class CandidatEspace(http.Controller):
             ], limit=1)
             
             if not candidat:
-                return request.redirect('/candidat/signup')
+                candidat = self._provision_candidat()
+            if not candidat:
+                return self._no_candidat_redirect()
 
             # Préparer les données de mise à jour
             update_data = {}
@@ -175,7 +203,9 @@ class CandidatEspace(http.Controller):
         ], limit=1)
         
         if not candidat:
-            return request.redirect('/candidat/signup')
+            candidat = self._provision_candidat()
+        if not candidat:
+            return self._no_candidat_redirect()
             
         return request.render('website_bensizwe.candidat_update_template', {
             'candidat': candidat
@@ -222,7 +252,9 @@ class CandidatEspace(http.Controller):
         ], limit=1)
         
         if not candidat:
-            return request.redirect('/candidat/signup')
+            candidat = self._provision_candidat()
+        if not candidat:
+            return self._no_candidat_redirect()
 
         # Récupérer toutes les candidatures avec détails
         applications = candidat.application_ids.sorted('create_date', reverse=True)
@@ -241,7 +273,9 @@ class CandidatEspace(http.Controller):
         ], limit=1)
         
         if not candidat:
-            return request.redirect('/candidat/signup')
+            candidat = self._provision_candidat()
+        if not candidat:
+            return self._no_candidat_redirect()
 
         # Formations disponibles
         formations_disponibles = request.env['website.training'].sudo().search([
@@ -263,7 +297,9 @@ class CandidatEspace(http.Controller):
         ], limit=1)
         
         if not candidat:
-            return request.redirect('/candidat/signup')
+            candidat = self._provision_candidat()
+        if not candidat:
+            return self._no_candidat_redirect()
             
         return request.render('website_bensizwe.candidat_settings_template', {
             'candidat': candidat,
