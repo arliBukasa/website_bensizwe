@@ -173,7 +173,7 @@
                               <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fa fa-sign-in me-2"></i> Se connecter
                               </button>
-                                <a href="/candidat/signup" class="btn btn-link">
+                                <a t-att-href="'/candidat/signup/%s' % formation.id if formation else '/candidat/signup'" class="btn btn-link">
                                 <i class="fa fa-user-plus me-2"></i> Créer un compte
                                 </a>
                             </div>
@@ -204,9 +204,19 @@
                         <div class="row">
                           <!-- Informations personnelles contenue centré-->
                           <div class="col-md-9 text-center mx-auto ">
-                            <h5 class="mb-3 text-primary">
-                              <i class=""></i>Formation pratique et certifiante!
-                            </h5>
+                            <!-- /candidat/signup/<n°> : inscription à une formation ; /candidat/signup : compte candidat général -->
+                            <t t-if="formation">
+                              <h5 class="mb-2 text-primary">Formation pratique et certifiante !</h5>
+                              <p class="text-muted mb-3">
+                                Inscrivez-vous à la formation <strong t-esc="formation.name"/>.
+                              </p>
+                            </t>
+                            <t t-else="">
+                              <h5 class="mb-2 text-primary">Créez votre compte candidat</h5>
+                              <p class="text-muted mb-3">
+                                Un seul compte pour postuler à nos offres d'emploi et vous inscrire à nos formations.
+                              </p>
+                            </t>
 
                             <div class="mb-3">
                               <label for="name" class="form-label">Nom complet *</label>
@@ -230,8 +240,15 @@
                             </div>
                             <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">
-                              <i class="fa fa-user-plus me-2"></i> Je m'inscris
+                              <i class="fa fa-user-plus me-2"></i>
+                              <t t-if="formation">Je m'inscris à la formation</t>
+                              <t t-else="">Créer mon compte</t>
                             </button>
+                          </div>
+                          <div class="text-center mt-3">
+                            <a t-att-href="'/formation/auth?formation_id=%s' % formation.id if formation else '/candidat/login'" class="text-muted">
+                              Déjà un compte ? Connectez-vous
+                            </a>
                           </div>
 
                           </div>
