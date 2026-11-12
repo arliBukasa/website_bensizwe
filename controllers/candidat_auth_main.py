@@ -226,7 +226,11 @@ class CandidatAuth(http.Controller):
     @http.route('/candidat/trainning/submit', type='http', auth='public', website=True)
     def candidat_trainning_submit(self, **post):
         formation_id = post.get('formation_id')
-        name = post.get('name', '').strip()
+        # Nom & Postnom + Prénom (+ Sexe) ; « name » seul reste accepté (anciens formulaires)
+        last_name = ' '.join(post.get('last_name', '').split())
+        first_name = ' '.join(post.get('first_name', '').split())
+        gender = post.get('gender') if post.get('gender') in ('male', 'female') else False
+        name = ' '.join(filter(None, [first_name, last_name])) or post.get('name', '').strip()
         email = post.get('email', '').strip().lower()
         phone = post.get('phone', '').strip()
         redirect = post.get('redirect', '/mon-espace')
@@ -266,12 +270,23 @@ class CandidatAuth(http.Controller):
                 if not request.env['website.user'].sudo().search([('email', '=', email)], limit=1):
                     created_user = request.env['website.user'].sudo().create({
                         'name': name,
+                        'first_name': first_name or False,
+                        'last_name': last_name or False,
+                        'gender': gender,
                         'email': email,
                         'phone': phone,
                         'user_id': user.id
                     })
                     logging.info("============Website user created: %s", created_user)
-            
+
+            # Fiche candidat existante : on complète seulement ce qui manque (rien n'est écrasé)
+            candidat_profile = request.env['website.user'].sudo().search([('user_id', '=', user.id)], limit=1)
+            missing = {key: value for key, value in (('first_name', first_name), ('last_name', last_name),
+                                                     ('gender', gender), ('phone', phone))
+                       if value and candidat_profile and not candidat_profile[key]}
+            if missing:
+                candidat_profile.write(missing)
+
             new_user = user
 
             # s'il y a une formation envoyée lie le candidat à la formation

@@ -218,11 +218,33 @@
                               </p>
                             </t>
 
+                            <div class="row">
+                              <div class="col-md-7 mb-3">
+                                <label for="last_name" class="form-label">Nom &amp; Postnom *</label>
+                                <input type="text" id="last_name" name="last_name" class="form-control"
+                                       placeholder="Nom et postnom" required="required"
+                                       t-att-value="request.params.get('last_name', '')"/>
+                              </div>
+                              <div class="col-md-5 mb-3">
+                                <label for="first_name" class="form-label">Prénom *</label>
+                                <input type="text" id="first_name" name="first_name" class="form-control"
+                                       placeholder="Prénom" required="required"
+                                       t-att-value="request.params.get('first_name', '')"/>
+                              </div>
+                            </div>
+
                             <div class="mb-3">
-                              <label for="name" class="form-label">Nom complet *</label>
-                              <input type="text" id="name" name="name" class="form-control" 
-                                     placeholder="Nom et Prénom" required="required" 
-                                     t-att-value="request.params.get('name', '')"/>
+                              <label class="form-label d-block">Sexe *</label>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="gender_m" value="male" required="required"
+                                       t-att-checked="request.params.get('gender') == 'male'"/>
+                                <label class="form-check-label" for="gender_m">Masculin</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="gender_f" value="female"
+                                       t-att-checked="request.params.get('gender') == 'female'"/>
+                                <label class="form-check-label" for="gender_f">Féminin</label>
+                              </div>
                             </div>
 
                             <div class="mb-3">
@@ -305,19 +327,8 @@
               passwordConfirm.addEventListener('keyup', validatePasswords);
             }
 
-            // Format du téléphone
-            const phoneInput = document.getElementById('phone');
-            if (phoneInput) {
-              phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.startsWith('223')) {
-                  value = '+' + value;
-                } else if (value.length > 0 &amp;&amp; !value.startsWith('+')) {
-                  value = '+223' + value;
-                }
-                e.target.value = value;
-              });
-            }
+            // Téléphone : on garde la saisie telle quelle (l'ancien script ajoutait l'indicatif +223 du Mali
+            // à tous les numéros, alors que le numéro sert d'identifiant à la connexion)
 
             // Basculer vers l'onglet inscription si des erreurs d'inscription
             <t t-if="signup_error">
