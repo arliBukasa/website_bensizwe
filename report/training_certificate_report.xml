@@ -29,7 +29,7 @@
 
     <!--
         Maquette « CERTIFICAT BENSIZWE ACADEMY (Update) » : fond sans texte
-        (static/src/img/certificat/fond_certificat.jpg, A4 paysage, image du PDF fourni) sur lequel les
+        (static/src/img/certificat/fond_certificat.png, A4 paysage, 3508x2480 = 300 dpi) sur lequel les
         textes sont positionnés en absolu. Unités en mm sur A4 (297 x 210) ; chaque position vient du PDF
         de la maquette (780 x 540 pt) converti : x_mm = x_pt x 0.3808, y_mm = y_pt x 0.3808.
         Textes en Montserrat (la maquette est en Calibri, absente du serveur), tailles réglées pour
@@ -111,7 +111,7 @@
                         .bsz-qr { top: 142.9mm; left: 253.8mm; width: 16.5mm; height: 16.5mm; }
                     </style>
                     <div class="bsz-cert">
-                        <img class="bsz-cert-bg" src="/website_bensizwe/static/src/img/certificat/fond_certificat.jpg"/>
+                        <img class="bsz-cert-bg" src="/website_bensizwe/static/src/img/certificat/fond_certificat.png"/>
 
                         <!-- Intitulé (bleu), sous « CERTIFICAT DE FORMATION » -->
                         <div class="bsz-abs bsz-mid bsz-title">
