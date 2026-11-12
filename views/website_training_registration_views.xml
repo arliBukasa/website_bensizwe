@@ -239,6 +239,8 @@
                         <div class="col-md-6 mb-3 d-flex align-items-center justify-content-center">
                             <button name="action_open_analysis" type="object" class="btn btn-primary"
                                     string="Analyse détaillée (tableau croisé / graphique)" icon="fa-bar-chart"/>
+                            <button name="action_export_sheet" type="object" class="btn btn-secondary ml-2"
+                                    string="Fiche Excel de la période" icon="fa-file-excel-o"/>
                         </div>
                     </div>
 

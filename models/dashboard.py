@@ -1,6 +1,7 @@
 from datetime import date
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class WebsiteTrainingDashboard(models.TransientModel):
@@ -82,6 +83,12 @@ class WebsiteTrainingDashboard(models.TransientModel):
         return self._open('website_bensizwe.action_website_training_registration',
                           self._period_domain() + [('state', '=', 'registered')],
                           _('Candidats en attente de paiement'), {'search_default_group_training': 1})
+
+    def action_export_sheet(self):
+        """Fiche Excel des participants : un onglet par formation de la période."""
+        if not self.training_ids:
+            raise UserError(_("Aucune formation sur cette période."))
+        return self.training_ids.action_export_participant_sheet()
 
     def action_open_analysis(self):
         return self._open('website_bensizwe.action_website_training_registration_analysis', self._period_domain(),

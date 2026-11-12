@@ -34,6 +34,8 @@
                     <button name="action_open_certificate_wizard" type="object"
                             string="Enregistrer les participants certifiés" class="oe_highlight"
                             attrs="{'invisible': [('participant_count', '=', 0)]}"/>
+                    <button name="action_export_participant_sheet" type="object" string="Fiche Excel"
+                            attrs="{'invisible': [('participant_count', '=', 0)]}"/>
                     <button name="action_print_participants" type="object" string="Liste des participants"
                             attrs="{'invisible': [('registration_count', '=', 0)]}"/>
                     <button name="action_print_certificates" type="object"
@@ -77,6 +79,8 @@
                             <field name="period_state" widget="badge"/>
                             <field name="status"/>
                             <field name="max_participants"/>
+                            <field name="training_place"/>
+                            <field name="province"/>
                             <field name="available_spots" attrs="{'invisible': [('max_participants', '=', 0)]}"/>
                             <field name="is_published"/>
                             <field name="image" widget="image" class="oe_avatar" invisible="1"/>
@@ -220,5 +224,14 @@
         </field>
     </record>
 
+    <!-- Liste des formations : sélectionner une ou plusieurs formations > Action > Fiche Excel des participants -->
+    <record id="action_server_training_participant_sheet" model="ir.actions.server">
+        <field name="name">Fiche Excel des participants</field>
+        <field name="model_id" ref="model_website_training"/>
+        <field name="binding_model_id" ref="model_website_training"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_export_participant_sheet()</field>
+    </record>
 
 </odoo>

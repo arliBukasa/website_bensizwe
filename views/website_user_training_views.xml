@@ -43,6 +43,7 @@
                         <group string="Contact">
                             <field name="email" widget="email"/>
                             <field name="phone" widget="phone"/>
+                            <field name="gender"/>
                             <field name="city"/>
                         </group>
                         <group string="Formations">
