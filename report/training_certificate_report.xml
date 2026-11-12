@@ -41,7 +41,6 @@
             <t t-foreach="docs" t-as="o">
                 <t t-set="title" t-value="o.get_training_label()"/>
                 <t t-set="sentence" t-value="o.get_sentence()"/>
-                <t t-set="name_len" t-value="len(o.participant_name or '')"/>
                 <!-- .article : chaque certificat est rendu dans web.minimal_layout (charset, base url) = 1 page -->
                 <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
                     <style>
@@ -82,8 +81,8 @@
                         .bsz-mid > div { display: table-cell; vertical-align: middle; text-align: center; }
                         .bsz-title { top: 78mm; height: 11mm; color: #0070c0; font-weight: bold; line-height: 1.15; }
                         .bsz-name {
-                            top: 98.8mm; left: 66.5mm; width: 168mm;
-                            height: 8mm; line-height: 8mm;
+                            top: 97.8mm; left: 66.5mm; width: 168mm;
+                            height: 10mm; line-height: 10mm;
                             text-align: center;
                             font-weight: bold;
                             text-transform: uppercase;
@@ -97,9 +96,8 @@
                             white-space: nowrap;
                         }
                         .bsz-sign {
-                            top: 188.3mm; width: 60mm; height: 4mm; line-height: 4mm;
+                            top: 187.5mm; width: 80mm; height: 5.6mm; line-height: 5.6mm;
                             text-align: center;
-                            font-size: 8pt;
                             font-weight: bold;
                             color: #0b2a5c;
                             white-space: nowrap;
@@ -117,13 +115,12 @@
 
                         <!-- Intitulé (bleu), sous « CERTIFICAT DE FORMATION » -->
                         <div class="bsz-abs bsz-mid bsz-title">
-                            <div t-att-style="'font-size: %spt;' % (17 if len(title) &lt;= 45 else 13 if len(title) &lt;= 70 else 10.5)"
-                                 t-esc="title"/>
+                            <!-- 24 pt si l'intitulé tient sur une ligne, sinon réduit (minimum 13 pt, puis 2 lignes) -->
+                            <div t-att-style="'font-size: %spt;' % o.get_title_pt()" t-esc="title"/>
                         </div>
 
                         <!-- Nom, posé sur la ligne du fond -->
-                        <div class="bsz-abs bsz-name"
-                             t-att-style="'font-size: %spt;' % (15 if name_len &lt;= 28 else 13.5 if name_len &lt;= 36 else 11.5 if name_len &lt;= 44 else 9.5)"
+                        <div class="bsz-abs bsz-name" t-att-style="'font-size: %spt;' % o.get_name_pt()"
                              t-esc="o.participant_name"/>
 
                         <!-- A suivi avec succès la formation de 14h00 (Théorie + Pratique) -->
@@ -141,8 +138,10 @@
                         <img class="bsz-abs bsz-qr" t-att-src="o.get_qr_code_data_uri()"/>
 
                         <!-- Formateur / Directeur Général : noms sous les pointillés, signature du DG si renseignée -->
-                        <div class="bsz-abs bsz-sign" style="left: 43mm;" t-if="o.trainer_name" t-esc="o.trainer_name"/>
-                        <div class="bsz-abs bsz-sign" style="left: 185mm;" t-if="o.director_name" t-esc="o.director_name"/>
+                        <div class="bsz-abs bsz-sign" t-if="o.trainer_name" t-esc="o.trainer_name"
+                             t-att-style="'left: 33mm; font-size: %spt;' % o.get_signer_pt(o.trainer_name)"/>
+                        <div class="bsz-abs bsz-sign" t-if="o.director_name" t-esc="o.director_name"
+                             t-att-style="'left: 175mm; font-size: %spt;' % o.get_signer_pt(o.director_name)"/>
                         <div class="bsz-abs bsz-signature" style="left: 49.3mm;" t-if="o.training_id.trainer_signature">
                             <div><img t-att-src="image_data_uri(o.training_id.trainer_signature)"/></div>
                         </div>

@@ -1,15 +1,42 @@
 import base64
+import functools
+import math
 import re
 import unicodedata
 
+from PIL import ImageFont
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.modules.module import get_module_resource
 from odoo.tools import file_open
 
 # Signataires par défaut des certificats (modifiables formation par formation)
 DEFAULT_TRAINER = 'Papy KIDIDI'
 DEFAULT_DIRECTOR = 'Didier CIBALONZA'
 SIGNATURE_DIR = 'website_bensizwe/static/src/img/certificat/'
+
+
+@functools.lru_cache(maxsize=4)
+def _montserrat(weight):
+    """Police Montserrat livrée avec Odoo (la même que celle du PDF), pour mesurer la largeur des textes."""
+    path = get_module_resource('web', 'static/fonts/google/Montserrat', 'Montserrat-%s.ttf' % weight)
+    try:
+        return ImageFont.truetype(path, 1000) if path else None
+    except OSError:
+        return None
+
+
+def _fit_pt(text, max_pt, min_pt, width_mm, weight='Bold'):
+    """Plus grande taille (pas de 0,5 pt) entre min_pt et max_pt où `text` tient sur une ligne de width_mm."""
+    font = _montserrat(weight)
+    if not text or not font:
+        return max_pt
+    mm_per_pt = font.getlength(text) / 1000 * 25.4 / 72
+    if not mm_per_pt:
+        return max_pt
+    size = width_mm * 0.96 / mm_per_pt  # 4 % de marge pour les écarts de rendu
+    return max(min_pt, min(max_pt, math.floor(size * 2) / 2))
 
 
 def _default_signature(filename):
@@ -316,6 +343,16 @@ class WebsiteTrainingCertificate(models.Model):
         """Titre imprimé en bleu sous « CERTIFICAT DE FORMATION »."""
         self.ensure_one()
         return self.training_id.certificate_title or self.training_id.name
+
+    # Tailles des textes du PDF : 24 pt (12 pt pour les signataires) si le texte tient dans sa zone, sinon réduit
+    def get_title_pt(self):
+        return _fit_pt(self.get_training_label(), 24, 13, 200)
+
+    def get_name_pt(self):
+        return _fit_pt((self.participant_name or '').upper(), 24, 9, 168)
+
+    def get_signer_pt(self, name):
+        return _fit_pt(name, 12, 7.5, 80)
 
     def get_hours_text(self):
         """14.0 -> '14h00', 7.5 -> '7h30' ; vide si aucune durée n'est renseignée."""

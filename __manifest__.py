@@ -1,6 +1,6 @@
 {
     'name': 'website_bensizwe',
-    'version': '2.8',
+    'version': '2.9',
     'summary': 'Custom website module for Bensizwe with modern user space',
     'description': '''
     This module provides custom website functionalities for Bensizwe including:
